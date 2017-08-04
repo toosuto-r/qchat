@@ -116,9 +116,17 @@ finalcheck:{if[c:testphrase~"c"$dc[chatprikey;x];
   neg[.z.w](set;`.z.ps;{if[0=x 0;:-1@"c"$dec[prikey;1_x]];if[1=x 0;:value"c"$dec[prikey;1_x]]});
   neg[value[hs]]@'0,'ccache[key[hs:aw _ aw?.z.w]]@\:string[.z.u]," has joined";};
 
-ostvote:{{@[`ostd;.z.u;:;first 1?where 1&count'[ss/:[x;string[u]]]]}dc[chatprikey;x]}
 
-endost:{neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:"ended ostracism voting"}
+endost:{neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:"Ended ostracism voting";
+  @[`tf;"";:;chat];
+  h:aw u:c?max c:1_count'[group raze ostd];
+  if[not n:null h;
+    neg[h]@0,ccache[u]"j"$"You know what you did.";
+    neg[h]@1,ccache[u]"j"$"exit 0";
+    neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:string[u]," has been BANISHED"];
+  if[n;neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:"Insufficient ill-will to kick."];
+  `ostd set enlist[`]!enlist`;
+  };
 
 chatter:{-1 "c"$dec[chatprikey;x];};
 chatter:{tf[tf?tf 2$"c"$r][r:dc[chatprikey;x];.z.w;.z.u];};
@@ -130,8 +138,8 @@ help:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$"Message typed without prefix are automati
 clrs:{[x;y;z]if[not(`$3_"c"$x) in key coldict;:neg[y]@0,ccache[aw?y]"j"$"Incorrect colour"];@[`ucol;z;:;(coldict `$3_"c"$x;"\033[0m ")];:neg[y]@0,ccache[aw?y]"j"$"colour set. Fabulous."};
 ostr:{[x;y;z]neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:string[.z.u]," has initiated ostracism mode.\nYou have 10 seconds to vote for a current user who will be kicked.";
   `cron insert (.z.P+"v"$10;`endost);
-  
-  };
+  @[`tf;"";:;ostv];};
+ostv:{[x;y;z]@[`ostd;.z.u;:;users first 1?where 1&count'[ss/:["c"$x;string[users]]]]};
 
 tf:("";"\\q";"\\u";"\\h";"\\c";"\\o")!(chat;quit;usls;help;clrs;ostr);
 
