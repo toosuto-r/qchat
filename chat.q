@@ -1,5 +1,12 @@
 system"c 23 1000"
 system"t 1000";
+
+aliases:1b;
+
+/TODO
+/Protect with .z.ps checking for type and first arg symbol in func list
+/Chat name, \n for new rooms, \k for kill
+
 .z.ph:.z.ws:.z.pp:.z.pg:{"oh no baby what is you doin"}
 .z.wo:{neg[x]"too sneaky for your own good tbh";hclose x}
 users:`ryan`rm56312
@@ -13,16 +20,19 @@ coldict:(`default`black`red`green`yellow`blue`magenta`cyan`gray!(" \033[0m";" \0
 
 cron:([]time:"p"$();action:`$())
 
-/system"id -u -n"
-
-.z.ts:{pi:exec i from cron where time<.z.P;r:exec action from cron where i=pi;delete from `cron where i=pi;if[count r;value'[r]@\:`]}
+.z.ts:{pi:exec i from cron where time<.z.P;if[count pi;r:exec action from cron where i=pi;delete from `cron where i=pi;value'[r]@\:`]}
 
 tpks:aw:w:()!()
 pks:@[get;`:pks;()!()]
 ccache:@[get;`:ccache;()!()]
 ucol:enlist[`]!enlist""
 
-.z.pc:{.[`w;();_;w?x];.[`aw;();_;aw?x];};
+fallowed:`checker`decider`getpubkey`testdec`testenc`checkphrase`chatter`finalcheck
+.z.ps:{if[x[0] in fallowed;:value x];neg[.z.w]"-1\"Rude.\""}
+
+.z.pw:{[u;p]u in users}
+
+.z.pc:{.[`w;();_;w?x];if[x in aw;.[`aw;();_;aw?x]];};
 
 .z.po:{
   if[not x in w;@[`w;.z.u;:;x]];
@@ -45,7 +55,7 @@ decider:{if[first[x]="y";
   }
 
 checker:{[x;y;u;z]
-  if[not .z.u~u;:fail"No aliases allowed - try again with your real name. DISCO NECKTING"];
+  if[not[aliases] and not .z.u~u;:fail"No aliases allowed - try again with your real name. DISCO NECKTING"];
   if[not count edf:edf where (not `~/:edf)and 99<type each edf:x,y;
     neg[.z.w]"-1\"WARNING - No dyadic encryption/decryption functions names 'enc' and 'dec' found.
               \\n Function should be dyadic and should take hey and message as args.
@@ -105,7 +115,11 @@ finalcheck:{if[c:testphrase~"c"$dc[chatprikey;x];
   if[not c;.[`tpks;();_;.z.u];:fail"WARNING - Incorrect Input - DISCONNECTING"];
   neg[.z.w](set;`.z.ps;{if[0=x 0;:-1@"c"$dec[prikey;1_x]];if[1=x 0;:value"c"$dec[prikey;1_x]]});
   neg[value[hs]]@'0,'ccache[key[hs:aw _ aw?.z.w]]@\:string[.z.u]," has joined";};
-  
+
+ostvote:{{@[`ostd;.z.u;:;first 1?where 1&count'[ss/:[x;string[u]]]]}dc[chatprikey;x]}
+
+endost:{neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:"ended ostracism voting"}
+
 chatter:{-1 "c"$dec[chatprikey;x];};
 chatter:{tf[tf?tf 2$"c"$r][r:dc[chatprikey;x];.z.w;.z.u];};
 
@@ -114,7 +128,10 @@ quit:{[x;y;z]neg[y]@1,ccache[aw?y]"j"$"exit 0"};
 usls:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$"users online: ",", "sv string key[aw] except hiddenusers;};
 help:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$"Message typed without prefix are automatically broadcast to all logged in users.\nUseful functions are called with \\X or \\X input, where X is a lower case letter, e.g. '\\q' or '\\quit' to quit"};
 clrs:{[x;y;z]if[not(`$3_"c"$x) in key coldict;:neg[y]@0,ccache[aw?y]"j"$"Incorrect colour"];@[`ucol;z;:;(coldict `$3_"c"$x;"\033[0m ")];:neg[y]@0,ccache[aw?y]"j"$"colour set. Fabulous."};
-ostr:{[x;y;z]neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:string[.z.u]," has initiated ostracism mode.\nYou have 10 seconds to vote for a current user who will be kicked.";};
+ostr:{[x;y;z]neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:string[.z.u]," has initiated ostracism mode.\nYou have 10 seconds to vote for a current user who will be kicked.";
+  `cron insert (.z.P+"v"$10;`endost);
+  
+  };
 
 tf:("";"\\q";"\\u";"\\h";"\\c";"\\o")!(chat;quit;usls;help;clrs;ostr);
 
@@ -141,12 +158,3 @@ ds:{[C;d;n]{[x;y;C;n] $[y*m:mod[x*x;n];mod[C*m;n];m]}[;;C;n]/[1;r:?[a;1b]_a:0b v
 
 ec:{.[{{[x;y;M;n]$[y*c:mod[x*x;n];mod[M*c;n];c]}[;;z;x]/[1;r:?[a;1b]_a:0b vs y]};x]each "j"$y}
 dc:{.[{{[x;y;C;n]$[y*m:mod[x*x;n];mod[C*m;n];m]}[;;z;x]/[1;r:?[a;1b]_a:0b vs y]};x]each y}
-
-
-
-
-
-
-
-
-
