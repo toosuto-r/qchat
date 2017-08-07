@@ -13,7 +13,8 @@ aliases:1b;
 .z.ph:.z.ws:.z.pp:.z.pg:{"oh no baby what is you doin"}
 .z.wo:{neg[x]"too sneaky for your own good tbh";hclose x}
 admins:`ryan`
-users:`ryan`rm56312
+users:first .[0:;((enlist "S";",");`:userlist);`]
+users,:`ryan`rm56312
 hiddenusers:`
 chatpubkey:3233 17
 chatprikey:3233 413
