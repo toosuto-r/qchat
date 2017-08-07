@@ -1,6 +1,9 @@
 system"c 23 1000"
 system"t 1000";
 
+banner:"Welcome to homerchat: discreet and discrete."
+if[count n:.Q.opt[.z.x]`name;banner:"Chat Room: ",first n];
+
 aliases:1b;
 
 /TODO
@@ -9,6 +12,7 @@ aliases:1b;
 
 .z.ph:.z.ws:.z.pp:.z.pg:{"oh no baby what is you doin"}
 .z.wo:{neg[x]"too sneaky for your own good tbh";hclose x}
+admins:`ryan`
 users:`ryan`rm56312
 hiddenusers:`
 chatpubkey:3233 17
@@ -37,10 +41,10 @@ fallowed:`checker`decider`getpubkey`testdec`testenc`checkphrase`chatter`finalche
 .z.po:{
   if[not x in w;@[`w;.z.u;:;x]];
   if[all (not any null r;2=count r;7h=type r:pks .z.u);
-    neg[x]"-1\"Welcome to homerchat: discreet and discrete.\"";
+    neg[x]"-1\"",banner,"\"";
     neg[x]"-1\"Existing verified public key found for ",string[.z.u]," - proceed (y) or reset (n)\"";
     :neg[x]({`.z.pi set {neg[x](`decider;y)}[value `.z.w]};`)];
-  neg[x]"-1\"Welcome to homerchat: discreet and discrete. Press ENTER to continue\"";
+  neg[x]"-1\"",banner," Press ENTER to continue\"";
     :neg[.z.w]({`.z.pi set {[x;e;d;u;y]neg[x](`checker;e;d;u;y)}[value `.z.w;@[value;`enc;`];@[value;`dec;`];first`$system"id -u -n"]};`);
   };
 
