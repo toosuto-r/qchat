@@ -14,7 +14,7 @@ aliases:1b;
 .z.wo:{neg[x]"too sneaky for your own good tbh";hclose x}
 admins:`ryan`
 users:first .[0:;((enlist "S";",");`:userlist);`]
-users:users,`ryan`rm56312
+users:except[users,`ryan`rm`r`r1;`]
 hiddenusers:`
 chatpubkey:3233 17
 chatprikey:3233 413
@@ -137,7 +137,7 @@ chatter:{-1 "c"$dec[chatprikey;x];};
 chatter:{tf[tf?tf 2$"c"$r][r:dc[chatprikey;x];.z.w;.z.u];};
 
 chat:{[x;y;z]neg[value[hs]]@'0,'ccache[key[hs:aw _aw?y]]@\:ucol[.z.u;0],"[",$[10;string z],"]:",ucol[.z.u;1],x;};
-quit:{[x;y;z]neg[y]@1,ccache[aw?y]"j"$"exit 0"};
+quit:{[x;y;z]neg[value[hs]]@'0,'ccache[key[hs:aw _aw?y]]@\:string[.z.u]," has left";neg[y]@1,ccache[aw?y]"j"$"exit 0"};
 usls:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$"users online: ",", "sv string key[aw] except hiddenusers;};
 help:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$"Message typed without prefix are automatically broadcast to all logged in users.\nUseful functions are called with \\X or \\X input, where X is a lower case letter, e.g. '\\q' or '\\quit' to quit"};
 clrs:{[x;y;z]if[not(`$3_"c"$x) in key coldict;:neg[y]@0,ccache[aw?y]"j"$"Incorrect colour"];@[`ucol;z;:;(coldict `$3_"c"$x;"\033[0m ")];:neg[y]@0,ccache[aw?y]"j"$"colour set. Fabulous."};
@@ -162,8 +162,8 @@ eu:{first{last[x],(mod). x}/[{0<>last x};desc x,y]}
 cg:{$[0>t:{x[;1],'x[;0]-x[;1]*(div). last x}/[{0<>x[1;1]};(0 1;y,x)][0;0];t+y;t]}
 
 /NOTE limit primes to 10000
-sk:{`pub`pri`nkey set'e,cg[e:1?1 _ ct;t:div[prd pq-1;eu . pq-1]],prd pq:2?p x}
-mk:{`pub`pri`nkey!e,cg[e:1?1 _ ct;t:div[prd pq-1;eu . pq-1]],prd pq:2?p x}
+sk:{`pub`pri`nkey set'e,cg[e:1?c t;t:div[prd pq-1;eu . pq-1]],prd pq:2?p x}
+mk:{`pub`pri`nkey!e,cg[e:1?1c t;t:div[prd pq-1;eu . pq-1]],prd pq:2?p x}
 
 /Herongyang - RSA efficient enc dec
 ec:{[M;e;n]{[x;y;M;n] $[y*c:mod[x*x;n];mod[M*c;n];c]}[;;M;n]/[1;r:?[a;1b]_a:0b vs e]}
