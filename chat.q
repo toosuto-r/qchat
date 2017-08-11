@@ -2,19 +2,23 @@ system"c 23 1000"
 system"t 1000";
 
 banner:"Welcome to homerchat: discreet and discrete."
-if[count n:.Q.opt[.z.x]`name;banner:"Chat Room: ",first n];
+if[count n:raze .Q.opt[.z.x]`name;banner:"Chat Room: ",n];
 
 aliases:1b;
-
+challenge:0b;
+persist:1b;
+qloc:@[system;"which q";getenv[`HOME],"/q/l32/q"]
 /TODO
-/Protect with .z.ps checking for type and first arg symbol in func list
+/set challenge mode - if not, deliver enc and dec functions
+/close handles on client? Make sure client isn't "catching" anything? put in checker
 /Chat name, \n for new rooms, \k for kill
+/Chat admins
 
 .z.ph:.z.ws:.z.pp:.z.pg:{"oh no baby what is you doin"}
 .z.wo:{neg[x]"too sneaky for your own good tbh";hclose x}
-admins:`ryan`
-users:first .[0:;((enlist "S";",");`:userlist);`]
-users:except[users,`ryan`rm`r`r1;`]
+admins:$[count a:.Q.opt[.z.x]`admin;`$a;`ryan]
+users:raze .[0:;((enlist "S";",");chatfile:hsym`$raze string md5 banner);`$"-"vs $[count ul:first .Q.opt[.z.x]`users;ul;""]]
+chatfile 0: string users;
 hiddenusers:`
 chatpubkey:3233 17
 chatprikey:3233 413
@@ -41,6 +45,8 @@ fallowed:`checker`decider`getpubkey`testdec`testenc`checkphrase`chatter`finalche
 
 .z.po:{
   if[not x in w;@[`w;.z.u;:;x]];
+  neg[x](system;"p 0");
+  neg[x]({hclose each key[.z.W] except value x};`.z.w);
   if[all (not any null r;2=count r;7h=type r:pks .z.u);
     neg[x]"-1\"",banner,"\"";
     neg[x]"-1\"Existing verified public key found for ",string[.z.u]," - proceed (y) or reset (n)\"";
@@ -60,21 +66,25 @@ decider:{if[first[x]="y";
   }
 
 checker:{[x;y;u;z]
-  if[not[aliases] and not .z.u~u;:fail"No aliases allowed - try again with your real name. DISCO NECKTING"];
-  if[not count edf:edf where (not `~/:edf)and 99<type each edf:x,y;
-    neg[.z.w]"-1\"WARNING - No dyadic encryption/decryption functions names 'enc' and 'dec' found.
-              \\n Function should be dyadic and should take hey and message as args.
-              \\n e.g. enc[3233 17;\\\"hello\\\"], dec[3233 413;2170 1313 745 745 2185]
-              \\n DISCONNECTING\"";
-    neg[.z.w](system;"x .z.pi");
-    :neg[.z.w]"hclose value `.z.w"];
-  if[not all 2=count'[get'[edf][;1]];:fail .Q.s "WARNING - enc and dec should be dyadic, taking to key components as a list, and the message to <en|de>crypt, e.g. enc[3233 17;\"hello\"] - DISCONNECTING"];
-    /neg[.z.w]"-1\"WARNING - enc and dec should be dyadic, taking to key components as a list, and the message to <en|de>crypt, e.g. enc[3233 17;\\\"hello\\\"] - DISCONNECTING\"";
-    /:neg[.z.w]"hclose value `.z.w"];
+  if[not[aliases] and not .z.u~u;:fail"No aliases allowed - try again with your real name - DISCONNECTING"];
+  if[challenge;
+    if[not count edf:edf where (not `~/:edf)and 99<type each edf:x,y;
+      neg[.z.w]"-1\"WARNING - No dyadic encryption/decryption functions names 'enc' and 'dec' found.
+                \\n Function should be dyadic and should take hey and message as args.
+                \\n e.g. enc[3233 17;\\\"hello\\\"], dec[3233 413;2170 1313 745 745 2185]
+                \\n DISCONNECTING\"";
+      neg[.z.w](system;"x .z.pi");
+      :neg[.z.w]"hclose value `.z.w"];
+    if[not all 2=count'[get'[edf][;1]];:fail .Q.s "WARNING - enc and dec should be dyadic, taking to key components as a list, and the message to <en|de>crypt, e.g. enc[3233 17;\"hello\"] - DISCONNECTING"];];
+      /neg[.z.w]"-1\"WARNING - enc and dec should be dyadic, taking to key components as a list, and the message to <en|de>crypt, e.g. enc[3233 17;\\\"hello\\\"] - DISCONNECTING\"";
+      /:neg[.z.w]"hclose value `.z.w"];
   neg[.z.w]"-1\"Please enter PUBLIC KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\"";
   neg[.z.w]({`.z.pi set {neg[x](`getpubkey;$[like[i:-1_y;"`:*"]; first @[read0;`$1_i;"wrong"];i])}[value `.z.w]};`);};
 
 fail:{neg[.z.w]"-1\"",x,"\"";
+  if[not challenge;
+    neg[.z.w]({.[`.;();_;`dec]};`);
+    neg[.z.w]({.[`.;();_;`enc]};`)];
   neg[.z.w](system;"x .z.pi");
   :neg[.z.w]"hclose value `.z.w";};
 
@@ -87,7 +97,7 @@ getpubkey:{
   neg[.z.w]"-1\"Please enter PRIVATE KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\"";
   neg[.z.w]({`.z.pi set y@value x}[`.z.w];nspk);};
 
-nspk:{`prikey set r:"J"$" "vs $[like[i:-1_y;"`:*"];first @[read0;`:$1_i;"wrong"];i];
+nspk:{`prikey set r:"J"$" "vs $[like[i:-1_y;"`:*"];first @[read0;hsym`$1_i;"wrong"];i];
   if[not all (not any null r;2=count r;7h=type r);
     -1"WARNING - Input Incorrect - DISCONNECTING";
     system"x .z.pi";
@@ -97,6 +107,9 @@ nspk:{`prikey set r:"J"$" "vs $[like[i:-1_y;"`:*"];first @[read0;`:$1_i;"wrong"]
 
 testdec:{
   neg[.z.w]"-1\"Testing decryption - waiting on return message:\"";
+  if[not challenge;
+    neg[.z.w]({`enc set x};ec);
+    neg[.z.w]({`dec set x};dc);];
   neg[.z.w]({neg[.z.w](`checkphrase;.[dec;(prikey;x);"FAILURE"])};(ec[tpks .z.u;testphrase]));
   neg[.z.w]({`.z.pi set {neg[x](`testenc;y)}[value `.z.w]};`);};
 
@@ -133,20 +146,50 @@ endost:{neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:"Ended ostracism voting";
   `ostd set enlist[`]!enlist`;
   };
 
-chatter:{-1 "c"$dec[chatprikey;x];};
 chatter:{tf[tf?tf 2$"c"$r][r:dc[chatprikey;x];.z.w;.z.u];};
 
 chat:{[x;y;z]neg[value[hs]]@'0,'ccache[key[hs:aw _aw?y]]@\:ucol[.z.u;0],"[",$[10;string z],"]:",ucol[.z.u;1],x;};
 quit:{[x;y;z]neg[value[hs]]@'0,'ccache[key[hs:aw _aw?y]]@\:string[.z.u]," has left";neg[y]@1,ccache[aw?y]"j"$"exit 0"};
 usls:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$"users online: ",", "sv string key[aw] except hiddenusers;};
+info:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$banner,". Chat admins: ",", "sv string admins};
 help:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$"Message typed without prefix are automatically broadcast to all logged in users.\nUseful functions are called with \\X or \\X input, where X is a lower case letter, e.g. '\\q' or '\\quit' to quit"};
+
+kick:{[x;y;z]if[not .z.u in admins;:neg[y]@0,ccache[aw?y]"j"$"Kicking is an admin-only action"];
+  if[not in[t:`$3_"c"$x;users];:neg[y]@0,ccache[aw?y]"j"$"Not a user"];
+  neg[value[hs]]@'0,'ccache[key[hs:aw _aw?y]]@\:string[t]," has been permanently banished";
+  neg[aw t]@1,ccache[t]"j"$"exit 0";
+  chatfile 0: string users except t}
+
+addu:{[x;y;z]if[not .z.u in admins;:neg[y]@0,ccache[aw?y]"j"$"Adding is an admin-only action"];
+  if[not in[t:`$3_"c"$x;users];:neg[y]@0,ccache[aw?y]"j"$"Not a user"];
+  neg[value[hs]]@'0,'ccache[key[hs:aw _aw?y]]@\:string[t]," has been added";
+  chatfile 0: string users,t}
+
 clrs:{[x;y;z]if[not(`$3_"c"$x) in key coldict;:neg[y]@0,ccache[aw?y]"j"$"Incorrect colour"];@[`ucol;z;:;(coldict `$3_"c"$x;"\033[0m ")];:neg[y]@0,ccache[aw?y]"j"$"colour set. Fabulous."};
+
+thum:{[x;y;z]chat[t:"i"$"\n         _     \n        |)\\     \n        :  )    \n_____  /  /__   \n     |`  (____) \n     |   |(____)\n     |__.(____) \n_____|.__(___)";y;z];neg[y]@0,ccache[aw?y]t};
+
 ostr:{[x;y;z]neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:string[.z.u]," has initiated ostracism mode.\nYou have 10 seconds to vote for a current user who will be kicked.";
   `cron insert (.z.P+"v"$10;`endost);
   @[`tf;"";:;ostv];};
+
 ostv:{[x;y;z]@[`ostd;.z.u;:;users first 1?where 1&count'[ss/:["c"$x;string[users]]]]};
 
-tf:("";"\\q";"\\u";"\\h";"\\c";"\\o")!(chat;quit;usls;help;clrs;ostr);
+mkct:{[x;y;z] if[2>count r:r where 1&count'[r:" "vs "c"$3_x];:neg[y]@0,ccache[aw?y]"j"$"Please input in format CHATNAME USER1 USER2 USER3... to add users from scratch or CHATNAME -USER1 USER2... to make a new chat with all but the named users from this chat"];
+  show $[`;raze string md5 "Chat Room: ",r 0]; show r 0;
+  if[$[`;raze string md5 "Chat Room: ",r 0] in key`:.; :neg[y]@0,ccache[aw?y]"j"$"Chat already exists";]
+  show flags:" -name ",first[r]," -admin ",string[.z.u]," -users ","-"sv nu:(),/:$["-"~r[1;0];string[.z.u, users]except 1_r;(1_r),enlist string .z.u];
+  show chatcmd:$[persist;"nohup ",qloc;"q"]," chat.q -p ",string[np:{$[x~r:@[system;"lsof -i :",string x;x];x;x+1i]}/[system"p"]],flags,$[persist;" &";""];
+  system chatcmd;
+  neg[aw[th]]@'0,'ccache[th:inter[key aw;.z.u,`$nu]]@\:string[.z.u]," has made a new chat on port: ",string[np],".";
+  }
+
+dlte:{[x;y;z]if[not .z.u in admins;:neg[y]@0,ccache[aw?y]"j"$"Deleting the chatroom is an admin-only action"];
+  if[(not "confirm"~i)or  not count i:3_"c"$x;:neg[y]@0,ccache[aw?y]"j"$"type \\d confirm"];
+  shutdown`;
+  exit 0;}
+
+tf:("";"\\q";"\\u";"\\i";"\\h";"\\c";"\\k";"\\o";"\\y";"\\a";"\\n";"\\d")!(chat;quit;usls;info;help;clrs;kick;ostr;thum;addu;mkct;dlte);
 
 shutdown:{quit["";;""]each value aw}
 
@@ -161,13 +204,9 @@ eu:{first{last[x],(mod). x}/[{0<>last x};desc x,y]}
 /congruence (ext Euclid)
 cg:{$[0>t:{x[;1],'x[;0]-x[;1]*(div). last x}/[{0<>x[1;1]};(0 1;y,x)][0;0];t+y;t]}
 
-/NOTE limit primes to 10000
+/NOTE limit primes to 10000?
 sk:{`pub`pri`nkey set'e,cg[e:1?c t;t:div[prd pq-1;eu . pq-1]],prd pq:2?p x}
 mk:{`pub`pri`nkey!e,cg[e:1?1c t;t:div[prd pq-1;eu . pq-1]],prd pq:2?p x}
-
-/Herongyang - RSA efficient enc dec
-ec:{[M;e;n]{[x;y;M;n] $[y*c:mod[x*x;n];mod[M*c;n];c]}[;;M;n]/[1;r:?[a;1b]_a:0b vs e]}
-ds:{[C;d;n]{[x;y;C;n] $[y*m:mod[x*x;n];mod[C*m;n];m]}[;;C;n]/[1;r:?[a;1b]_a:0b vs d]}
 
 ec:{.[{{[x;y;M;n]$[y*c:mod[x*x;n];mod[M*c;n];c]}[;;z;x]/[1;r:?[a;1b]_a:0b vs y]};x]each "j"$y}
 dc:{.[{{[x;y;C;n]$[y*m:mod[x*x;n];mod[C*m;n];m]}[;;z;x]/[1;r:?[a;1b]_a:0b vs y]};x]each y}
