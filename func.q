@@ -41,4 +41,10 @@ dlte:{[x;y;z]if[not .z.u in admins;:neg[y]@0,ccache[aw?y]"j"$"Deleting the chatr
   shutdown`;
   exit 0;}
 
+ghostword:""
+wl:read0`:words
+ghostplayers:0#`
+lastghost:0#`
+ghst:{[x;y;z] if[0=count l:trim "c"$3_x;:neg[y]@0,ccache[aw?y]"j"$"players:",", "sv string ghostplayers];}
+
 tf,:("\\u";"\\i";"\\h";"\\c";"\\k";"\\o";"\\y";"\\a";"\\n";"\\d")!(usls;info;help;clrs;kick;ostr;thum;addu;mkct;dlte);

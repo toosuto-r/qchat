@@ -1,5 +1,3 @@
-/TODO
-
 system"c 23 1000"
 system"t 1000";
 
@@ -10,12 +8,14 @@ aliases:1b;
 challenge:0b;
 persist:1b;
 record:1b;
+
 qloc:@[system;"which q";getenv[`HOME],"/q/l32/q"]
+connectedusers:@[get;`:cu;0#`]
 
-connectedusers:get`:cu
-
-.z.ph:.z.ws:.z.pp:.z.pg:{"oh no baby what is you doin"}
-.z.wo:{neg[x]"too sneaky for your own good tbh";hclose x}
+.z.exit:{shutdown`}
+.z.pi:{if[0<>.z.w;:neg[.z.w]"-1\"Forbidden - use a full q process.\""];.Q.s @[value;x;{'"nw"}]}
+.z.ps:.z.po:.z.pm:.z.ph:.z.ws:.z.pp:.z.pg:{neg[.z.w]"-1\"oh no baby what is you doin\"";hclose[.z.w]}
+.z.wo:{neg[x]"-1\"too sneaky for your own good tbh\"";hclose x}
 admins:$[count a:.Q.opt[.z.x]`admin;`$a;`ryan]
 users:raze .[0:;((enlist "S";",");chatfile:hsym`$raze string md5 banner);`$"-"vs $[count ul:first .Q.opt[.z.x]`users;ul;""]]
 chatfile 0: string users;
@@ -34,11 +34,8 @@ ucol:enlist[`]!enlist""
 
 fallowed:`checker`decider`getpubkey`testdec`testenc`checkphrase`chatter`finalcheck
 .z.ps:{if[x[0] in fallowed;:value x];neg[.z.w]"-1\"Rude.\""}
-
 .z.pw:{[u;p]u in users}
-
 .z.pc:{.[`w;();_;w?x];if[x in aw;.[`aw;();_;aw?x]];};
-
 .z.po:{
   if[not x in w;@[`w;.z.u;:;x]];
   neg[x](system;"p 0");
@@ -163,8 +160,8 @@ eu:{first{last[x],(mod). x}/[{0<>last x};desc x,y]}
 cg:{$[0>t:{x[;1],'x[;0]-x[;1]*(div). last x}/[{0<>x[1;1]};(0 1;y,x)][0;0];t+y;t]}
 
 /general ext. Euclid
-ex:{{(x[1];(x[0]-x[1]*q:(div). x[;0]))}/[{0<x[1;0]};(x,y),'(1 0;0 1)]}[3120;17]
-cg1:{$[0>x[0;2];sum x[;2];x[1;2]]ex . desc x,y}
+ex:{{(x[1];(x[0]-x[1]*q:(div). x[;0]))}/[{0<x[1;0]};(x,y),'(1 0;0 1)]}
+cg1:{{$[0>x[0;2];sum x[;2];x[1;2]]}ex . desc x,y}
 
 /NOTE limit primes to 10000?
 sk:{`pub`pri`nkey set'e,cg[e:1?c t;t:div[prd pq-1;eu . pq-1]],prd pq:2?p x}
