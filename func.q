@@ -48,3 +48,20 @@ lastghost:0#`
 ghst:{[x;y;z] if[0=count l:trim "c"$3_x;:neg[y]@0,ccache[aw?y]"j"$"players:",", "sv string ghostplayers];}
 
 tf,:("\\u";"\\i";"\\h";"\\c";"\\k";"\\o";"\\y";"\\a";"\\n";"\\d")!(usls;info;help;clrs;kick;ostr;thum;addu;mkct;dlte);
+
+
+/TODO
+/
+q) [jmcmurray ]: if you feel like adding another feature, could put a notification about new messages in the window title with something like 1"\033];New Message Received - homerchat\007";
+ [jmcmurray ]: ;)
+haha I might actually
+q)I definitely have a couple more planned
+q) [jmcmurray ]: hmm, maybe I should revisit generating the keys before then, I'm still just using the ones you sent me originally
+ [jmcmurray ]: I bet there's an escape code for the terminal bell as well, to really annoy people lol
+haha man that is some evil thinking
+/timestamps? "new" timestamps?
+/clearing? using \r?
+/https://en.wikipedia.org/wiki/ANSI_escape_code#CSI_codes
+/1"\033[F\033[0J";
+/{-1"\033[F\033[0J\r";}
+/.z.pi:{-1"\033[F\r\033[0J\033[F\r";}
