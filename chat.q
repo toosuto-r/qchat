@@ -113,7 +113,7 @@ testenc:{
   neg[.z.w]"-1\"Testing encryption - waiting on return message:\"";
   neg[.z.w](set;`chatkey;chatpubkey);
   neg[.z.w]({neg[.z.w](`finalcheck;.[enc;(chatkey;x);"FAILURE"])};(testphrase));
-  neg[.z.w]({`.z.pi set {neg[x](`chatter;enc[chatkey;-1_y])}[value `.z.w]};`);
+  neg[.z.w]({`.z.pi set {neg[x](`chatter;enc[chatkey;-1_y]);-1"\033[F\r\033[0J\033[F\r";}[value `.z.w]};`);
   };
 
 finalcheck:{if[c:testphrase~"c"$dc[chatprikey;x];
@@ -141,7 +141,7 @@ endost:{neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:"Ended ostracism voting";
 
 chatter:{tf[tf?tf 2$"c"$r][r:dc[chatprikey;x];.z.w;.z.u];};
 
-chat:{[x;y;z]neg[value[hs]]@'0,'ccache[key[hs:aw _aw?y]]@\:ucol[.z.u;0],"[",$[10;string z],"]:",ucol[.z.u;1],x;};
+chat:{[x;y;z]neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:ucol[.z.u;0],"[",$[10;string z],"]:",ucol[.z.u;1],x;};
 quit:{[x;y;z]neg[value[hs]]@'0,'ccache[key[hs:aw _aw?y]]@\:string[.z.u]," has left";neg[y]@1,ccache[aw?y]"j"$"exit 0"};
 
 tf:("";"\\q")!(chat;quit);
