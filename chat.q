@@ -24,7 +24,7 @@ chatpubkey:ckeys 0
 chatprikey:ckeys 1
 cron:([]time:"p"$();action:`$())
 
-.z.ts:{pi:exec i from cron where time<.z.P;if[count pi;r:exec action from cron where i=pi;delete from `cron where i=pi;value'[r]@\:`]}
+.z.ts:{pi:exec i from cron where time<.z.P;if[count pi;r:exec action from cron where i in pi;delete from `cron where i in pi;value'[r]@\:`]}
 
 tpks:aw:w:()!()
 pks:@[get;`:pks;()!()]
@@ -127,18 +127,18 @@ finalcheck:{if[c:testphrase~"c"$dc[chatprikey;x];
   neg[value[hs]]@'0,'ccache[key[hs:aw _ aw?.z.w]]@\:string[.z.u]," has joined";};
 
 
-endost:{neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:"Ended ostracism voting";
+endost:{neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:"\033[GEnded ostracism voting";
   @[`tf;"";:;chat];
   h:aw u:c?max c:1_count'[group raze ostd];
   if[not n:null h;
-    neg[h]@0,ccache[u]"j"$"You know what you did.";
+    neg[h]@0,ccache[u]"j"$"\033[GYou know what you did.";
     neg[h]@1,ccache[u]"j"$"exit 0";
-    neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:string[u]," has been BANISHED"];
-  if[n;neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:"Insufficient ill-will to kick."];
+    neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[G",string[u]," has been BANISHED"];
+  if[n;neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[GInsufficient ill-will to kick."];
   `ostd set enlist[`]!enlist`;
   };
 
-msgtime:{if[lastmsg within .z.P-"v"$60 30;neg[value[aw]]@'0,'ccache[key[aw]]@\:"Last message at: ",string lastmsg-"v"$30];
+msgtime:{if[lastmsg within .z.P-"v"$60 30;neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[GLast message at: ",string lastmsg-"v"$30];
    `cron insert (.z.P+"v"$30;`msgtime);}
 msgtime`
 
@@ -146,10 +146,10 @@ chatter:{tf[tf?tf 2$"c"$r][r:dc[chatprikey;x];.z.w;.z.u];};
 
 coldict:(`default`black`red`green`yellow`blue`magenta`cyan`gray!(" \033[0m";" \033[1;30m";" \033[1;31m";" \033[1;32m";" \033[1;33m";" \033[1;34m";" \033[1;35m";" \033[1;36m";" \033[1;37m"));
 
-chat:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@\:ucol[.z.u;0],"[",$[10;string z],"]:",ucol[.z.u;1],x;};
+chat:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[G",ucol[.z.u;0],"[",$[10;string z],"]:",ucol[.z.u;1],x;};
 quit:{[x;y;z]neg[y]@1,ccache[aw?y]"j"$"exit 0"};
-help:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$"Message typed without prefix are automatically broadcast to all logged in users.\nUseful functions are called with \\X or \\X input, where X is a lower case letter, e.g. '\\q' or '\\quit' to quit"};
-clrs:{[x;y;z]if[not(`$3_"c"$x) in key coldict;:neg[y]@0,ccache[aw?y]"j"$"Incorrect colour"];@[`ucol;z;:;(coldict `$3_"c"$x;"\033[0m ")];:neg[y]@0,ccache[aw?y]"j"$"colour set. Fabulous."};
+help:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$"\033[GMessage typed without prefix are automatically broadcast to all logged in users.\nUseful functions are called with \\X or \\X input, where X is a lower case letter, e.g. '\\q' or '\\quit' to quit"};
+clrs:{[x;y;z]if[not(`$3_"c"$x) in key coldict;:neg[y]@0,ccache[aw?y]"j"$"Incorrect colour"];@[`ucol;z;:;(coldict `$3_"c"$x;"\033[0m ")];:neg[y]@0,ccache[aw?y]"j"$"\033[Gcolour set. Fabulous."};
 
 tf:("";"\\q";"\\h";"\\c")!(chat;quit;help;clrs);
 
