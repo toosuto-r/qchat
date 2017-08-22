@@ -1,4 +1,3 @@
-system"c 23 1000"
 system"t 1000";
 
 banner:"Welcome to homerchat: discreet and discrete."
@@ -13,16 +12,16 @@ qloc:@[system;"which q";getenv[`HOME],"/q/l32/q"]
 connectedusers:@[get;`:cu;0#`]
 
 .z.exit:{shutdown`}
-.z.pi:{if[0<>.z.w;:neg[.z.w]"-1\"Forbidden - use a full q process.\""];.Q.s @[value;x;{'"nw"}]}
+.z.pi:{if[.z.w;:neg[.z.w]"-1\"Forbidden - use a full q process.\""];.Q.s @[value;x;{'"nw"}]}
 .z.ps:.z.po:.z.pm:.z.ph:.z.ws:.z.pp:.z.pg:{neg[.z.w]"-1\"oh no baby what is you doin\"";hclose[.z.w]}
 .z.wo:{neg[x]"-1\"too sneaky for your own good tbh\"";hclose x}
 admins:$[count a:.Q.opt[.z.x]`admin;`$a;`ryan]
 users:raze .[0:;((enlist "S";",");chatfile:hsym`$raze string md5 banner);`$"-"vs $[count ul:first .Q.opt[.z.x]`users;ul;""]]
 chatfile 0: string users;
 hiddenusers:`
-chatpubkey:3233 17
-chatprikey:3233 413
-
+ckeys:$[`key in key`;2 cut .key.mk[5000][`nkey`pub`nkey`pri];(3233 17;3233 413)]
+chatpubkey:ckeys 0
+chatprikey:ckeys 1
 cron:([]time:"p"$();action:`$())
 
 .z.ts:{pi:exec i from cron where time<.z.P;if[count pi;r:exec action from cron where i=pi;delete from `cron where i=pi;value'[r]@\:`]}
@@ -31,14 +30,16 @@ tpks:aw:w:()!()
 pks:@[get;`:pks;()!()]
 ccache:@[get;`:ccache;()!()]
 ucol:enlist[`]!enlist""
+lastmsg:0
 
 fallowed:`checker`decider`getpubkey`testdec`testenc`checkphrase`chatter`finalcheck
 .z.ps:{if[x[0] in fallowed;:value x];neg[.z.w]"-1\"Rude.\""}
 .z.pw:{[u;p]u in users}
-.z.pc:{.[`w;();_;w?x];if[x in aw;.[`aw;();_;aw?x]];};
+.z.pc:{.[`w;();_;w?x];if[x in aw;neg[value[hs]]@'0,'ccache[key[hs:aw _aw?x]]@\:string[aw?x]," has left";.[`aw;();_;aw?x]];}
 .z.po:{
   if[not x in w;@[`w;.z.u;:;x]];
   neg[x](system;"p 0");
+  neg[x](system;"c 25 1000");
   neg[x]({hclose each key[.z.W] except value x};`.z.w);
   if[all (not any null r;2=count r;7h=type r:pks .z.u);
     neg[x]"-1\"",banner,"\"";
@@ -69,8 +70,6 @@ checker:{[x;y;u;z]
       neg[.z.w](system;"x .z.pi");
       :neg[.z.w]"hclose value `.z.w"];
     if[not all 2=count'[get'[edf][;1]];:fail .Q.s "WARNING - enc and dec should be dyadic, taking to key components as a list, and the message to <en|de>crypt, e.g. enc[3233 17;\"hello\"] - DISCONNECTING"];];
-      /neg[.z.w]"-1\"WARNING - enc and dec should be dyadic, taking to key components as a list, and the message to <en|de>crypt, e.g. enc[3233 17;\\\"hello\\\"] - DISCONNECTING\"";
-      /:neg[.z.w]"hclose value `.z.w"];
   neg[.z.w]"-1\"Please enter PUBLIC KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\"";
   neg[.z.w]({`.z.pi set {neg[x](`getpubkey;$[like[i:-1_y;"`:*"]; first @[read0;`$1_i;"wrong"];i])}[value `.z.w]};`);};
 
@@ -117,7 +116,7 @@ testenc:{
   };
 
 finalcheck:{if[c:testphrase~"c"$dc[chatprikey;x];
-    @[`ccache;.z.u;:;ec[tpks .z.u;"c"$til 255]];
+    @[`ccache;.z.u;:;ec[tpks .z.u;"c"$til 1000]];
     `:ccache set ccache;
     @[`aw;.z.u;:;.z.w];
     @[`pks;.z.u;:;tpks .z.u];
@@ -139,33 +138,22 @@ endost:{neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:"Ended ostracism voting";
   `ostd set enlist[`]!enlist`;
   };
 
+msgtime:{if[lastmsg within .z.P-"v"$60 30;neg[value[aw]]@'0,'ccache[key[aw]]@\:"Last message at: ",string lastmsg-"v"$30];
+   `cron insert (.z.P+"v"$30;`msgtime);}
+msgtime`
+
 chatter:{tf[tf?tf 2$"c"$r][r:dc[chatprikey;x];.z.w;.z.u];};
 
-chat:{[x;y;z]neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:ucol[.z.u;0],"[",$[10;string z],"]:",ucol[.z.u;1],x;};
-quit:{[x;y;z]neg[value[hs]]@'0,'ccache[key[hs:aw _aw?y]]@\:string[.z.u]," has left";neg[y]@1,ccache[aw?y]"j"$"exit 0"};
+coldict:(`default`black`red`green`yellow`blue`magenta`cyan`gray!(" \033[0m";" \033[1;30m";" \033[1;31m";" \033[1;32m";" \033[1;33m";" \033[1;34m";" \033[1;35m";" \033[1;36m";" \033[1;37m"));
 
-tf:("";"\\q")!(chat;quit);
+chat:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@\:ucol[.z.u;0],"[",$[10;string z],"]:",ucol[.z.u;1],x;};
+quit:{[x;y;z]neg[y]@1,ccache[aw?y]"j"$"exit 0"};
+help:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$"Message typed without prefix are automatically broadcast to all logged in users.\nUseful functions are called with \\X or \\X input, where X is a lower case letter, e.g. '\\q' or '\\quit' to quit"};
+clrs:{[x;y;z]if[not(`$3_"c"$x) in key coldict;:neg[y]@0,ccache[aw?y]"j"$"Incorrect colour"];@[`ucol;z;:;(coldict `$3_"c"$x;"\033[0m ")];:neg[y]@0,ccache[aw?y]"j"$"colour set. Fabulous."};
+
+tf:("";"\\q";"\\h";"\\c")!(chat;quit;help;clrs);
 
 shutdown:{quit["";;""]each value aw}
-
-p:{{(1+y 0;y[1] except s+a*til 0|1+div[x-s:a*a;a:y[1]y 0])}[x]/[{x[0]<count[x 1]div 2};(0;2+til x-1)]1}
-
-/coprimes jg
-c:{where not til[x] in raze 1,a*'til@'x div a:{x where 1=sum x=/:x*'x div/:x}i[w],d w:where x=i*d:x div i:1_1+til floor sqrt x}
-
-/euclid gcd
-eu:{first{last[x],(mod). x}/[{0<>last x};desc x,y]}
-
-/congruence (ext Euclid)
-cg:{$[0>t:{x[;1],'x[;0]-x[;1]*(div). last x}/[{0<>x[1;1]};(0 1;y,x)][0;0];t+y;t]}
-
-/general ext. Euclid
-ex:{{(x[1];(x[0]-x[1]*q:(div). x[;0]))}/[{0<x[1;0]};(x,y),'(1 0;0 1)]}
-cg1:{{$[0>x[0;2];sum x[;2];x[1;2]]}ex . desc x,y}
-
-/NOTE limit primes to 10000?
-sk:{`pub`pri`nkey set'e,cg[e:1?c t;t:div[prd pq-1;eu . pq-1]],prd pq:2?p x}
-mk:{`pub`pri`nkey!e,cg[e:1?1c t;t:div[prd pq-1;eu . pq-1]],prd pq:2?p x}
 
 ec:{.[{{[x;y;M;n]$[y*c:mod[x*x;n];mod[M*c;n];c]}[;;z;x]/[1;r:?[a;1b]_a:0b vs y]};x]each "j"$y}
 dc:{.[{{[x;y;C;n]$[y*m:mod[x*x;n];mod[C*m;n];m]}[;;z;x]/[1;r:?[a;1b]_a:0b vs y]};x]each y}
