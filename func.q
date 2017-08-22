@@ -42,7 +42,9 @@ dlte:{[x;y;z]if[not .z.u in admins;:neg[y]@0,ccache[aw?y]"j"$"\033[GDeleting the
   exit 0;}
 
 emdict:(!)."Sj"$flip {enlist[("";"Available: ",", "sv x[;0])],x}2 cut read0`:emojis
-emji:{[x;y;z] if[not(`$3_"c"$x) in key emdict;:neg[y]@0,ccache[aw?y]"j"$"\033[GUnknown emoji - meme deficiency detected."];chat[;y;z]emdict `$"c"$3_x;}
+emji:{[x;y;z] if[not(`$3_"c"$x) in key emdict;:neg[y]@0,ccache[aw?y]"j"$"\033[GUnknown emoji - meme deficiency detected."];
+  if[null`$3_"c"$x;:neg[y]@0,ccache[aw?y]emdict`];
+  chat[;y;z]emdict `$"c"$3_x;}
 
 /ghostword:""
 /wl:read0`:words
