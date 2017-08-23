@@ -29,7 +29,7 @@ cron:([]time:"p"$();action:`$())
 tpks:aw:w:()!()
 pks:@[get;`:pks;()!()]
 ccache:@[get;`:ccache;()!()]
-ucol:enlist[`]!enlist""
+ucol:@[get;`:ucol;enlist[`]!enlist""]
 lastmsg:0
 
 fallowed:`checker`decider`getpubkey`testdec`testenc`checkphrase`chatter`finalcheck
@@ -149,7 +149,10 @@ coldict:(`default`black`red`green`yellow`blue`magenta`cyan`gray!(" \033[0m";" \0
 chat:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[G",ucol[.z.u;0],"[",$[10;string z],"]:",ucol[.z.u;1],x;};
 quit:{[x;y;z]neg[y]@1,ccache[aw?y]"j"$"exit 0"};
 help:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$"\033[GMessage typed without prefix are automatically broadcast to all logged in users.\nUseful functions are called with \\X or \\X input, where X is a lower case letter, e.g. '\\q' or '\\quit' to quit"};
-clrs:{[x;y;z]if[not(`$3_"c"$x) in key coldict;:neg[y]@0,ccache[aw?y]"j"$"Incorrect colour"];@[`ucol;z;:;(coldict `$3_"c"$x;"\033[0m ")];:neg[y]@0,ccache[aw?y]"j"$"\033[Gcolour set. Fabulous."};
+clrs:{[x;y;z]if[not(`$3_"c"$x) in key coldict;:neg[y]@0,ccache[aw?y]"j"$"Incorrect colour"];
+  @[`ucol;z;:;(coldict `$3_"c"$x;"\033[0m ")];
+  `:ucol set ucol;
+  :neg[y]@0,ccache[aw?y]"j"$"\033[Gcolour set. Fabulous."};
 
 tf:("";"\\q";"\\h";"\\c")!(chat;quit;help;clrs);
 
