@@ -54,7 +54,8 @@ decider:{if[first[x]="y";
     neg[.z.w]({`enc set x};ec);
     neg[.z.w]({`dec set x};dc);
     @[`tpks;.z.u;:;pks .z.u];
-    :neg[.z.w]"-1\"Please enter PRIVATE KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\""];
+    :neg[.z.w]"-1$[`pri in key hsym `$getenv[`HOME],\"/.homerchat\";\"Found local private key from last session - re-use(y/n)?\";\"Please enter PRIVATE KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\"]"];
+    /:neg[.z.w]"-1\"Please enter PRIVATE KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\""];
   neg[.z.w]"-1\"Press ENTER to continue\"";
   :neg[.z.w]({`.z.pi set {[x;e;d;u;y]neg[x](`checker;e;d;u;y)}[value `.z.w;@[value;`enc;`];@[value;`dec;`];first`$system"id -u -n"]};`);
   }
@@ -85,11 +86,19 @@ testphrase:"testphrase if you are reading this something has gone wrong TESTPHRA
 getpubkey:{
   if[not all x in .Q.n," ";:fail"WARNING - Incorrect Input - DISCONNECTING"];
   @[`tpks;.z.u;:;"J"$" "vs x];
-  if[not all (not any null r;not 3233 17~desc r;2=count r;7h=type r:tpks .z.u);:fail"WARNING - Incorrect Input - DISCONNECTING"];
-  neg[.z.w]"-1\"Please enter PRIVATE KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\"";
+  if[not all (not any null r;not 323 17~desc r;2=count r;7h=type r:tpks .z.u);:fail"WARNING - Incorrect Input - DISCONNECTING"];
+  /neg[.z.w]"-1\"Please enter PRIVATE KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\"";
+  neg[.z.w]"-1$[`pri in key hsym `$getenv[`HOME],\"/.homerchat\";\"Found local private key from last session - re-use(y/n)?\";\"Please enter PRIVATE KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\"]";
   neg[.z.w]({`.z.pi set y@value x}[`.z.w];nspk);};
 
-nspk:{`prikey set r:"J"$" "vs $[like[i:-1_y;"`:*"];first @[read0;hsym`$1_i;"wrong"];i];
+nspk:{
+    if[`pri in key hsym `$getenv[`HOME],"/.homerchat";
+    if["y"~first y;
+      `prikey set get hsym `$getenv[`HOME],"/.homerchat/pri";
+      :neg[x](`testdec;`)];
+    -1"Please enter PRIVATE KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:";
+     y:,[read0 0;"\n"]];
+  `prikey set r:"J"$" "vs $[like[i:-1_y;"`:*"];first @[read0;hsym`$1_i;"wrong"];i];
   if[not all (not any null r;2=count r;7h=type r);
     -1"WARNING - Input Incorrect - DISCONNECTING";
     system"x .z.pi";
@@ -122,6 +131,7 @@ finalcheck:{if[c:testphrase~"c"$dc[chatprikey;x];
     @[`pks;.z.u;:;tpks .z.u];
     `:pks set pks;
     neg[.z.w]"-1\"Test successful - Chat enabled. Type \\\\h for help.\""];
+    neg[.z.w]"hsym[`$pkl:getenv[`HOME],\"/.homerchat/pri\"]set prikey;system \"chmod 600 \",pkl";
   if[not c;.[`tpks;();_;.z.u];:fail"WARNING - Incorrect Input - DISCONNECTING"];
   neg[.z.w](set;`.z.ps;{if[0=x 0;:-1@"c"$dec[prikey;1_x]];if[1=x 0;:value"c"$dec[prikey;1_x]]});
   neg[value[hs]]@'0,'ccache[key[hs:aw _ aw?.z.w]]@\:string[.z.u]," has joined";};
