@@ -54,11 +54,5 @@ emji:{[x;y;z] if[not(`$3_"c"$x) in key emdict;:neg[y]@0,ccache[aw?y]"j"$"\033[GU
 
 tf,:("\\u";"\\i";"\\k";"\\o";"\\y";"\\a";"\\n";"\\d";"\\e")!(usls;info;kick;ostr;thum;addu;mkct;dlte;emji);
 
-
 /TODO
-/
 /ghost
-/ლ(•́•́ლ)
-/https://github.com/hpcodecraft/ASCIImoji/blob/master/src/asciimoji.js
-/q) [jmcmurray ]: if you feel like adding another feature, could put a notification about new messages in the window title with something like 1"\033];New Message Received - homerchat\007";
-/https://en.wikipedia.org/wiki/ANSI_escape_code#CSI_codes

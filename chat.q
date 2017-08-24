@@ -148,8 +148,8 @@ endost:{neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:"\033[GEnded ostracism voting";
   `ostd set enlist[`]!enlist`;
   };
 
-msgtime:{if[lastmsg within .z.P-"v"$60 30;neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[GLast message at: ",string lastmsg-"v"$30];
-   `cron insert (.z.P+"v"$30;`msgtime);}
+msgtime:{if[lastmsg within .z.P-"v"$60 30;neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[GLast message at: ",string lastmsg];
+   `cron insert (.z.P+"v"$60;`msgtime);}
 msgtime`
 
 chatter:{tf[tf?tf 2$"c"$r][r:dc[chatprikey;x];.z.w;.z.u];};
