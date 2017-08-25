@@ -22,9 +22,10 @@ hiddenusers:`
 ckeys:$[`key in key`;2 cut .key.mk[5000][`nkey`pub`nkey`pri];(3233 17;3233 413)]
 chatpubkey:ckeys 0
 chatprikey:ckeys 1
-cron:([]time:"p"$();action:`$())
+cron:([]time:"p"$();action:`$();args:())
 
-.z.ts:{pi:exec i from cron where time<.z.P;if[count pi;r:exec action from cron where i in pi;delete from `cron where i in pi;value'[r]@\:`]}
+/.z.ts:{pi:exec i from cron where time<.z.P;if[count pi;r:exec action from cron where i in pi;delete from `cron where i in pi;value'[r]@\:`]}
+.z.ts:{pi:exec i from cron where time<.z.P;if[count pi;r:exec action,args from cron where i in pi;delete from `cron where i in pi;({value[x]. (),y}.)'[flip value r]];}
 
 tpks:aw:w:()!()
 pks:@[get;`:pks;()!()]
@@ -43,13 +44,13 @@ fallowed:`checker`decider`getpubkey`testdec`testenc`checkphrase`chatter`finalche
   neg[x]({hclose each key[.z.W] except value x};`.z.w);
   if[all (not any null r;2=count r;7h=type r:pks .z.u);
     neg[x]"-1\"",banner,"\"";
-    neg[x]"-1\"Existing verified public key found for ",string[.z.u]," - proceed (y) or reset (n)\"";
+    neg[x]"-1\"Existing verified public key found for ",string[.z.u]," - proceed (enter) or reset (n)\"";
     :neg[x]({`.z.pi set {neg[x](`decider;y)}[value `.z.w]};`)];
   neg[x]"-1\"",banner," Press ENTER to continue\"";
     :neg[.z.w]({`.z.pi set {[x;e;d;u;y]neg[x](`checker;e;d;u;y)}[value `.z.w;@[value;`enc;`];@[value;`dec;`];first`$system"id -u -n"]};`);
   };
 
-decider:{if[first[x]="y";
+decider:{if[first[x]="\n";
     neg[.z.w]({`.z.pi set y@value x}[`.z.w];nspk);
     neg[.z.w]({`enc set x};ec);
     neg[.z.w]({`dec set x};dc);
@@ -88,12 +89,12 @@ getpubkey:{
   @[`tpks;.z.u;:;"J"$" "vs x];
   if[not all (not any null r;not 323 17~desc r;2=count r;7h=type r:tpks .z.u);:fail"WARNING - Incorrect Input - DISCONNECTING"];
   /neg[.z.w]"-1\"Please enter PRIVATE KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\"";
-  neg[.z.w]"-1$[`pri in key hsym `$getenv[`HOME],\"/.homerchat\";\"Found local private key from last session - re-use(y/n)?\";\"Please enter PRIVATE KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\"]";
+  neg[.z.w]"-1$[`pri in key hsym `$getenv[`HOME],\"/.homerchat\";\"Found local private key from last session - re-use (enter/n)?\";\"Please enter PRIVATE KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\"]";
   neg[.z.w]({`.z.pi set y@value x}[`.z.w];nspk);};
 
 nspk:{
     if[`pri in key hsym `$getenv[`HOME],"/.homerchat";
-    if["y"~first y;
+    if["\n"=first y;
       `prikey set get hsym `$getenv[`HOME],"/.homerchat/pri";
       :neg[x](`testdec;`)];
     -1"Please enter PRIVATE KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:";
@@ -149,10 +150,10 @@ endost:{neg[value[hs]]@'0,'ccache[key[hs:aw]]@\:"\033[GEnded ostracism voting";
   };
 
 msgtime:{if[lastmsg within .z.P-"v"$60 30;neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[GLast message at: ",string lastmsg];
-   `cron insert (.z.P+"v"$60;`msgtime);}
+   `cron insert (.z.P+"v"$60;`msgtime;`);}
 msgtime`
 
-chatter:{tf[tf?tf 2$"c"$r][r:dc[chatprikey;x];.z.w;.z.u];};
+chatter:{tf[tf?tf 3$"c"$r][r:dc[chatprikey;x];.z.w;.z.u];};
 
 coldict:(`default`black`red`green`yellow`blue`magenta`cyan`gray!(" \033[0m";" \033[1;30m";" \033[1;31m";" \033[1;32m";" \033[1;33m";" \033[1;34m";" \033[1;35m";" \033[1;36m";" \033[1;37m"));
 
@@ -164,7 +165,7 @@ clrs:{[x;y;z]if[not(`$3_"c"$x) in key coldict;:neg[y]@0,ccache[aw?y]"j"$"Incorre
   `:ucol set ucol;
   :neg[y]@0,ccache[aw?y]"j"$"\033[Gcolour set. Fabulous."};
 
-tf:("";"\\q";"\\h";"\\c")!(chat;quit;help;clrs);
+tf:("";"\\q ";"\\h ";"\\c ")!(chat;quit;help;clrs);
 
 shutdown:{quit["";;""]each value aw}
 

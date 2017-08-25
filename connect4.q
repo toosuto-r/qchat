@@ -37,7 +37,7 @@ bnr:"#################################################\n",
 st:{-1 "\033[H\033[J",y,"\nYou are player ",string[x],"\nType \"quit\" to exit\n";if[2>x;-1"Waiting for second player...\n\n"];}[;bnr]    / startup message
 pi:{[h;x] $[x~enlist "\n";"\n";x~"quit\n";exit 0;[h(`play;x);"move sent\n"]]};                                                  / .z.pi for players
 dis:{-1"Too many players connected";exit 0;}                                                                                    / disconnect extras
-
+\
 / initial setup when someone connects
 .z.po:{
   if[.z.u=`lb;(neg .z.w)(-1;"\n",.Q.s top[]);:0b];                   / if logging in with "lb" username, give them the leaderboard
