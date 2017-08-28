@@ -18,8 +18,9 @@ colr:{ssr[;y;"\033[3",z,"m",y,"\033[0m"]'[x]}/[;"XO";"12"]      / colour-ise boa
 disp:{[b] colr a,("|",'b,'"|"),(a:enlist[9#"-"]),enlist[" 0123456 "]} / function to display board
 
 move:{[p;c;b] /p:player,c:column,b:board
-  if[not " " in b[;c];'full];                                   / make sure column isn't full
-  b[last where b[;c]=" ";c]:$[1=value[players]?p;"X";"O"];      / place piece
+  if[not any null raze b;:b];
+  if[not " " in b[;c];c:first 1?where " "in/:flip b];                                   / make sure column isn't full
+  b[last where b[;c]=" ";c]:("X";"O")p;      / place piece
   :b;                                                           / return updated board
  }
 
@@ -37,7 +38,7 @@ bnr:"#################################################\n",
 st:{-1 "\033[H\033[J",y,"\nYou are player ",string[x],"\nType \"quit\" to exit\n";if[2>x;-1"Waiting for second player...\n\n"];}[;bnr]    / startup message
 pi:{[h;x] $[x~enlist "\n";"\n";x~"quit\n";exit 0;[h(`play;x);"move sent\n"]]};                                                  / .z.pi for players
 dis:{-1"Too many players connected";exit 0;}                                                                                    / disconnect extras
-\
+/
 / initial setup when someone connects
 .z.po:{
   if[.z.u=`lb;(neg .z.w)(-1;"\n",.Q.s top[]);:0b];                   / if logging in with "lb" username, give them the leaderboard
@@ -51,12 +52,12 @@ dis:{-1"Too many players connected";exit 0;}                                    
 
 / handle quitters
 .z.pc:{players::enlist [x]_players;}                            / remove player if they quit
-
+\
 / move to next turn
-turn:{[]
-  (neg key players)@\:(-1;"\033[15H\033[J",string[value[players]@curplayer],"'s Turn\n\nCurrent board:\n\n","\n" sv disp b);
-  (neg key[players]@curplayer)(-1;"Enter column to make move:");
-  moves+:1;                                                                                                                     / increment moves counter
+step:{[]
+  neg[value[`..aw]pl]@'2,'(cc:value`..ccache)[pl:raze value[`..plyr]`c4]@\:raze "\033[1;1H\033[J",bnr,"\n\033[J\n\033[J\n\033[J\n\033[J\n\033[J\n\033[J\n\033[J\n\033[J";
+  neg[value[`..aw]pl]@'2,'cc[pl]@\:"\033[15H\033[JTeam ",string[1+value[`..turn][`c4]mod 2],"'s Turn\n\nCurrent board:\n\n",sv["\n";" ",/:disp b],"\n";
+  neg[value[`..aw]pl]@'2,'cc[pl]@'raze'["\033[28H\033[J",/:("Enter column to make a move. You have ",string[value[`..turnlengths]`c4]," seconds:\n";"The other team is moving.\n")raze count'[value[`..plyr]`c4]#'mod[value[`..turn][`c4]+0 1;2]];
  }
 
 / check if there's a winner along any line or diagonal
@@ -75,21 +76,20 @@ checkboard:{[b]
 
 / function called by player making a move
 play:{[x]
-  if[curplayer <> key[players]?.z.w;(neg .z.w)(-2;"Wait your turn");:()];
   pb:b;                                                                                         / store previous board
-  b::.[move;(players[.z.w];"I"$-1_x;b);{(neg .z.w)(-2;"Column full");:b}];
-  if[pb~b;:()];                                                                                 / return if board unchanged i.e. full column
-  if[checkboard[b];                                                                             / check for a winner
-     (neg key players)@\:(-1;string[value[players]@curplayer]," wins!\n\nWinning board:\n\n",("\n" sv disp b),"\n\nGame Over, exiting...");
-     record[;;;moves;0b] . value[players]@0 1,curplayer;
-     (neg key players)@\:(exit;0)
-    ];
+  b::.[move;(curplayer;0|("I"$x)&7;b)];
+  if[pb~b;:()];
+  if[checkboard[b] or 0=count value[`..plyr][`c4;not curplayer];                                                                             / check for a winner
+    record[;;;moves;0b] . (value[`..plyr]`c4)@0 1,curplayer;
+    neg[value[`..aw]pl]@'2,'value[`..ccache][pl:raze value[`..plyr]`c4]@\:raze"\033[15H\033[JTeam ",string[1+curplayer]," wins!\n\nWinning board:\n\n",("\n" sv disp b),"\n\nGame Over, exiting...\n";
+    value[`..resetgame]`c4;
+    :b::6#enlist 7#" ";];
   if[not any " " in/:b;                                                                         / if no spaces & no one has one, it's a draw
-     (neg key players)@\:(-1;"Tied game!\n\n",("\n" sv disp b),"\n\nGame Over, exiting...");
-     (neg key players)@\:(exit;0)
-    ];
+    :neg[value[`..aw]pl]@'2,'value[`..ccache][pl:raze value[`..plyr]`c4]@\:raze"\033[15H\033[J","Tied game!\n\n",("\n" sv disp b),"\n\nGame Over, exiting...\n";
+    value[`..resetgame]`c4;
+    :b::6#enlist 7#" ";];
   curplayer::1 0@curplayer;
-  turn[];
+  step[];
  }
 
 / record results of game in leaderboard

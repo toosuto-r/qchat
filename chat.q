@@ -9,7 +9,7 @@ persist:1b;
 record:1b;
 
 qloc:@[system;"which q";getenv[`HOME],"/q/l32/q"]
-connectedusers:@[get;`:cu;0#`]
+connectedusers:@[get;`:cu;([]time:"p"$();user:`$())]
 
 .z.exit:{shutdown`}
 .z.pi:{if[.z.w;:neg[.z.w]"-1\"Forbidden - use a full q process.\""];.Q.s @[value;x;{'"nw"}]}
@@ -24,7 +24,6 @@ chatpubkey:ckeys 0
 chatprikey:ckeys 1
 cron:([]time:"p"$();action:`$();args:())
 
-/.z.ts:{pi:exec i from cron where time<.z.P;if[count pi;r:exec action from cron where i in pi;delete from `cron where i in pi;value'[r]@\:`]}
 .z.ts:{pi:exec i from cron where time<.z.P;if[count pi;r:exec action,args from cron where i in pi;delete from `cron where i in pi;({value[x]. (),y}.)'[flip value r]];}
 
 tpks:aw:w:()!()
@@ -36,7 +35,12 @@ lastmsg:0
 fallowed:`checker`decider`getpubkey`testdec`testenc`checkphrase`chatter`finalcheck
 .z.ps:{if[x[0] in fallowed;:value x];neg[.z.w]"-1\"Rude.\""}
 .z.pw:{[u;p]u in users}
-.z.pc:{.[`w;();_;w?x];if[x in aw;neg[value[hs]]@'0,'ccache[key[hs:aw _aw?x]]@\:string[aw?x]," has left";.[`aw;();_;aw?x]];}
+.z.pc:{.[`w;();_;w?x];
+  if[x in aw;neg[value[hs]]@'0,'ccache[key[hs:aw _aw?x]]@\:string[aw?x]," has left";
+    .[`aw;();_;aw?x]]
+  if[any p:.z.u in/:plyr`c4;
+    .[`plyr;(`c4;where p);except;.z.u]]
+  ;}
 .z.po:{
   if[not x in w;@[`w;.z.u;:;x]];
   neg[x](system;"p 0");
@@ -115,7 +119,7 @@ testdec:{
   neg[.z.w]({neg[.z.w](`checkphrase;.[dec;(prikey;x);"FAILURE"])};(ec[tpks .z.u;testphrase]));
   neg[.z.w]({`.z.pi set {neg[x](`testenc;y)}[value `.z.w]};`);};
 
-checkphrase:{if[c:testphrase~"c"$x;if[record;connectedusers,:.z.u;`:cu set connectedusers];neg[.z.w]"-1\"Test successful - Press ENTER to continue\""];
+checkphrase:{if[c:testphrase~"c"$x;if[record;`connectedusers insert (.z.P;.z.u);`:cu set connectedusers];neg[.z.w]"-1\"Test successful - Press ENTER to continue\""];
   if[not c;.[`tpks;();_;.z.u];:fail"WARNING - Incorrect Input - DISCONNECTING"];};
 
 testenc:{

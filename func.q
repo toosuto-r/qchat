@@ -35,10 +35,11 @@ endost:{neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[GEnded ostracism voting";
   `ostd set enlist[`]!enlist`;
   };
 
-games:(),`connect4
+games:enlist[`connect4]!enlist`c4
 
-gamr:{[x;y;z]if[not in[`$3_"c"$x;games];:neg[y]@0,ccache[aw?y]"j"$"\033[GNot a known game";];
-  neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[G",string[.z.u]," has initiated a game of ",$["c";3_x],". Press enter to join.";
+gamr:{[x;y;z]if[not in[`$3_"c"$x;key games];:neg[y]@0,ccache[aw?y]"j"$"\033[GNot a known game";];
+  if[gameon games`$3_"c"$x;:neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[GGame already in progress";gamd::()];
+  neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[G",string[.z.u]," has initiated a game of ",$["c";3_x],". Press enter within the next 10 seconds to join.";
   `cron insert (.z.P+"v"$10;`endgv;`);
   @[`tf;"";:;gamv];}
 
@@ -46,52 +47,52 @@ gamv:{[x;y;z]if[null first "c"$x;gamd,:.z.u];}
 
 endgv:{@[`tf;"";:;chat];
   neg[aw ul]@'0,'ccache[ul:key[aw]except pl:distinct gamd]@\:"\033[GEnded game voting";
-  /if[2>pl;:eg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[GNot enough players"];
-  gamd::();
+  if[2>count pl;:neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[GNot enough players";gamd::()];
   t:2 0N#neg[count pl]?pl;
   .[`plyr;(`c4;0);:;(),t 0];
   .[`plyr;(`c4;1);:;(),t 1];
+  @[`gameon;`c4;:;1b]; 
   neg[aw pl]@'0,'ccache[pl]@'"j"$"you're in team ",/:raze string 1+where each pl in/:\:t;
   neg[aw pl]@'1,'ccache[pl]@\:"j"$"`.z.pi set {neg[x](`chatter;enc[chatkey;-1_\"\\\\c4\",y]);-1\"\\033[F\\r\\033[0J\\033[F\\r\";}[value `.z.w]";
   neg[aw pl]@'1,'ccache[pl]@\:"j"$
   "`.z.ps set {
    if[0=x 0;:-1@raze\"\\033[\",(string y-1),\";1H\\033[0J\\033[F\\r\\033[2K\",\"c\"$dec[prikey;1_x];];
    if[1=x 0;:value\"c\"$dec[prikey;1_x]];
-   if[2=x 0;:1@raze\"\\033[s\\033[;H\",(\"c\"$dec[prikey;1_x]),\"\\033[u\\033[\",(string y-1),\";1H\";]}[;\"J\"$system\"tput lines\"]";}
-
-c4ms:{}
-gcom:(enlist"\\c4")!enlist c4ms
+   if[2=x 0;:1@raze\"\\033[s\\033[;H\",(\"c\"$dec[prikey;1_x]),\"\\033[u\\033[\",(string y-1),\";1H\";]}[;\"J\"$system\"tput lines\"]";
+  .c4.step[];
+  `cron insert (.z.P+"v"$turnlengths[`c4];`endc4turn;`);}
 
 plyr:(``c4!()):\:(();())
 turn:(``c4!()):\:0
 gtvote:``c4!(();())
 gameon:(``c4!()):\:0b
+turnlengths:``c4!0N 10
 
 playc4:{
-
-
+  .c4.play x
   }
-
-
-
 
 c4tn:{[x;y;z]
   if[not within[i:"J"$"c"$first 3_x;0 9];:tf[tf?tf 3$"c"$3_x][3_x;y;z]];
   if[not .z.u in plyr[`c4]turn[`c4]mod 2;
     :neg[.z.w]@0,ccache[.z.u]"j"$"Wait your turn!"];
-  @[gtvote;`c4;,;i];
-  neg[.z.w]@0,ccache[.z.u]"j"$"Vote recieved";}
+  @[`gtvote;`c4;,;i];
+  neg[.z.w]@0,ccache[.z.u]"j"$"Vote received";}
 
 endc4turn:{
-  if[not gameon`c4;
-    neg[aw pl]@'1,'ccache[pl:raze plyr`c4]@\:"j"$"`.z.pi set {neg[x](`chatter;enc[chatkey;-1_y]);-1\"\\033[F\\r\\033[0J\\033[F\\r\";}[value `.z.w]";
-    :@[`plyr;`c4;:;(();())];];
-  @[`turn;c4;+;1];
-  mv:first key desc count'[group gtvote`c4];
+  if[not gameon`c4;:()];
+  @[`turn;`c4;+;1];
+  mv:first key desc count'[group (),$[0=count v:gtvote`c4;1?7;v]];
   @[`gtvote;`c4;:;()];
-  playc4 mv;
-  `cron insert (.z.P+"v"$turnlengths[`c4];endc4turn;`)
+  playc4 string mv;
+  `cron insert (.z.P+"v"$turnlengths[`c4];`endc4turn;`);
   }
+
+resetgame:{
+  neg[aw pl]@'1,'ccache[pl:raze plyr x]@\:"j"$"`.z.pi set {neg[x](`chatter;enc[chatkey;-1_y]);-1\"\\033[F\\r\\033[0J\\033[F\\r\";}[value `.z.w]";
+  neg[aw pl]@'1,'ccache[pl]@\:"j"$"`.z.ps set {if[0=x 0;:-1@\"c\"$dec[prikey;1_x]];if[1=x 0;:value\"c\"$dec[prikey;1_x]]}";
+  @[`plyr;x;:;(();())];
+  @[`gameon;x;:;0b];}
 
 mkct:{[x;y;z] if[2>count r:r where 1&count'[r:" "vs "c"$3_x];:neg[y]@0,ccache[aw?y]"j"$"\033[GPlease input in format CHATNAME USER1 USER2 USER3... to add users from scratch or CHATNAME -USER1 USER2... to make a new chat with all but the named users from this chat"];
   if[r[0]in ?\:[n;" "]#'n:raze each (6+n ss\:"-name ")_'(n:p where count each(p:system"ps -ef | grep chatter.q")ss\:"chatter.q");
