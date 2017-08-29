@@ -59,7 +59,7 @@ decider:{if[first[x]="\n";
     neg[.z.w]({`enc set x};ec);
     neg[.z.w]({`dec set x};dc);
     @[`tpks;.z.u;:;pks .z.u];
-    :neg[.z.w]"-1$[`pri in key hsym `$getenv[`HOME],\"/.homerchat\";\"Found local private key from last session - re-use(y/n)?\";\"Please enter PRIVATE KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\"]"];
+    :neg[.z.w]"-1$[`pri in key hsym `$getenv[`HOME],\"/.homerchat\";\"Found local private key from last session - re-use(enter/n)?\";\"Please enter PRIVATE KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\"]"];
     /:neg[.z.w]"-1\"Please enter PRIVATE KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\""];
   neg[.z.w]"-1\"Press ENTER to continue\"";
   :neg[.z.w]({`.z.pi set {[x;e;d;u;y]neg[x](`checker;e;d;u;y)}[value `.z.w;@[value;`enc;`];@[value;`dec;`];first`$system"id -u -n"]};`);
