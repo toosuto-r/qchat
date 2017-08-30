@@ -1,6 +1,4 @@
-ostd:enlist[`]!enlist`
-gamd:()
-
+/Basic functions
 usls:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$"\033[Gusers online: ",", "sv string key[aw] except hiddenusers;};
 info:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$"\033[G",banner,". Chat admins: ",", "sv string (),admins};
 
@@ -17,6 +15,9 @@ addu:{[x;y;z]if[not .z.u in admins;:neg[y]@0,ccache[aw?y]"j"$"\033[GAdding is an
 
 
 thum:{[x;y;z]t:"i"$"\033[G\n         _     \n        |)\\     \n        :  )    \n_____  /  /__   \n     |`  (____) \n     |   |(____)\n     |__.(____) \n_____|.__(___)";neg[y]@0,ccache[aw?y]t};
+
+/Ostracism
+ostd:enlist[`]!enlist`
 
 ostr:{[x;y;z]neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[G",string[.z.u]," has initiated ostracism mode.\nYou have 10 seconds to vote for a current user who will be kicked.";
   `cron insert (.z.P+"v"$10;`endost;`);
@@ -35,6 +36,8 @@ endost:{neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[GEnded ostracism voting";
   `ostd set enlist[`]!enlist`;
   };
 
+/Game interfaces
+gamd:()
 games:enlist[`connect4]!enlist`c4
 
 gamr:{[x;y;z]if[not in[`$3_"c"$x;key games];:neg[y]@0,ccache[aw?y]"j"$"\033[GNot a known game";];
@@ -94,6 +97,8 @@ resetgame:{
   @[`plyr;x;:;(();())];
   @[`gameon;x;:;0b];}
 
+
+/New chat functions
 mkct:{[x;y;z] if[2>count r:r where 1&count'[r:" "vs "c"$3_x];:neg[y]@0,ccache[aw?y]"j"$"\033[GPlease input in format CHATNAME USER1 USER2 USER3... to add users from scratch or CHATNAME -USER1 USER2... to make a new chat with all but the named users from this chat"];
   if[r[0]in ?\:[n;" "]#'n:raze each (6+n ss\:"-name ")_'(n:p where count each(p:system"ps -ef | grep chatter.q")ss\:"chatter.q");
     :neg[y]@0,ccache[aw?y]"j"$"\033[GChat exists and is currently active - quitting chat creation"];
@@ -112,7 +117,9 @@ dlte:{[x;y;z]if[not .z.u in admins;:neg[y]@0,ccache[aw?y]"j"$"\033[GDeleting the
   shutdown`;
   exit 0;}
 
+/Emojis
 emdict:(!)."Sj"$flip {enlist[("";"Available: ",", "sv x[;0])],x}2 cut read0`:emojis
+
 emji:{[x;y;z] if[not(`$3_"c"$x) in key emdict;:neg[y]@0,ccache[aw?y]"j"$"\033[GUnknown emoji - meme deficiency detected."];
   if[null`$3_"c"$x;:neg[y]@0,ccache[aw?y]emdict`];
   chat[;y;z]emdict `$"c"$3_x;}
@@ -124,8 +131,3 @@ emji:{[x;y;z] if[not(`$3_"c"$x) in key emdict;:neg[y]@0,ccache[aw?y]"j"$"\033[GU
 /ghst:{[x;y;z] if[0=count l:trim "c"$3_x;:neg[y]@0,ccache[aw?y]"j"$"players:",", "sv string ghostplayers];}
 
 tf,:("\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4")!(usls;info;kick;ostr;thum;addu;mkct;dlte;emji;gamr;c4tn);
-
-/TODO
-/ghost
-/ns "emoji"?
-/UX - "enter" to re-use old keys
