@@ -9,6 +9,7 @@ challenge:1b
 challenge=:"b"$count raze .Q.opt[.z.x]`challenge;
 persist:1b;
 record:1b;
+transfer:1b;
 
 forbiddenkeys:(3233 413;3233 17;3233 2753)
 forbiddenkeys:(0N 0N;0N 0N)
@@ -78,7 +79,7 @@ fallowed:`checker`decider`getpubkey`testdec`testenc`checkphrase`chatter`finalche
 /if user wants to reset, jump back to checker
 decider:{if[first[x]="\n";
     neg[.z.w]({`.z.pi set y@value x}[`.z.w];nspk);
-    if[not challenge;
+    if[transfer;
       neg[.z.w]({`enc set x};ec);
       neg[.z.w]({`dec set x};dc);];
     @[`tpks;.z.u;:;pks .z.u];
