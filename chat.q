@@ -1,12 +1,17 @@
 system"t 1000";
+system"S ",string"j"$.z.T
 
 banner:"Welcome to homerchat: discreet and discrete."
 if[count n:raze .Q.opt[.z.x]`name;banner:"Chat Room: ",n];
 
 aliases:1b;
-challenge:0b;
+challenge:1b
+challenge=:"b"$count raze .Q.opt[.z.x]`challenge;
 persist:1b;
 record:1b;
+
+forbiddenkeys:(3233 413;3233 17;3233 2753)
+forbiddenkeys:(0N 0N;0N 0N)
 
 qloc:@[system;"which q";getenv[`HOME],"/q/l32/q"]
 connectedusers:@[get;`:cu;([]time:"p"$();user:`$())]
@@ -21,7 +26,7 @@ admins:$[count a:.Q.opt[.z.x]`admin;`$a;`ryan]
 users:raze .[0:;((enlist "S";",");chatfile:hsym`$raze string md5 banner);`$"-"vs $[count ul:first .Q.opt[.z.x]`users;ul;""]]
 chatfile 0: string users;
 hiddenusers:`
-ckeys:$[`key in key`;2 cut .key.mk[5000][`nkey`pub`nkey`pri];(3233 17;3233 413)]
+ckeys:$[`key in key`;2 cut .key.mk[$[challenge;60;5000]][`nkey`pub`nkey`pri];(3233 17;3233 413)]
 chatpubkey:ckeys 0
 chatprikey:ckeys 1
 cron:([]time:"p"$();action:`$();args:())
@@ -66,7 +71,6 @@ fallowed:`checker`decider`getpubkey`testdec`testenc`checkphrase`chatter`finalche
     :neg[x]({`.z.pi set {neg[x](`decider;y)}[value `.z.w]};`)];
   neg[x]"-1\"",banner,"\"";
   :neg[.z.w]({neg[.z.w](`checker;value `.z.w;@[value;`enc;`];@[value;`dec;`];first`$system"id -u -n")};`);
-  /:neg[.z.w]({`.z.pi set {[x;e;d;u;y]neg[x](`checker;e;d;u;y)}[value `.z.w;@[value;`enc;`];@[value;`dec;`];first`$system"id -u -n"]};`);
   };
 
 /if user presses enter, push over the private key verifier
@@ -79,9 +83,7 @@ decider:{if[first[x]="\n";
       neg[.z.w]({`dec set x};dc);];
     @[`tpks;.z.u;:;pks .z.u];
     :neg[.z.w]"-1$[`pri in key hsym `$getenv[`HOME],\"/.homerchat\";\"Found local private key from last session - re-use(enter/n)?\";\"Please enter PRIVATE KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\"]"];
-  /neg[.z.w]"-1\"Press ENTER to continue\"";
   :neg[.z.w]({neg[.z.w](`checker;value `.z.w;@[value;`enc;`];@[value;`dec;`];first`$system"id -u -n")};`);
-  /:neg[.z.w]({`.z.pi set {[x;e;d;u;y]neg[x](`checker;e;d;u;y)}[value `.z.w;@[value;`enc;`];@[value;`dec;`];first`$system"id -u -n"]};`);
   }
 
 /check based on flags: aliases and *crypt functions 
@@ -89,13 +91,9 @@ checker:{[x;y;u;z]
   if[not[aliases] and not .z.u~u;:fail"No aliases allowed - try again with your real name - DISCONNECTING"];
   if[challenge;
     if[not count edf:edf where (not `~/:edf)and 99<type each edf:x,y;
-      neg[.z.w]"-1\"WARNING - No dyadic encryption/decryption functions names 'enc' and 'dec' found.
-                \\n Function should be dyadic and should take hey and message as args.
-                \\n e.g. enc[3233 17;\\\"hello\\\"], dec[3233 413;2170 1313 745 745 2185]
-                \\n DISCONNECTING\"";
-      neg[.z.w](system;"x .z.pi");
-      :neg[.z.w]"hclose value `.z.w"];
-    if[not all 2=count'[get'[edf][;1]];:fail .Q.s "WARNING - enc and dec should be dyadic, taking to key components as a list, and the message to <en|de>crypt, e.g. enc[3233 17;\"hello\"] - DISCONNECTING"];];
+      :fail"WARNING - No dyadic encryption/decryption functions names 'enc' and 'dec' found.\\n Function should be dyadic and should take hey and message as args.\\n e.g. enc[3233 17;\\\"hello\\\"], dec[3233 413;2170 1313 745 745 2185]\\n DISCONNECTING"];
+    if[not all 2=count'[get'[edf][;1]];
+      :fail "WARNING - enc and dec should be dyadic, taking to key components as a list, and the message to <en|de>crypt, e.g. enc[3233 17;\\\"hello\\\"] - DISCONNECTING"];];
   neg[.z.w]"-1\"Please enter PUBLIC KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\"";
   neg[.z.w]({`.z.pi set {neg[x](`getpubkey;$[like[i:-1_y;"`:*"]; first @[read0;`$1_i;"wrong"];i])}[value `.z.w]};`);};
 
@@ -113,7 +111,7 @@ testphrase:"testphrase if you are reading this something has gone wrong TESTPHRA
 getpubkey:{
   if[not all x in .Q.n," ";:fail"WARNING - Incorrect Input - DISCONNECTING"];
   @[`tpks;.z.u;:;"J"$" "vs x];
-  if[not all (not any null r;not 323 17~desc r;2=count r;7h=type r:tpks .z.u);:fail"WARNING - Incorrect Input - DISCONNECTING"];
+  if[not all (not any null r;not desc[r]in forbiddenkeys;2=count r;7h=type r:tpks .z.u);:fail"WARNING - Incorrect Input - DISCONNECTING"];
   neg[.z.w]"-1$[`pri in key hsym `$getenv[`HOME],\"/.homerchat\";\"Found local private key from last session - re-use (enter/n)?\";\"Please enter PRIVATE KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\"]";
   neg[.z.w]({`.z.pi set y@value x}[`.z.w];nspk);};
 
@@ -164,7 +162,7 @@ testenc:{
 /if everything checks out, permanently record public key and cache of encrypted values
 /clients must have a .z.ps which allows chat or command based on leading integer
 finalcheck:{
-  if[c:testphrase~"c"$dc[chatprikey;x];
+  if[c:testphrase~"c"$.[dc;(chatprikey;x);"FAILURE"];
     @[`ccache;.z.u;:;ec[tpks .z.u;"c"$til 1000]];
     `:ccache set ccache;
     @[`aw;.z.u;:;.z.w];
@@ -200,7 +198,7 @@ help:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$"\033[GMessage typed without prefix are au
 clrs:{[x;y;z]if[not(`$3_"c"$x) in key coldict;:neg[y]@0,ccache[aw?y]"j"$"Incorrect colour"];
   @[`ucol;z;:;(coldict `$3_"c"$x;"\033[0m ")];
   `:ucol set ucol;
-  :neg[y]@0,ccache[aw?y]"j"$"\033[Gcolour set. Fabulous."};
+  :neg[y]@0,ccache[aw?y]"j"$"\033[GColour set. Fabulous."};
 
 /chat action dictionary - should be appended to to add extra functions
 tf:("";"\\q ";"\\h ";"\\c ")!(chat;quit;help;clrs);
