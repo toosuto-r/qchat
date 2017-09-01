@@ -55,6 +55,7 @@ fallowed:`checker`decider`getpubkey`testdec`testenc`checkphrase`chatter`finalche
   if[x in aw;neg[value[hs]]@'0,'ccache[key[hs:aw _aw?x]]@\:string[aw?x]," has left";
     .[`aw;();_;aw?x]]
   if[any p:.z.u in/:plyr`c4;
+    x
     .[`plyr;(`c4;where p);except;.z.u]]
   ;}
 
@@ -88,7 +89,7 @@ decider:{if[first[x]="\n";
   }
 
 /check based on flags: aliases and *crypt functions 
-checker:{[x;y;u;z]
+checker:{[x;y;z;u]
   if[not[aliases] and not .z.u~u;:fail"No aliases allowed - try again with your real name - DISCONNECTING"];
   if[challenge;
     if[not count edf:edf where (not `~/:edf)and 99<type each edf:x,y;
