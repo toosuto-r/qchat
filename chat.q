@@ -208,5 +208,4 @@ tf:("";"\\q ";"\\h ";"\\c ")!(chat;quit;help;clrs);
 /handy function - call before exiting
 shutdown:{quit["";;""]each value aw}
 
-ec:{.[{{[x;y;M;n]$[y*c:mod[x*x;n];mod[M*c;n];c]}[;;z;x]/[1;r:?[a;1b]_a:0b vs y]};x]each "j"$y}
-dc:{.[{{[x;y;C;n]$[y*m:mod[x*x;n];mod[C*m;n];m]}[;;z;x]/[1;r:?[a;1b]_a:0b vs y]};x]each y}
+ec:dc:{{$[any y*c:mod[x*x;z 1];mod[c*z 0;z 1];c]}[;;("j"$y;x 0)]/[1;?[a;1b]_a:0b vs x 1]}
