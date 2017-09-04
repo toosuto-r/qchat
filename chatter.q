@@ -4,3 +4,4 @@
 \d .c4
 \l connect4.q
 \d .
+\l levenshtein.q
