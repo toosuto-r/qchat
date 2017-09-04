@@ -59,7 +59,7 @@ dis:{-1"Too many players connected";exit 0;}                                    
 / move to next turn
 step:{[]
   neg[value[`..aw]pl]@'2,'(cc:value`..ccache)[pl:raze value[`..plyr]`c4]@\:raze "\033[J",bnr,"\n\033[J\n\033[J\n\033[J\n\033[J\n\033[J\n\033[J\n\033[J\n\033[J";
-  neg[value[`..aw]pl]@'2,'cc[pl]@\:"\033[15H\033[JTeam ",string[1+value[`..turn][`c4]mod 2],"'s Turn\n\nCurrent board:\n\n",sv["\n";" ",/:disp b],"\n";
+  neg[value[`..aw]pl]@'2,'cc[pl]@\:raze"\033[15H\033[JTeam ",string[1+t],"'s Turn\n",("\033[31mX\033[m: ";"\033[32mO\033[m: ")[t],sv[", ";string value[`..plyr][`c4;t:value[`..turn][`c4]mod 2]],"\nCurrent board:\n\n",sv["\n";" ",/:disp b],"\n";
   neg[value[`..aw]pl]@'2,'cc[pl]@'raze'["\033[28H\033[J",/:("Enter column to make a move. You have ",string[value[`..turnlengths]`c4]," seconds:\n";"The other team is moving.\n")raze count'[value[`..plyr]`c4]#'mod[value[`..turn][`c4]+0 1;2]];
  }
 
