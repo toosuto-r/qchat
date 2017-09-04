@@ -24,7 +24,7 @@ ostr:{[x;y;z]neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[G",string[.z.u]," has in
   `cron insert (.z.P+"v"$10;`endost;`);
   @[`tf;"";:;ostv];};
 
-ostv:{[x;y;z]@[`ostd;.z.u;:;users users?`$"c"$x]};
+ostv:{[x;y;z]x:users a?min a:lvn[x]'[string users];@[`ostd;.z.u;:;x]};
 
 endost:{neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[GEnded ostracism voting";
   @[`tf;"";:;chat];
