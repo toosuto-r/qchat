@@ -110,7 +110,7 @@ mkct:{[x;y;z] if[2>count r:r where 1&count'[r:" "vs "c"$3_x];:neg[y]@0,ccache[aw
     r:enlist[r 0],read0 hsym cn];
   
   flags:" -name ",first[r]," -admin ",string[.z.u]," -users ","-"sv nu:(),/:$["-"~r[1;0];string[.z.u, users]except 1_r;(1_r),enlist string .z.u];
-  chatcmd:$[persist;"nohup ",qloc;"q"]," chatter.q -p ",string[np:{$[x~r:@[system;"lsof -i :",string x;x];x;x+1i]}/[system"p"]],flags,$[persist;" &";""];
+  chatcmd:raze $[persist;"nohup ",qloc;"q"]," chatter.q -p ",string[np:{$[x~r:@[system;"lsof -i :",string x;x];x;x+1i]}/[system"p"]],flags,$[persist;" &";""];
   system chatcmd;
   neg[aw[th]]@'0,'ccache[th:inter[key aw;.z.u,`$nu]]@\:"\033[G",string[.z.u]," has made a new chat on port: ",string[np],".";
   }
