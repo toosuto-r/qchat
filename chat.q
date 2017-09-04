@@ -92,7 +92,7 @@ checker:{[x;y;z;u]
   if[not[aliases] and not .z.u~u;:fail"No aliases allowed - try again with your real name - DISCONNECTING"];
   if[challenge;
     if[not count edf:edf where (not `~/:edf)and 99<type each edf:x,y;
-      :fail"WARNING - No dyadic encryption/decryption functions names 'enc' and 'dec' found.\\n Function should be dyadic and should take hey and message as args.\\n e.g. enc[3233 17;\\\"hello\\\"], dec[3233 413;2170 1313 745 745 2185]\\n DISCONNECTING"];
+      :fail"WARNING - No dyadic encryption/decryption functions names 'enc' and 'dec' found.\\n Function should be dyadic and should take key and message as args.\\n e.g. enc[3233 17;\\\"hello\\\"], dec[3233 413;2170 1313 745 745 2185]\\n DISCONNECTING"];
     if[not all 2=count'[get'[edf][;1]];
       :fail "WARNING - enc and dec should be dyadic, taking to key components as a list, and the message to <en|de>crypt, e.g. enc[3233 17;\\\"hello\\\"] - DISCONNECTING"];];
   neg[.z.w]"-1\"Please enter PUBLIC KEY or text file containing only this key in format: n e, where n is the component shared between public and private keys:\"";
@@ -194,7 +194,7 @@ chat:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[G",ucol[.z
 
 quit:{[x;y;z]neg[y]@1,ccache[aw?y]"j"$"exit 0"};
 
-help:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$"\033[GMessage typed without prefix are automatically broadcast to all logged in users.\nUseful functions are called with \\X or \\X input, where X is a lower case letter, e.g. '\\q' or '\\quit' to quit"};
+help:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$"\033[GMessage typed without prefix are automatically broadcast to all logged in users.\nUseful functions are called with \\X or \\X input, where X is a lower case letter, e.g. '\\q' to quit"}
 
 clrs:{[x;y;z]if[not(`$3_"c"$x) in key coldict;:neg[y]@0,ccache[aw?y]"j"$"Incorrect colour"];
   @[`ucol;z;:;(coldict `$3_"c"$x;"\033[0m ")];
