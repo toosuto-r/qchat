@@ -15,7 +15,7 @@ addu:{[x;y;z]if[not .z.u in admins;:neg[y]@0,ccache[aw?y]"j"$"\033[GAdding is an
   chatfile 0: string users,t}
 
 
-thum:{[x;y;z]t:"i"$"\033[G\n         _     \n        |)\\     \n        :  )    \n_____  /  /__   \n     |`  (____) \n     |   |(____)\n     |__.(____) \n_____|.__(___)";neg[y]@0,ccache[aw?y]t};
+thum:{[x;y;z]t:"i"$"\033[G\n         _     \n        |)\\     \n        :  )    \n_____  /  /__   \n     |`  (____) \n     |   |(____)\n     |__.(____) \n_____|.__(___)";chat[;y;z]t}
 
 /Ostracism
 ostd:enlist[`]!enlist`
