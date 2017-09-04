@@ -48,7 +48,7 @@ fallowed:`checker`decider`getpubkey`testdec`testenc`checkphrase`chatter`finalche
 
 /Only allow users
 .z.ps:{if[x[0] in fallowed;:value x];neg[.z.w]"-1\"Rude.\""}
-.z.pw:{[u;p]u in users}
+.z.pw:{[u;p]in[u;users]&not in[u;key aw]}
 
 /On handle close, drop from active handles
 .z.pc:{.[`w;();_;w?x];
