@@ -53,9 +53,8 @@ fallowed:`checker`decider`getpubkey`testdec`testenc`checkphrase`chatter`finalche
 /On handle close, drop from active handles
 .z.pc:{.[`w;();_;w?x];
   if[x in aw;neg[value[hs]]@'0,'ccache[key[hs:aw _aw?x]]@\:string[aw?x]," has left";
-    .[`aw;();_;aw?x]]
+    .[`aw;();_;aw?x]];
   if[any p:.z.u in/:plyr`c4;
-    x
     .[`plyr;(`c4;where p);except;.z.u]]
   ;}
 
