@@ -190,7 +190,7 @@ msgtime`
 /main access function from chat clients
 chatter:{tf[tf?tf 3$"c"$r][r:dc[chatprikey;x];.z.w;.z.u];};
 
-coldict:(`default`black`red`green`yellow`blue`magenta`cyan`gray`lightred`lightgreen`lightmagenta`lightcyan`lightgray`darkgray`white!(" \033[0m";" \033[1;30m";" \033[1;31m";" \033[1;32m";" \033[1;33m";" \033[1;34m";" \033[1;35m";" \033[1;36m";" \033[1;37m";" \033[01;31m";" \033[01;32m";" \033[01;35m";" \033[01;36m";" \033[00;37m";" \033[01;30m";" \033[01;37m"));
+coldict:(``default`black`red`green`yellow`blue`magenta`cyan`gray`lightred`lightgreen`lightmagenta`lightcyan`lightgray`darkgray`white!(" \033[0m";" \033[0m";" \033[1;30m";" \033[1;31m";" \033[1;32m";" \033[1;33m";" \033[1;34m";" \033[1;35m";" \033[1;36m";" \033[1;37m";" \033[01;31m";" \033[01;32m";" \033[01;35m";" \033[01;36m";" \033[00;37m";" \033[01;30m";" \033[01;37m"));
 
 /main chat - default action
 chat:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\033[G",ucol[.z.u;0],"[",$[10;string z],"]:",ucol[.z.u;1],x;};
