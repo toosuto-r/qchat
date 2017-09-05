@@ -71,6 +71,9 @@ fallowed:`checker`decider`getpubkey`testdec`testenc`checkphrase`chatter`finalche
     neg[x]"-1\"Existing verified public key found for ",string[.z.u]," - proceed (enter) or reset (n)\"";
     :neg[x]({`.z.pi set {neg[x](`decider;y)}[value `.z.w]};`)];
   neg[x]"-1\"",banner,"\"";
+  if[transfer&not challenge;
+    neg[x](set';`.key.p`.key.c`.key.ex`.key.cg`.key.mk;(.key.p;.key.c;.key.ex;.key.cg;.key.mk));
+    neg[x]"-1\"New keys - PUBLIC: \",sv[\" \";string nk[`nkey`pub]],\" PRIVATE: \",sv[\" \";string(nk:.key.mk 10000)[`nkey`pri]]"];
   :neg[.z.w]({neg[.z.w](`checker;value `.z.w;@[value;`enc;`];@[value;`dec;`];first`$system"id -u -n")};`);
   };
 
