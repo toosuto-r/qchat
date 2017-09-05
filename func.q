@@ -139,7 +139,7 @@ medo:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\
 func:{[x;y;z] neg[aw z]@0,ccache[z]"\n"sv key[labels],'" ",'value labels}
 
 cemdict:"c"$emdict
-pemji:{raze#[1;r],(1_'cemdict`$td#'dr),'(1+td:?\:[dr;" "])_'dr:1_r:"//e "vs x}
+pemji:{raze#[1;r],(cemdict`$td#'dr),'(td:?\:[dr;" "])_'dr:1_r:"//e "vs x}
 pcols:{raze#[1;r],(1_'coldict coldict?coldict`$td#'dr),'(1+td:?\:[dr;" "])_'dr:1_r:"//c "vs x}
 chat:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\033[G",ucol[.z.u;0],"[",$[10;string z],"]:",ucol[.z.u;1],$[any (cx:$["c";x])like/:("*//c*";"*//e*");"j"$pemji[pcols cx],"\033[0m";x];};
 
