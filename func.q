@@ -128,7 +128,13 @@ emji:{[x;y;z] if[not(`$3_"c"$x) in key emdict;:neg[y]@0,ccache[aw?y]"j"$"\033[GU
   if[null`$3_"c"$x;:neg[y]@0,ccache[aw?y]emdict`];
   chat[;y;z]emdict `$"c"$3_x;}
 
-labels:("\\q ";"\\h ";"\\c ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\v ")!("quit";"help";"colour";"users";"info";"kick";"ostracise";"(y)";"add";"newchat";"delete";"emoji";"game";"volume")
+labels:("\\q ";"\\h ";"\\c ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\v ";"\\me";"\\t ")!("quit";"help";"colour";"users";"info";"kick";"ostracise";"(y)";"add";"newchat";"delete";"emoji";"game";"volume";"action";"topic")
+
+words:@[read0;`:works;enlist"unknown"]
+
+topc:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\033[GThe current topic is: ",first 1?words;}
+
+medo:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\033[G",1_ucol[.z.u;0],string[z],ucol[.z.u;1],4_x;}
 
 func:{[x;y;z] neg[aw z]@0,ccache[z]"\n"sv key[labels],'" ",'value labels}
 
