@@ -78,6 +78,7 @@ play:{
   value[gtf[y]]@x
   }
 
+//TODO add a if[not gameon`c4;chat[x;y;z] thing
 c4tn:{[x;y;z]
   if[not within[i:"J"$"c"$first 3_x;0 9];:tf[tf?tf 3$"c"$3_x][3_x;y;z]];
   if[not .z.u in plyr[`c4]turn[`c4]mod 2;
@@ -127,6 +128,8 @@ emji:{[x;y;z] if[not(`$3_"c"$x) in key emdict;:neg[y]@0,ccache[aw?y]"j"$"\033[GU
   if[null`$3_"c"$x;:neg[y]@0,ccache[aw?y]emdict`];
   chat[;y;z]emdict `$"c"$3_x;}
 
-func:{[x;y;z] neg[aw z]@0,ccache[z]"\n"sv (key[tf]except("\\c4";"";"\\  ")),'" ",'("exit";"help";"colour";"userlist";"info";"kick";"ostracise";"(y)";"add";"newchat";"delete";"emoji";"games")}
+labels:("\\q ";"\\h ";"\\c ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\v ")!("quit";"help";"colour";"users";"info";"kick";"ostracise";"(y)";"add";"newchat";"delete";"emoji";"game";"volume")
+
+func:{[x;y;z] neg[aw z]@0,ccache[z]"\n"sv key[labels],'" ",'value labels}
 
 tf,:("\\  ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4")!(func;usls;info;kick;ostr;thum;addu;mkct;dlte;emji;gamr;c4tn);
