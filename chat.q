@@ -190,10 +190,10 @@ msgtime`
 /main access function from chat clients
 chatter:{tf[tf?tf 3$"c"$r][r:dc[chatprikey;x];.z.w;.z.u];};
 
-coldict:(`default`black`red`green`yellow`blue`magenta`cyan`gray!(" \033[0m";" \033[1;30m";" \033[1;31m";" \033[1;32m";" \033[1;33m";" \033[1;34m";" \033[1;35m";" \033[1;36m";" \033[1;37m"));
+coldict:(`default`black`red`green`yellow`blue`magenta`cyan`gray`lightred`lightgreen`lightmagenta`lightcyan`lightgray`darkgray`white!(" \033[0m";" \033[1;30m";" \033[1;31m";" \033[1;32m";" \033[1;33m";" \033[1;34m";" \033[1;35m";" \033[1;36m";" \033[1;37m";" \033[01;31m";" \033[01;32m";" \033[01;35m";" \033[01;36m";" \033[00;37m";" \033[01;30m";" \033[01;37m"));
 
 /main chat - default action
-chat:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[G",ucol[.z.u;0],"[",$[10;string z],"]:",ucol[.z.u;1],x;};
+chat:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\033[G",ucol[.z.u;0],"[",$[10;string z],"]:",ucol[.z.u;1],x;};
 
 quit:{[x;y;z]neg[y]@1,ccache[aw?y]"j"$"exit 0"};
 
@@ -204,8 +204,12 @@ clrs:{[x;y;z]if[not(`$3_"c"$x) in key coldict;:neg[y]@0,ccache[aw?y]"j"$"Incorre
   `:ucol set ucol;
   :neg[y]@0,ccache[aw?y]"j"$"\033[GColour set. Fabulous."};
 
+uvol:![users;()]:\:""
+
+vlme:{[x;y;z]@[`uvol;z;{("";"\007")x~""}];neg[y]@0,ccache[z]"\033[G",$[count uvol z;"Bell on";"Bell off"];}
+
 /chat action dictionary - should be appended to to add extra functions
-tf:("";"\\q ";"\\h ";"\\c ")!(chat;quit;help;clrs);
+tf:("";"\\q ";"\\h ";"\\c ";"\\v ")!(chat;quit;help;clrs;vlme);
 
 /handy function - call before exiting
 shutdown:{quit["";;""]each value aw}
