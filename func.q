@@ -127,4 +127,6 @@ emji:{[x;y;z] if[not(`$3_"c"$x) in key emdict;:neg[y]@0,ccache[aw?y]"j"$"\033[GU
   if[null`$3_"c"$x;:neg[y]@0,ccache[aw?y]emdict`];
   chat[;y;z]emdict `$"c"$3_x;}
 
-tf,:("\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4")!(usls;info;kick;ostr;thum;addu;mkct;dlte;emji;gamr;c4tn);
+func:{[x;y;z] neg[aw z]@0,ccache[z]"\n"sv (key[tf]except("\\c4";"";"\\  ")),'" ",'("exit";"help";"colour";"userlist";"info";"kick";"ostracise";"(y)";"add";"newchat";"delete";"emoji";"games")}
+
+tf,:("\\  ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4")!(func;usls;info;kick;ostr;thum;addu;mkct;dlte;emji;gamr;c4tn);
