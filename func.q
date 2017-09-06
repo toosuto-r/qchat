@@ -147,7 +147,7 @@ chat:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\
 
 boks:{[x;y;z]chat[;y;z]'["j"$("╔",((3*1+2*count x)#"═"),"╗";"║",(raze " ",'upper x)," ║";"╚",((3*1+2*count x:"c"$3_x)#"═"),"╝")];}
 biggerbox:{"\n" vs "╔",(a#"═"),"╗\n",c,"║",(raze " ",'upper y)," ║\n",(c:raze x#enlist "║",(b#" "),"║\n"),"╚",((a:3*b:1+2*count y)#"═"),"╝"}
-bboks:{[x;y;z]chat[;y;z]'["j"$biggerbox . {("J"$x[1];" " sv 2_x)} " " vs "c"$3_x];}
+bbks:{[x;y;z]chat[;y;z]'["j"$biggerbox . {("J"$x[1];" " sv 2_x)} " " vs "c"$3_x];}
 
 tf[""]:chat
 
