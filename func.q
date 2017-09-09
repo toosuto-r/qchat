@@ -55,7 +55,7 @@ endgv:{@[`tf;"";:;chat];
   t:2 0N#neg[count pl]?pl;
   .[`plyr;(x;0);:;(),t 0];
   .[`plyr;(x;1);:;(),t 1];
-  @[`gameon;x;:;1b]; 
+  @[`gameon;x;:;1b];
   neg[aw pl]@'0,'ccache[pl]@'"j"$"you're in team ",/:raze string 1+where each pl in/:\:t;
   neg[aw pl]@'1,'ccache[pl]@\:"j"$raze"`.z.pi set {neg[x](`chatter;enc[chatkey;-1_\"\\\\",string[x],"\",y]);-1\"\\033[F\\r\\033[0J\\033[F\\r\";}[value `.z.w]";
   neg[aw pl]@'1,'ccache[pl]@\:"j"$
@@ -70,7 +70,7 @@ plyr:(``c4`gh!()):\:(();())
 turn:(``c4`gh!()):\:0
 gtvote:``c4`gh!(();();())
 gameon:(``c4`gh!()):\:0b
-turnlengths:``c4`gh!0N 7 10 
+turnlengths:``c4`gh!0N 7 10
 
 gtf:`c4`gh!(`.c4.play;{})
 
@@ -109,7 +109,7 @@ mkct:{[x;y;z] if[2>count r:r where 1&count'[r:" "vs "c"$3_x];:neg[y]@0,ccache[aw
   if[(cn:$[`;raze string md5 "Chat Room: ",r 0]) in key`:.;
     neg[y]@0,ccache[aw?y]"j"$"\033[GChat already exists - taking existing userlist";
     r:enlist[r 0],read0 hsym cn];
-  
+
   flags:" -name ",first[r]," -admin ",string[.z.u]," -users ","-"sv nu:(),/:$["-"~r[1;0];string[.z.u, users]except 1_r;(1_r),enlist string .z.u];
   chatcmd:raze $[persist;"nohup ",qloc;"q"]," chatter.q -p ",string[np:{$[x~r:@[system;"lsof -i :",string x;x];x;x+1i]}/[system"p"]],flags,$[persist;" &";""];
   system chatcmd;
@@ -128,13 +128,23 @@ emji:{[x;y;z] if[not(`$3_"c"$x) in key emdict;:neg[y]@0,ccache[aw?y]"j"$"\033[GU
   if[null`$3_"c"$x;:neg[y]@0,ccache[aw?y]emdict`];
   chat[;y;z]emdict `$"c"$3_x;}
 
-labels:("\\q ";"\\h ";"\\c ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\v ";"\\me";"\\t ")!("quit";"help";"colour";"users";"info";"kick";"ostracise";"(y)";"add";"newchat";"delete";"emoji";"game";"volume";"action";"topic")
+labels:("\\q ";"\\h ";"\\c ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\v ";"\\me";"\\t ";"\\ml")!("quit";"help";"colour";"users";"info";"kick";"ostracise";"(y)";"add";"newchat";"delete";"emoji";"game";"volume";"action";"topic";"music lookup")
 
 words:@[read0;`:works;enlist"unknown"]
 
 topc:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\033[GThe current topic is: ",first 1?words;}
 
-medo:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\033[G",1_ucol[.z.u;0],string[z],ucol[.z.u;1],4_x;}
+medo:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\033[G",1_ucol[.z.u;0],string[z],ucol[.z.u;1],4_x;};
+
+/ music lookup from lastfm
+mulo:{[x;y;z]
+  if[not .lfm.enabled;:neg[aw z]@0,ccache[z]"music lookup is not enabled"];
+  if[0=count 4_x;:neg[aw z]@0,ccache[z]"will attempt to lookup what user is playing from lastfm"];
+  msg:.user.mostRecent"c"$4_x;
+  if[not first msg;:neg[aw z]@0,ccache[z]msg 1];
+  lastmsg::.z.P;
+  neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:raze"\033[G",(4_x)," is listening to ",msg 1;
+ };
 
 func:{[x;y;z] neg[aw z]@0,ccache[z]"\n"sv key[labels],'" ",'value labels}
 
@@ -151,4 +161,4 @@ bbks:{[x;y;z]chat[;y;z]'["j"$biggerbox . {(5&1^"J"$x[1];" " sv 2_x)} " " vs "c"$
 
 tf[""]:chat
 
-tf,:("\\  ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4";"\\b ";"\\bb";"\\t ";"\\me")!(func;usls;info;kick;ostr;thum;addu;mkct;dlte;emji;gamr;c4tn;boks;bbks;topc;medo);
+tf,:("\\  ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4";"\\b ";"\\bb";"\\t ";"\\me";"\\ml")!(func;usls;info;kick;ostr;thum;addu;mkct;dlte;emji;gamr;c4tn;boks;bbks;topc;medo;mulo);

@@ -10,6 +10,7 @@ challenge=:"b"$count raze .Q.opt[.z.x]`challenge;
 persist:1b;
 record:1b;
 transfer:1b;
+.lfm.enabled:1b;
 
 forbiddenkeys:(3233 413;3233 17;3233 2753)
 forbiddenkeys:(0N 0N;0N 0N)
@@ -58,7 +59,7 @@ fallowed:`checker`decider`getpubkey`testdec`testenc`checkphrase`chatter`finalche
     .[`plyr;(`c4;where p);except;.z.u]]
   ;}
 
-/On open, close ports on target, turn timer off, make the display wide, 
+/On open, close ports on target, turn timer off, make the display wide,
 /display welcome and allow jump to end of checks if previously reg'd
 .z.po:{
   if[not x in w;@[`w;.z.u;:;x]];
@@ -90,7 +91,7 @@ decider:{if[first[x]="\n";
   :neg[.z.w]({neg[.z.w](`checker;value `.z.w;@[value;`enc;`];@[value;`dec;`];first`$system"id -u -n")};`);
   }
 
-/check based on flags: aliases and *crypt functions 
+/check based on flags: aliases and *crypt functions
 checker:{[x;y;z;u]
   if[not[aliases] and not .z.u~u;:fail"No aliases allowed - try again with your real name - DISCONNECTING"];
   if[challenge;

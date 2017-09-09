@@ -5,3 +5,4 @@
 \l connect4.q
 \d .
 \l levenshtein.q
+\l music.q
