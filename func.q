@@ -132,13 +132,9 @@ labels:("\\q ";"\\h ";"\\c ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\
 
 words:@[read0;`:works;enlist"unknown"];
 / cache topic list in random order to ensure all topics have been used once before repeating
-topcList:@[read0;`:topics;enlist"there are no topics"];
-topcCache:();
-topcReturn:{
-  if[0=count topcCache;topcCache::neg[count topcList]?topcList];
-  t:first topcCache;
-  topcCache::1_topcCache;
-  :t;
+topcReturn:{[]
+  if[0=count@[value;`topcCache;()];topcCache::neg[count a]?a:@[read0;`:topics;enlist"there are no topics"]];
+  :last({topcCache::1_ x};first)@\:topcCache;
  };
 
 topc:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\033[GThe current topic is: ",topcReturn[];}
