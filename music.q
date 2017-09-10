@@ -24,17 +24,15 @@
 
 .user.nowPlaying:{
   msg:.user.getRecentTracks x;
-  if[`error in key msg;:msg`message];
-  if[0=count m:msg[`recenttracks]`track;:"user has no recent tracks"];
-  if[not(`$"@attr")in key a:first m;
-    :"user is not currently playing a track";
-  ];
-  :a[`name]," by ",a[`artist]`$"#text";
+  if[`error in key msg;:(0b;msg`message)];
+  if[0=count m:msg[`recenttracks]`track;:(0b;"user has no recent tracks")];
+  if[not(`$"@attr")in key a:first m;:(0b;"user is not currently playing a track")];
+  :(1b;"'",a[`name],"' by ",a[`artist]`$"#text");
  };
 
 .user.mostRecent:{
   msg:.user.getRecentTracks x;
   if[`error in key msg;:(0b;msg`message)];
   if[0=count m:msg[`recenttracks]`track;:(0b;"user has no recent tracks")];
-  :(1b;a[`name]," by ",(a:first m)[`artist]`$"#text");
+  :(1b;"'",a[`name],"' by ",(a:first m)[`artist]`$"#text");
  };

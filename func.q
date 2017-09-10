@@ -138,12 +138,18 @@ medo:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\
 
 / music lookup from lastfm
 mulo:{[x;y;z]
-  if[not .lfm.enabled;:neg[aw z]@0,ccache[z]"music lookup is not enabled"];
-  if[0=count 4_x;:neg[aw z]@0,ccache[z]"will attempt to lookup what user is playing from lastfm"];
-  msg:.user.mostRecent"c"$4_x;
-  if[not first msg;:neg[aw z]@0,ccache[z]msg 1];
-  lastmsg::.z.P;
-  neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:raze"\033[G",(4_x)," is listening to ",msg 1;
+  if[not .lfm.enabled;:neg[aw z]@0,ccache[z]"music lookup is not enabled"];                     / check if functionality is enabled
+  if[0=count 4_x;:neg[aw z]@0,ccache[z]"music lookup from lastfm enabled, available options:\n* enter a username to attempt now playing lookup\n* enter 'user=<USERNAME>' to enter or update your own lastfm username\n* unset username by entering 'user='"];
+  .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / cache lastfm usernames
+  if[(uname:"c"$4_x)like"user=*";                                                               / update current users details
+    `:lfm_cache set $[0=count uname:(1+uname?"=") _ uname;.z.u _ .lfm.cache;.lfm.cache,enlist[.z.u]!enlist uname]; / update cache
+    :neg[aw z]@0,ccache[z]"Updated username";
+  ];
+  if[not(sname:`$uname)in users;:neg[aw z]@0,ccache[z]"user is not logged in/doesn't exists"];  / verify user is logged in
+  if[not sname in key .lfm.cache;:neg[aw z]@0,ccache[z]"user has not provided lastfm details"]; / verify user has provided required details
+  if[not first msg:.user.nowPlaying .lfm.cache sname;:neg[aw z]@0,ccache[z]msg 1];
+  lastmsg::.z.P;                                                                                / only updated timestamp before pushing public message
+  neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:raze"\033[G",1_ucol[.z.u;0],string[z],ucol[.z.u;1],"wants you to know",ucol[sname;0],uname,ucol[sname;1],"is listening to ",msg 1;
  };
 
 func:{[x;y;z] neg[aw z]@0,ccache[z]"\n"sv key[labels],'" ",'value labels}
