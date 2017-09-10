@@ -139,10 +139,10 @@ medo:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\
 / music lookup from lastfm
 mulo:{[x;y;z]
   if[not .lfm.enabled;:neg[aw z]@0,ccache[z]"music lookup is not enabled"];                     / check if functionality is enabled
-  if[0=count 4_x;:neg[aw z]@0,ccache[z]"music lookup from lastfm enabled, available options:\n* enter a username to attempt now playing lookup\n* enter 'user=<USERNAME>' to enter or update your own lastfm username\n* unset username by entering 'user='"];
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / cache lastfm usernames
+  if[0=count 4_x;:neg[aw z]@0,ccache[z]"music lookup from lastfm enabled, available options:\n* enter a username to attempt now playing lookup\n  users:",$[0=count k:key .lfm.cache;"()";", "sv string k],"\n* enter 'user=<USERNAME>' to enter or update your own lastfm username\n* unset username by entering 'user='"];
   if[(uname:"c"$4_x)like"user=*";                                                               / update current users details
-    `:lfm_cache set $[0=count uname:(1+uname?"=") _ uname;.z.u _ .lfm.cache;.lfm.cache,enlist[.z.u]!enlist uname]; / update cache
+    `:lfm_cache set $[0=count uname:(1+uname?"=")_uname;.z.u _.lfm.cache;.lfm.cache,enlist[.z.u]!enlist uname]; / update cache
     :neg[aw z]@0,ccache[z]"Updated username";
   ];
   if[not(sname:`$uname)in users;:neg[aw z]@0,ccache[z]"user is not logged in/doesn't exists"];  / verify user is logged in
