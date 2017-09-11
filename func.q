@@ -130,9 +130,14 @@ emji:{[x;y;z] if[not(`$3_"c"$x) in key emdict;:neg[y]@0,ccache[aw?y]"j"$"\033[GU
 
 labels:("\\q ";"\\h ";"\\c ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\v ";"\\me";"\\t ";"\\ml")!("quit";"help";"colour";"users";"info";"kick";"ostracise";"(y)";"add";"newchat";"delete";"emoji";"game";"volume";"action";"topic";"music lookup")
 
-words:@[read0;`:works;enlist"unknown"]
+words:@[read0;`:works;enlist"unknown"];
+/ cache topic list in random order to ensure all topics have been used once before repeating
+topcReturn:{[]
+  if[0=count@[value;`topcCache;()];topcCache::neg[count a]?a:@[read0;`:topics;enlist"there are no topics"]];
+  :last({topcCache::1_ x};first)@\:topcCache;
+ };
 
-topc:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\033[GThe current topic is: ",first 1?words;}
+topc:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\033[GThe current topic is: ",topcReturn[];}
 
 medo:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\033[G",1_ucol[.z.u;0],string[z],ucol[.z.u;1],4_x;};
 
@@ -157,7 +162,7 @@ func:{[x;y;z] neg[aw z]@0,ccache[z]"\n"sv key[labels],'" ",'value labels}
 cemdict:"c"$emdict
 pemji:{raze#[1;r],(cemdict`$td#'dr),'(td:?\:[dr;" "])_'dr:1_r:"//e "vs x}
 pcols:{raze#[1;r],(1_'coldict coldict?coldict`$td#'dr),'(1+td:?\:[dr;" "])_'dr:1_r:"//c "vs x}
-atproc:{#[a;x],1_first[ucol`$t],t,_[-1;(),last[ucol`$t::1_a _e#x]],_[e:count[x]^w?[(a:?[x;"@"])<w:where not x in .Q.an;1b];x]}/
+atproc:{#[a;x],$[count b:ucol`$t;1_first b;e=count[x];"";"@"],t,_[-1;(),last[ucol`$t::1_a _e#x]],_[e:count[x]^w?[(a:?[x;"@"])<w:where not x in .Q.an;1b];x]}/
 
 chat:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\033[G",ucol[.z.u;0],"[",$[10;string z],"]:",ucol[.z.u;1],$[any $["@"in cx:$["c";x];"c"$x:"j"$atproc cx;cx]like/:("*//c*";"*//e*");"j"$pemji[pcols cx],"\033[0m";x];};
 
