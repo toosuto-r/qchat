@@ -193,21 +193,28 @@ chatter:{tf[tf?tf 3$"c"$r][r:dc[chatprikey;x];.z.w;.z.u];};
 
 coldict:(``default`black`red`green`yellow`blue`magenta`cyan`gray`lightred`lightgreen`lightmagenta`lightcyan`lightgray`darkgray`white!(" \033[0m";" \033[0m";" \033[1;30m";" \033[1;31m";" \033[1;32m";" \033[1;33m";" \033[1;34m";" \033[1;35m";" \033[1;36m";" \033[1;37m";" \033[01;31m";" \033[01;32m";" \033[01;35m";" \033[01;36m";" \033[00;37m";" \033[01;30m";" \033[01;37m"));
 
+/broadcast, namedcast, returncast
+bc:{neg[value[aw]]@'0,'ccache[key[aw]]@'x}
+nc:{neg[aw y]@'z,'ccache[y]@\:x}
+rc:{neg[y]@z,ccache[aw?y]x}
+
+uct:{ucol[.z.u;0],x,ucol[.z.u;1]}
+
 /main chat - default action
-chat:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\033[G",ucol[.z.u;0],"[",$[10;string z],"]:",ucol[.z.u;1],x;};
+chat:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",uct["[",$[10;string z],"]:"],x;};
 
-quit:{[x;y;z]neg[y]@1,ccache[aw?y]"j"$"exit 0"};
+quit:{[x;y;z]rc[;y;1]"j"$"exit 0"};
 
-help:{[x;y;z]neg[y]@0,ccache[aw?y]"j"$"\033[GMessage typed without prefix are automatically broadcast to all logged in users.\nUseful functions are called with \\X or \\X input, where X is a lower case letter, e.g. '\\q' to quit"}
+help:{[x;y;z]rc[;y;0]"j"$"\033[GMessage typed without prefix are automatically broadcast to all logged in users.\nUseful functions are called with \\X or \\X input, where X is a lower case letter, e.g. '\\q' to quit"}
 
-clrs:{[x;y;z]if[not(`$3_"c"$x) in key coldict;:neg[y]@0,ccache[aw?y]"j"$"Incorrect colour"];
+clrs:{[x;y;z]if[not(`$3_"c"$x) in key coldict;:rc[;y;0]"j"$"Incorrect colour"];
   @[`ucol;z;:;(coldict `$3_"c"$x;"\033[0m ")];
   `:ucol set ucol;
-  :neg[y]@0,ccache[aw?y]"j"$"\033[GColour set. Fabulous."};
+  :rc[;y;0]"j"$"\033[GColour set. Fabulous."};
 
 uvol:![users;()]:\:""
 
-vlme:{[x;y;z]@[`uvol;z;{("";"\007")x~""}];neg[y]@0,ccache[z]"\033[G",$[count uvol z;"Bell on";"Bell off"];}
+vlme:{[x;y;z]@[`uvol;z;{("";"\007")x~""}];rc[;y;0]"\033[G",$[count uvol z;"Bell on";"Bell off"];}
 
 /chat action dictionary - should be appended to to add extra functions
 tf:("";"\\q ";"\\h ";"\\c ";"\\v ")!(chat;quit;help;clrs;vlme);
