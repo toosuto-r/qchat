@@ -140,7 +140,7 @@ topcReturn:{[]
 
 topc:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[GThe current topic is: ",topcReturn[];}
 
-medo:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",1_ucol[.z.u;0],string[z],ucol[.z.u;1],4_x;}
+medo:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",1_uct[string z],4_x;}
 
 func:{[x;y;z]rt[y;0]"\n"sv key[labels],'" ",'value labels}
 
@@ -149,7 +149,7 @@ pemji:{raze#[1;r],(cemdict`$td#'dr),'(td:?\:[dr;" "])_'dr:1_r:"//e "vs x}
 pcols:{raze#[1;r],(1_'coldict coldict?coldict`$td#'dr),'(1+td:?\:[dr;" "])_'dr:1_r:"//c "vs x}
 atproc:{#[a;x],$[count b:ucol`$t;1_first b;e=count[x];"";"@"],t,_[-1;(),last[ucol`$t::1_a _e#x]],_[e:count[x]^w?[(a:?[x;"@"])<w:where not x in .Q.an;1b];x]}/
 
-chat:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",ucol[.z.u;0],"[",$[10;string z],"]:",ucol[.z.u;1],$[any $["@"in cx:$["c";x];"c"$x:"j"$atproc cx;cx]like/:("*//c*";"*//e*");"j"$pemji[pcols cx],"\033[0m";x];};
+chat:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",uct["[",$[10;string z],"]:"],$[any $["@"in cx:$["c";x];"c"$x:"j"$atproc cx;cx]like/:("*//c*";"*//e*");"j"$pemji[pcols cx],"\033[0m";x];};
 
 boks:{[x;y;z]chat[;y;z]'["j"$("╔",((3*1+2*count x)#"═"),"╗";"║",(raze " ",'upper x)," ║";"╚",((3*1+2*count x:"c"$3_x)#"═"),"╝")];}
 biggerbox:{"\n" vs "╔",(a#"═"),"╗\n",c,"║",(raze " ",'upper y)," ║\n",(c:raze x#enlist "║",(b#" "),"║\n"),"╚",((a:3*b:1+2*count y)#"═"),"╝"}
