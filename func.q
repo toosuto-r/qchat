@@ -55,7 +55,7 @@ endgv:{@[`tf;"";:;chat];
   t:2 0N#neg[count pl]?pl;
   .[`plyr;(x;0);:;(),t 0];
   .[`plyr;(x;1);:;(),t 1];
-  @[`gameon;x;:;1b]; 
+  @[`gameon;x;:;1b];
   neg[aw pl]@'0,'ccache[pl]@'"j"$"you're in team ",/:raze string 1+where each pl in/:\:t;
   neg[aw pl]@'1,'ccache[pl]@\:"j"$raze"`.z.pi set {neg[x](`chatter;enc[chatkey;-1_\"\\\\",string[x],"\",y]);-1\"\\033[F\\r\\033[0J\\033[F\\r\";}[value `.z.w]";
   neg[aw pl]@'1,'ccache[pl]@\:"j"$
@@ -70,7 +70,7 @@ plyr:(``c4`gh!()):\:(();())
 turn:(``c4`gh!()):\:0
 gtvote:``c4`gh!(();();())
 gameon:(``c4`gh!()):\:0b
-turnlengths:``c4`gh!0N 7 10 
+turnlengths:``c4`gh!0N 7 10
 
 gtf:`c4`gh!(`.c4.play;{})
 
@@ -109,7 +109,7 @@ mkct:{[x;y;z] if[2>count r:r where 1&count'[r:" "vs "c"$3_x];:neg[y]@0,ccache[aw
   if[(cn:$[`;raze string md5 "Chat Room: ",r 0]) in key`:.;
     neg[y]@0,ccache[aw?y]"j"$"\033[GChat already exists - taking existing userlist";
     r:enlist[r 0],read0 hsym cn];
-  
+
   flags:" -name ",first[r]," -admin ",string[.z.u]," -users ","-"sv nu:(),/:$["-"~r[1;0];string[.z.u, users]except 1_r;(1_r),enlist string .z.u];
   chatcmd:raze $[persist;"nohup ",qloc;"q"]," chatter.q -p ",string[np:{$[x~r:@[system;"lsof -i :",string x;x];x;x+1i]}/[system"p"]],flags,$[persist;" &";""];
   system chatcmd;
@@ -130,9 +130,14 @@ emji:{[x;y;z] if[not(`$3_"c"$x) in key emdict;:neg[y]@0,ccache[aw?y]"j"$"\033[GU
 
 labels:("\\q ";"\\h ";"\\c ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\v ";"\\me";"\\t ")!("quit";"help";"colour";"users";"info";"kick";"ostracise";"(y)";"add";"newchat";"delete";"emoji";"game";"volume";"action";"topic")
 
-words:@[read0;`:works;enlist"unknown"]
+words:@[read0;`:works;enlist"unknown"];
+/ cache topic list in random order to ensure all topics have been used once before repeating
+topcReturn:{[]
+  if[0=count@[value;`topcCache;()];topcCache::neg[count a]?a:@[read0;`:topics;enlist"there are no topics"]];
+  :last({topcCache::1_ x};first)@\:topcCache;
+ };
 
-topc:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\033[GThe current topic is: ",first 1?words;}
+topc:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\033[GThe current topic is: ",topcReturn[];}
 
 medo:{[x;y;z]lastmsg::.z.P;neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:"\033[G",1_ucol[.z.u;0],string[z],ucol[.z.u;1],4_x;}
 
