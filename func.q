@@ -142,7 +142,7 @@ topc:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[GThe current topic is: ",topc
 
 medo:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",1_uct[string z],4_x;}
 
-func:{[x;y;z]rt[y;0]"\n"sv key[labels],'" ",'value labels}
+func:{[x;y;z]rc[;y;0]"\n"sv key[labels],'" ",'value labels}
 
 cemdict:"c"$emdict
 pemji:{raze#[1;r],(cemdict`$td#'dr),'(td:?\:[dr;" "])_'dr:1_r:"//e "vs x}
@@ -151,10 +151,18 @@ atproc:{#[a;x],$[count b:ucol`$t;1_first b;e=count[x];"";"@"],t,_[-1;(),last[uco
 
 chat:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",uct["[",$[10;string z],"]:"],$[any $["@"in cx:$["c";x];"c"$x:"j"$atproc cx;cx]like/:("*//c*";"*//e*");"j"$pemji[pcols cx],"\033[0m";x];};
 
+publ:{[x;y;z]bc uvol[key aw],\:"\033[G",uct[z],x;};
+
 boks:{[x;y;z]chat[;y;z]'["j"$("╔",((3*1+2*count x)#"═"),"╗";"║",(raze " ",'upper x)," ║";"╚",((3*1+2*count x:"c"$3_x)#"═"),"╝")];}
 biggerbox:{"\n" vs "╔",(a#"═"),"╗\n",c,"║",(raze " ",'upper y)," ║\n",(c:raze x#enlist "║",(b#" "),"║\n"),"╚",((a:3*b:1+2*count y)#"═"),"╝"}
 bbks:{[x;y;z]chat[;y;z]'["j"$biggerbox . {(5&1^"J"$x[1];" " sv 2_x)} " " vs "c"$3_x];}
 
+workernames:``news!"[",/:$[10;("BLANK";"NEWSBOT")],\:"]:"
+
+worker:{publ[y;0;n:workernames x]}
+
+news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;`);}
+
 tf[""]:chat
 
-tf,:("\\  ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4";"\\b ";"\\bb";"\\t ";"\\me")!(func;usls;info;kick;ostr;thum;addu;mkct;dlte;emji;gamr;c4tn;boks;bbks;topc;medo);
+tf,:("\\  ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4";"\\b ";"\\bb";"\\t ";"\\me";"\\ne")!(func;usls;info;kick;ostr;thum;addu;mkct;dlte;emji;gamr;c4tn;boks;bbks;topc;medo;news);

@@ -44,7 +44,7 @@ ccache:@[get;`:ccache;()!()]
 ucol:@[get;`:ucol;enlist[`]!enlist""]
 lastmsg:0Np
 
-fallowed:`checker`decider`getpubkey`testdec`testenc`checkphrase`chatter`finalcheck
+fallowed:`checker`decider`getpubkey`testdec`testenc`checkphrase`chatter`finalcheck`worker
 
 /Only allow users
 .z.ps:{if[x[0] in fallowed;:value x];neg[.z.w]"-1\"Rude.\""}
