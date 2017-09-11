@@ -1,4 +1,4 @@
-/.z.pw:{not count .z.W}
+.z.pw:{[u;p]"b"$not count .z.W}
 
 /Powered by News API
 /default BBC
