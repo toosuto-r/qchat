@@ -17,12 +17,11 @@ getheadline:{news:.j.k .Q.hg first 1?src;
 
 / user functions
 .lfm.getRecentTracks:{.lfm.req"user.getrecenttracks&user=",x};
-.lfm.nowPlaying:{[x;y]                                                                          / [user;msg]
-  .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / cache lastfm usernames
-  msg:.lfm.getRecentTracks .lfm.cache`$y;
+.lfm.nowPlaying:{[x;y;z]                                                                        / [user;lfm name;msg]
+  msg:.lfm.getRecentTracks y;
   if[`error in key msg;:()];                                                                    / error
   if[0=count m:msg[`recenttracks]`track;:()];                                                   / no recent tracks
   if[not(`$"@attr")in key a:first m;:()];                                                       / not listening
-  v:"'",a[`name],"' by ",a[`artist]`$"#text";
-  :neg[.z.w](`worker;`music;x,": ",y," is listening to ",v);
+  s:"'",a[`name],"' by ",a[`artist]`$"#text";
+  :neg[.z.w](`worker;`music;"Hey ",x,", ",z," is listening to ",s);
  };
