@@ -1,4 +1,4 @@
-labels,:("\\ne";"\\ml")!("news";"music");
+labels,:("\\ne";"\\ml";"\\bc")!("news";"music";"bitcoin");
 
 news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;uct string z);}
 mulo:{[x;y;z]
@@ -11,9 +11,12 @@ mulo:{[x;y;z]
     :rc[;y;0]"\033[GUpdated username";
   ];
   if[not(`$msg)in key .lfm.cache;:rc[;y;0]"\033[Guser not available"];
-  rc[;y;0]"\033[GGetting music";neg[wh](`.lfm.nowPlaying;trim uct string z;.lfm.cache`$msg;trim uct msg);
+  rc[;y;0]"\033[GSending Request";neg[wh](`.lfm.nowPlaying;trim uct string z;.lfm.cache`$msg;trim uct msg);
+ };
+btcp:{[x;y;z]
+ rc[;y;0]"\033[GGetting BTC price";neg[wh](`.btc.getprice;trim uct string z);
  };
 
-workernames,:`news`music!"[",/:$[10;("NEWSBOT";"LASTFMBOT")],\:"]:"
+workernames,:`news`music`bitcoin!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT")],\:"]:"
 
-tf,:("\\ne";"\\ml")!(news;mulo);
+tf,:("\\ne";"\\ml";"\\bc")!(news;mulo;btpc);

@@ -25,3 +25,9 @@ getheadline:{news:.j.k .Q.hg first 1?src;
   s:"'",a[`name],"' by ",a[`artist]`$"#text";
   :neg[.z.w](`worker;`music;"Hey ",x,", ",z," is listening to ",s);
  };
+
+/ bitcoin
+.btc.getprice:{
+ j:.j.k .Q.hg`$":https://api.coindesk.com/v1/bpi/currentprice.json";
+ :neg[.z.w](`worker;`bitcoin;"Hey ",x,", bitcoin price is currently: USD ",j[`bpi][`USD][`rate]);
+ }
