@@ -11,7 +11,8 @@ mulo:{[x;y;z]
     :rc[;y;0]"\033[GUpdated username";
   ];
   if[not(`$msg)in key .lfm.cache;:rc[;y;0]"\033[Guser not available"];
-  rc[;y;0]"\033[GSending Request";neg[wh](`.lfm.nowPlaying;trim uct string z;.lfm.cache`$msg;trim uct msg);
+  rc[;y;0]"\033[GSending Request";
+  neg[wh](`.lfm.nowPlaying;trim uct string z;.lfm.cache`$msg;trim uct msg);
  };
 btcp:{[x;y;z]
  rc[;y;0]"\033[GGetting BTC price";neg[wh](`.btc.getprice;trim uct string z);
@@ -19,4 +20,4 @@ btcp:{[x;y;z]
 
 workernames,:`news`music`bitcoin!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT")],\:"]:"
 
-tf,:("\\ne";"\\ml";"\\bc")!(news;mulo;btpc);
+tf,:("\\ne";"\\ml";"\\bc")!(news;mulo;btcp);
