@@ -162,7 +162,7 @@ workernames:``news!"[",/:$[10;("BLANK";"NEWSBOT")],\:"]:"
 
 worker:{publ[y;0;n:workernames x]}
 
-news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;`);}
+news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;uct string z);}
 
 mulo:{[x;y;z]
   if[not .lfm.enabled;:neg[aw z]@0,ccache[z]"music lookup is not enabled"];                     / check if functionality is enabled
