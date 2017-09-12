@@ -158,7 +158,7 @@ boks:{[x;y;z]chat[;y;z]'["j"$("╔",((3*1+2*count x)#"═"),"╗";"║",(raze " 
 biggerbox:{"\n" vs "╔",(a#"═"),"╗\n",c,"║",(raze " ",'upper y)," ║\n",(c:raze x#enlist "║",(b#" "),"║\n"),"╚",((a:3*b:1+2*count y)#"═"),"╝"}
 bbks:{[x;y;z]chat[;y;z]'["j"$biggerbox . {(5&1^"J"$x[1];" " sv 2_x)} " " vs "c"$3_x];}
 
-workernames:``news`music!"[",/:$[10;("BLANK";"NEWSBOT";"LASTFMBOT")],\:"]:"
+workernames:``news`music`bitcoin!"[",/:$[10;("BLANK";"NEWSBOT";"LASTFMBOT";"BTCBOT")],\:"]:"
 
 worker:{publ[y;0;n:workernames x]}
 
@@ -175,7 +175,10 @@ mulo:{[x;y;z]
   if[not(`$msg)in key .lfm.cache;:rc[;y;0]"\033[Guser not available"];
   rc[;y;0]"\033[GGetting music";neg[wh](`.lfm.nowPlaying;trim uct string z;.lfm.cache`$msg;trim uct msg);
  };
+btcp:{[x;y;z]
+ rc[;y;0]"\033[GGetting BTC price";neg[wh](`.btc.getprice;trim uct string z);
+ };
 
 tf[""]:chat
 
-tf,:("\\  ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4";"\\b ";"\\bb";"\\t ";"\\me";"\\ne";"\\ml")!(func;usls;info;kick;ostr;thum;addu;mkct;dlte;emji;gamr;c4tn;boks;bbks;topc;medo;news;mulo);
+tf,:("\\  ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4";"\\b ";"\\bb";"\\t ";"\\me";"\\ne";"\\ml";"\\bc")!(func;usls;info;kick;ostr;thum;addu;mkct;dlte;emji;gamr;c4tn;boks;bbks;topc;medo;news;mulo;btcp);
