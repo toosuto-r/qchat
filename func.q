@@ -167,7 +167,7 @@ mulo:{[x;y;z]
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / cache lastfm usernames
   msg:trim"c"$3_x;                                                                              / get user commands
   if[not[.lfm.enabled]or()~key`:lfm_key;:rc[;y;0]"\033[Gmusic lookup not enabled"];
-  if[0=count msg;:rc[;y;0]"\033[Gmusic lookup from lastfm enabled, available options:\n* enter a username to attempt now playing lookup\n  users:",$[0=count k:key .lfm.cache;"()";", "sv string k],"\n* enter 'user=<USERNAME>' to enter or update your own lastfm username\n* unset username by entering 'user='"];
+  if[0=count msg;:rc[;y;0]"\033[Gmusic lookup from lastfm enabled, available options:\n* enter a username to attempt now playing lookup\n  users:",$[0=count k:key .lfm.cache;"()";", "sv trim'[uct'[string k]]],"\n* enter 'user=<USERNAME>' to enter or update your own lastfm username\n* unset username by entering 'user='"];
   if[msg like"user=*";
     `:lfm_cache set $[0=count uname:(1+msg?"=")_msg;.z.u _.lfm.cache;.lfm.cache,enlist[.z.u]!enlist uname]; / update cache
     :rc[;y;0]"\033[GUpdated username";
