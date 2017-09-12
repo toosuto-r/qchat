@@ -8,7 +8,7 @@ getheadline:{news:.j.k .Q.hg first 1?src;
   neg[.z.w](`worker;`news;raze"(",x,") "," - "sv(),/:"c"$enlist[news`source],first each?[1;news`articles]`title`description`url)}
 
 / last fm analysis
-.lfm.key:first@[read0;`:lfm_key;{.lfm.enabled:0b;-1 x;""}];
+.lfm.key:first@[read0;`:lfm_key;""];
 
 .lfm.root:"http://ws.audioscrobbler.com/2.0/";
 .lfm.post:"&api_key=",.lfm.key,"&format=json";

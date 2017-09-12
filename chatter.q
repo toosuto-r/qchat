@@ -7,4 +7,3 @@ if[workeron;system "q worker.q -p ",string[wp:{$[x~r:@[system;"lsof -i :",string
 \l connect4.q
 \d .
 \l levenshtein.q
-\l music.q
