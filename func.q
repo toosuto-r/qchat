@@ -158,13 +158,25 @@ boks:{[x;y;z]chat[;y;z]'["j"$("╔",((3*1+2*count x)#"═"),"╗";"║",(raze " 
 biggerbox:{"\n" vs "╔",(a#"═"),"╗\n",c,"║",(raze " ",'upper y)," ║\n",(c:raze x#enlist "║",(b#" "),"║\n"),"╚",((a:3*b:1+2*count y)#"═"),"╝"}
 bbks:{[x;y;z]chat[;y;z]'["j"$biggerbox . {(5&1^"J"$x[1];" " sv 2_x)} " " vs "c"$3_x];}
 
-workernames:``news!"[",/:$[10;("BLANK";"NEWSBOT")],\:"]:"
+workernames:``news`music!"[",/:$[10;("BLANK";"NEWSBOT";"LASTFMBOT")],\:"]:"
 
 worker:{publ[y;0;n:workernames x]}
 
 news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;uct string z);}
-
 mulo:{[x;y;z]
+  `aa set (x;y;z);
+  msg:trim"c"$3_x;
+  .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / cache lastfm usernames
+  if[0=count msg;:rc[;y;0]"\033[Gmusic lookup from lastfm enabled, available options:\n* enter a username to attempt now playing lookup\n  users:",$[0=count k:key .lfm.cache;"()";", "sv string k],"\n* enter 'user=<USERNAME>' to enter or update your own lastfm username\n* unset username by entering 'user='"];
+  if[msg like"user=*";
+    `:lfm_cache set $[0=count uname:(1+msg?"=")_msg;.z.u _.lfm.cache;.lfm.cache,enlist[.z.u]!enlist uname]; / update cache
+    :rc[;y;0]"\033[GUpdated username";
+  ];
+  if[not(`$msg)in key .lfm.cache;:rc[;y;0]"\033[Guser not available"];
+  rc[;y;0]"\033[GGetting music";neg[wh](`.lfm.nowPlaying;uct string z;msg);
+ };
+
+mulo2:{[x;y;z]
   if[not .lfm.enabled;:neg[aw z]@0,ccache[z]"music lookup is not enabled"];                     / check if functionality is enabled
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / cache lastfm usernames
   if[0=count 4_x;:neg[aw z]@0,ccache[z]"music lookup from lastfm enabled, available options:\n* enter a username to attempt now playing lookup\n  users:",$[0=count k:key .lfm.cache;"()";", "sv string k],"\n* enter 'user=<USERNAME>' to enter or update your own lastfm username\n* unset username by entering 'user='"];
