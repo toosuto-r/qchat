@@ -161,7 +161,7 @@ workernames:``news!"[",/:$[10;("BLANK";"NEWSBOT")],\:"]:"
 
 worker:{publ[y;0;n:workernames x]}
 
-news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;`);}
+news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;uct string z);}
 
 tf[""]:chat
 
