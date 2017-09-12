@@ -143,6 +143,27 @@ topc:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[GThe current topic is: ",topc
 medo:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",1_uct[string z],4_x;}
 
 / music lookup from lastfm
+func:{[x;y;z]rc[;y;0]"\n"sv key[labels],'" ",'value labels}
+
+cemdict:"c"$emdict
+pemji:{raze#[1;r],(cemdict`$td#'dr),'(td:?\:[dr;" "])_'dr:1_r:"//e "vs x}
+pcols:{raze#[1;r],(1_'coldict coldict?coldict`$td#'dr),'(1+td:?\:[dr;" "])_'dr:1_r:"//c "vs x}
+atproc:{#[a;x],$[count b:ucol`$t;1_first b;e=count[x];"";"@"],t,_[-1;(),last[ucol`$t::1_a _e#x]],_[e:count[x]^w?[(a:?[x;"@"])<w:where not x in .Q.an;1b];x]}/
+
+chat:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",uct["[",$[10;string z],"]:"],$[any $["@"in cx:$["c";x];"c"$x:"j"$atproc cx;cx]like/:("*//c*";"*//e*");"j"$pemji[pcols cx],"\033[0m";x];};
+
+publ:{[x;y;z]bc uvol[key aw],\:"\033[G",uct[z],x;};
+
+boks:{[x;y;z]chat[;y;z]'["j"$("╔",((3*1+2*count x)#"═"),"╗";"║",(raze " ",'upper x)," ║";"╚",((3*1+2*count x:"c"$3_x)#"═"),"╝")];}
+biggerbox:{"\n" vs "╔",(a#"═"),"╗\n",c,"║",(raze " ",'upper y)," ║\n",(c:raze x#enlist "║",(b#" "),"║\n"),"╚",((a:3*b:1+2*count y)#"═"),"╝"}
+bbks:{[x;y;z]chat[;y;z]'["j"$biggerbox . {(5&1^"J"$x[1];" " sv 2_x)} " " vs "c"$3_x];}
+
+workernames:``news!"[",/:$[10;("BLANK";"NEWSBOT")],\:"]:"
+
+worker:{publ[y;0;n:workernames x]}
+
+news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;`);}
+
 mulo:{[x;y;z]
   if[not .lfm.enabled;:neg[aw z]@0,ccache[z]"music lookup is not enabled"];                     / check if functionality is enabled
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / cache lastfm usernames
@@ -158,19 +179,6 @@ mulo:{[x;y;z]
   neg[value[aw]]@'0,'ccache[key[aw]]@'uvol[key aw],\:raze"\033[G",1_ucol[.z.u;0],string[z],ucol[.z.u;1],"wants you to know",ucol[sname;0],uname,ucol[sname;1],"is listening to ",msg 1;
  };
 
-func:{[x;y;z]rt[y;0]"\n"sv key[labels],'" ",'value labels}
-
-cemdict:"c"$emdict
-pemji:{raze#[1;r],(cemdict`$td#'dr),'(td:?\:[dr;" "])_'dr:1_r:"//e "vs x}
-pcols:{raze#[1;r],(1_'coldict coldict?coldict`$td#'dr),'(1+td:?\:[dr;" "])_'dr:1_r:"//c "vs x}
-atproc:{#[a;x],$[count b:ucol`$t;1_first b;e=count[x];"";"@"],t,_[-1;(),last[ucol`$t::1_a _e#x]],_[e:count[x]^w?[(a:?[x;"@"])<w:where not x in .Q.an;1b];x]}/
-
-chat:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",uct["[",$[10;string z],"]:"],$[any $["@"in cx:$["c";x];"c"$x:"j"$atproc cx;cx]like/:("*//c*";"*//e*");"j"$pemji[pcols cx],"\033[0m";x];};
-
-boks:{[x;y;z]chat[;y;z]'["j"$("╔",((3*1+2*count x)#"═"),"╗";"║",(raze " ",'upper x)," ║";"╚",((3*1+2*count x:"c"$3_x)#"═"),"╝")];}
-biggerbox:{"\n" vs "╔",(a#"═"),"╗\n",c,"║",(raze " ",'upper y)," ║\n",(c:raze x#enlist "║",(b#" "),"║\n"),"╚",((a:3*b:1+2*count y)#"═"),"╝"}
-bbks:{[x;y;z]chat[;y;z]'["j"$biggerbox . {(5&1^"J"$x[1];" " sv 2_x)} " " vs "c"$3_x];}
-
 tf[""]:chat
 
-tf,:("\\  ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4";"\\b ";"\\bb";"\\t ";"\\me";"\\ml")!(func;usls;info;kick;ostr;thum;addu;mkct;dlte;emji;gamr;c4tn;boks;bbks;topc;medo;mulo);
+tf,:("\\  ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4";"\\b ";"\\bb";"\\t ";"\\me";"\\ne";"\\ml")!(func;usls;info;kick;ostr;thum;addu;mkct;dlte;emji;gamr;c4tn;boks;bbks;topc;medo;news;mulo);
