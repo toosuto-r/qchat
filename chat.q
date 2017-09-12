@@ -198,7 +198,8 @@ bc:{neg[value[aw]]@'0,'ccache[key[aw]]@'x}
 nc:{neg[aw y]@'z,'ccache[y]@\:x}
 rc:{neg[y]@z,ccache[aw?y]x}
 
-uct:{ucol[.z.u;0],x,ucol[.z.u;1]}
+uct:{ucol[.z.u;0],x,ucol[.z.u;1]};
+ucn:{ucol[x;0],y,ucol[x;1]};
 
 /main chat - default action
 chat:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",uct["[",$[10;string z],"]:"],x;};
