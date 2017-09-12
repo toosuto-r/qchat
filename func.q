@@ -129,7 +129,7 @@ emji:{[x;y;z] if[not(`$3_"c"$x) in key emdict;:rc[;y;0]"j"$"\033[GUnknown emoji 
   if[null`$3_"c"$x;:rc[;y;0]emdict`];
   chat[;y;z]emdict `$"c"$3_x;}
 
-labels:("\\q ";"\\h ";"\\c ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\v ";"\\me";"\\t ";"\\ml")!("quit";"help";"colour";"users";"info";"kick";"ostracise";"(y)";"add";"newchat";"delete";"emoji";"game";"volume";"action";"topic";"music lookup")
+labels:("\\q ";"\\h ";"\\c ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\v ";"\\me";"\\t ")!("quit";"help";"colour";"users";"info";"kick";"ostracise";"(y)";"add";"newchat";"delete";"emoji";"game";"volume";"action";"topic")
 
 words:@[read0;`:works;enlist"unknown"];
 / cache topic list in random order to ensure all topics have been used once before repeating
@@ -158,24 +158,10 @@ boks:{[x;y;z]chat[;y;z]'["j"$("╔",((3*1+2*count x)#"═"),"╗";"║",(raze " 
 biggerbox:{"\n" vs "╔",(a#"═"),"╗\n",c,"║",(raze " ",'upper y)," ║\n",(c:raze x#enlist "║",(b#" "),"║\n"),"╚",((a:3*b:1+2*count y)#"═"),"╝"}
 bbks:{[x;y;z]chat[;y;z]'["j"$biggerbox . {(5&1^"J"$x[1];" " sv 2_x)} " " vs "c"$3_x];}
 
-workernames:``news`music!"[",/:$[10;("BLANK";"NEWSBOT";"LASTFMBOT")],\:"]:"
+workernames:enlist[`]!enlist"[",$[10;"BLANK"],"]";
 
 worker:{publ[y;0;n:workernames x]}
 
-news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;uct string z);}
-mulo:{[x;y;z]
-  .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / cache lastfm usernames
-  msg:trim"c"$3_x;                                                                              / get user commands
-  if[not[.lfm.enabled]or()~key`:lfm_key;:rc[;y;0]"\033[Gmusic lookup not enabled"];
-  if[0=count msg;:rc[;y;0]"\033[Gmusic lookup from lastfm enabled, available options:\n* enter a username to attempt now playing lookup\n  users:",$[0=count k:key .lfm.cache;"()";", "sv trim'[uct'[string k]]],"\n* enter 'user=<USERNAME>' to enter or update your own lastfm username\n* unset username by entering 'user='"];
-  if[msg like"user=*";
-    `:lfm_cache set $[0=count uname:(1+msg?"=")_msg;.z.u _.lfm.cache;.lfm.cache,enlist[.z.u]!enlist uname]; / update cache
-    :rc[;y;0]"\033[GUpdated username";
-  ];
-  if[not(`$msg)in key .lfm.cache;:rc[;y;0]"\033[Guser not available"];
-  rc[;y;0]"\033[GGetting music";neg[wh](`.lfm.nowPlaying;trim uct string z;.lfm.cache`$msg;trim uct msg);
- };
-
 tf[""]:chat
 
-tf,:("\\  ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4";"\\b ";"\\bb";"\\t ";"\\me";"\\ne";"\\ml")!(func;usls;info;kick;ostr;thum;addu;mkct;dlte;emji;gamr;c4tn;boks;bbks;topc;medo;news;mulo);
+tf,:("\\  ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4";"\\b ";"\\bb";"\\t ";"\\me")!(func;usls;info;kick;ostr;thum;addu;mkct;dlte;emji;gamr;c4tn;boks;bbks;topc;medo);
