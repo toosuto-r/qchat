@@ -129,7 +129,7 @@ emji:{[x;y;z] if[not(`$3_"c"$x) in key emdict;:rc[;y;0]"j"$"\033[GUnknown emoji 
   if[null`$3_"c"$x;:rc[;y;0]emdict`];
   chat[;y;z]emdict `$"c"$3_x;}
 
-labels:("\\q ";"\\h ";"\\c ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\v ";"\\me";"\\t ";"\\ml")!("quit";"help";"colour";"users";"info";"kick";"ostracise";"(y)";"add";"newchat";"delete";"emoji";"game";"volume";"action";"topic";"music lookup")
+labels:("\\q ";"\\h ";"\\c ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\v ";"\\me";"\\t ";"\\ne";"\\ml")!("quit";"help";"colour";"users";"info";"kick";"ostracise";"(y)";"add";"newchat";"delete";"emoji";"game";"volume";"action";"topic";"news";"music")
 
 words:@[read0;`:works;enlist"unknown"];
 / cache topic list in random order to ensure all topics have been used once before repeating
@@ -167,14 +167,14 @@ mulo:{[x;y;z]
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / cache lastfm usernames
   msg:trim"c"$3_x;                                                                              / get user commands
   if[not[.lfm.enabled]or()~key`:lfm_key;:rc[;y;0]"\033[Gmusic lookup not enabled"];
-  if[0=count msg;:rc[;y;0]"\033[Gmusic lookup from lastfm enabled, available options:\n* enter a username to attempt now playing lookup\n  users:",$[0=count k:key .lfm.cache;"()";", "sv string k],"\n* enter 'user=<USERNAME>' to enter or update your own lastfm username\n* unset username by entering 'user='"];
+  if[0=count msg;:rc[;y;0]"\033[Gmusic lookup from lastfm enabled, available options:\n* enter a username to attempt now playing lookup\n  users:",$[0=count k:key .lfm.cache;"()";", "sv trim'[ucn'[k;string k]]],"\n* enter 'user=<USERNAME>' to enter or update your own lastfm username\n* unset username by entering 'user='"];
   if[msg like"user=*";
     `:lfm_cache set $[0=count uname:(1+msg?"=")_msg;.z.u _.lfm.cache;.lfm.cache,enlist[.z.u]!enlist uname]; / update cache
     :rc[;y;0]"\033[GUpdated username";
   ];
   if[not(`$msg)in key .lfm.cache;:rc[;y;0]"\033[Guser not available"];
   rc[;y;0]"\033[GSending request";
-  neg[wh](`.lfm.nowPlaying;trim uct string z;.lfm.cache`$msg;msg);
+  neg[wh](`.lfm.nowPlaying;trim uct string z;.lfm.cache`$msg;trim ucn[`$msg;msg]);
  };
 
 tf[""]:chat
