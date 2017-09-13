@@ -15,7 +15,9 @@ mulo:{[x;y;z]
   neg[wh](`.lfm.nowPlaying;trim uct string z;.lfm.cache`$msg;trim uct msg);
  };
 btcp:{[x;y;z]
- rc[;y;0]"\033[GGetting BTC price";neg[wh](`.btc.getprice;trim uct string z);
+ if[`~`$upper trim"c"$3_x;x:"xxxUSD"];
+ if[not (c:`$upper trim"c"$3_x) in `USD`GBP`EUR;:rc[;y;0]"\033[GUnsupported currency. Supported currencies: gbp,usd,eur"];
+ rc[;y;0]"\033[GGetting BTC price";neg[wh](`.btc.getprice;trim uct string z;c);
  };
 
 workernames,:`news`music`bitcoin!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT")],\:"]:"
