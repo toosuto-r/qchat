@@ -28,7 +28,7 @@ getheadline:{news:.j.k .Q.hg first 1?src;
 
 / bitcoin
 .btc.getprice:{
- j:.j.k .Q.hg`$":https://api.coindesk.com/v1/bpi/currentprice.json";
+ j:.j.k .Q.hg`$":http://api.coindesk.com/v1/bpi/currentprice.json";
  d:`GBP`USD`EUR!("£";"$";"€");
  :neg[.z.w](`worker;`bitcoin;"Hey ",x,", bitcoin price is currently: ",d[y],j[`bpi][y][`rate]," (",string[y],")");
  }
