@@ -12,7 +12,7 @@ mulo:{[x;y;z]
   ];
   if[not(`$msg)in key .lfm.cache;:rc[;y;0]"\033[Guser not available"];
   rc[;y;0]"\033[GSending Request";
-  neg[wh](`.lfm.nowPlaying;trim uct string z;.lfm.cache`$msg;trim uct msg);
+  neg[wh](`.lfm.nowPlaying;trim uct string z;.lfm.cache`$msg;trim ucn[`$msg;msg]);
  };
 btcp:{[x;y;z]
  if[`~`$upper trim"c"$3_x;x:"xxxUSD"];
