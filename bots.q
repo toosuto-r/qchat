@@ -14,11 +14,11 @@ mulo:{[x;y;z]
   ];
   if[not(`$msg)in key .lfm.cache;:rc[;y;0]"\033[Guser not available"];
   rc[;y;0]"\033[GSending Request";
-  neg[wh](`.lfm.nowPlaying;trim uct string z;.lfm.cache`$msg;trim uct msg);
+  neg[wh](`.lfm.nowPlaying;trim uct string z;.lfm.cache`$msg;trim ucn[`$msg;msg]);
  };
 btcp:{[x;y;z]
  if[`~`$upper trim"c"$3_x;x:"xxxUSD"];
- if[not (c:`$upper trim"c"$3_x) in `USD`GBP`EUR;:rc[;y;0]"\033[GUnsupported currency. Supported currencies: gbp,usd,eur"];
+ if[not (c:`$upper trim"c"$3_x) in `USD`GBP`EUR`PLOT;:rc[;y;0]"\033[GUnsupported currency/option. Supported currencies: gbp,usd,eur. Options: plot"];
  rc[;y;0]"\033[GGetting BTC price";neg[wh](`.btc.getprice;trim uct string z;c);
  };
 
