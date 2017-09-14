@@ -31,7 +31,9 @@ Client can type a `\h` to access a help message and `\` to access a list of func
 Bots provide additional functionality and are handled by `worker.q`, which is a separate process spun up if `workeron` is true. This allows the bots to make web requests that may potentially hang before return the result to the chat.
 Several chat bots are available that may be called from backslash `\` commands.
 
-Bots require a function to handle backslash requests on the server. This function in turn should pass data to a handler function on the worker process which makes HTTP requests (if required).
+To create a bot server and worker code must be defined in `bots.q` and `worker.q` respectively.
+In `bots.q` a help message should be added to `lables` and an input handler should be defined, with its name added to `tf`. The bots name should be added to `workernames`.
+In `worker.q` a function to handle the input and make any HTTP requests should be added. This function should return its result to the worker function.
 
 ## Contributing
 

@@ -12,15 +12,15 @@ getheadline:{news:.j.k .Q.hg first 1?src;
   neg[.z.w](`worker;`news;raze"(",x,") "," - "sv(),/:"c"$enlist[news`source],first each?[1;news`articles]`title`description`url)}
 
 / last fm analysis
-.lfm.key:first@[read0;`:lfm_key;""];
+.lfm.key:first@[read0;`:lfm_key;""];                                                            / api key
 .lfm.req:{.j.k .Q.hg`$"http://ws.audioscrobbler.com/2.0/?format=json&api_key=",.lfm.key,"&method=user.getrecenttracks&user=",x};
-.lfm.nowPlaying:{[x;y;z]                                                                        / [user;lfm name;msg]
+.lfm.nowPlaying:{[x;y;z]                                                                        / [user;lfm name;msg] return users now playing track, mentioning the user who made the request
   msg:.lfm.req y;
-  if[`error in key msg;:()];                                                                    / error
-  if[0=count m:msg[`recenttracks]`track;:()];                                                   / no recent tracks
-  if[not(`$"@attr")in key a:first m;:()];                                                       / not listening
-  s:"'",a[`name],"' by ",a[`artist]`$"#text";
-  :neg[.z.w](`worker;`music;"Hey ",x,", ",z," is listening to ",s);
+  if[`error in key msg;:()];                                                                    / error returned from lfm
+  if[0=count m:msg[`recenttracks]`track;:()];                                                   / no recent tracks for user
+  if[not(`$"@attr")in key a:first m;:()];                                                       / user is currently not listening
+  s:"'",a[`name],"' by ",a[`artist]`$"#text";                                                   / return track details
+  :neg[.z.w](`worker;`music;"Hey ",x,", ",z," is listening to ",s);                             / pass message back to server
  };
 
 / bitcoin
