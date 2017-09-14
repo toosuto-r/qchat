@@ -10,7 +10,6 @@ challenge=:"b"$count raze .Q.opt[.z.x]`challenge;
 persist:1b;
 record:1b;
 transfer:1b;
-.lfm.enabled:1b;
 
 forbiddenkeys:(3233 413;3233 17;3233 2753)
 forbiddenkeys:(0N 0N;0N 0N)

@@ -1,9 +1,9 @@
-http://newsapi.org/v1/articles?source=bbc-news&sortBy=top&apiKey=ed61d8472c6845e1b7467c11ac999f69
-http://newsapi.org/v1/articles?source=bloomberg&sortBy=top&apiKey=ed61d8472c6845e1b7467c11ac999f69
-http://newsapi.org/v1/articles?source=ars-technica&sortBy=top&apiKey=ed61d8472c6845e1b7467c11ac999f69
-http://newsapi.org/v1/articles?source=financial-times&sortBy=top&apiKey=ed61d8472c6845e1b7467c11ac999f69
-http://newsapi.org/v1/articles?source=reddit-r-all&sortBy=top&apiKey=ed61d8472c6845e1b7467c11ac999f69
-http://newsapi.org/v1/articles?source= mirror-online & sortBy = top & apiKey = ed61d8472c6845e1b7467c11ac999f69
-http://newsapi.org/v1/articles?source=the-economist&sortBy=top&apiKey=ed61d8472c6845e1b7467c11ac999f69
-http://newsapi.org/v1/articles?source=the-times-of-india&sortBy=top&apiKey=ed61d8472c6845e1b7467c11ac999f69
-http://newsapi.org/v1/articles?source=ign&sortBy=top&apiKey=ed61d8472c6845e1b7467c11ac999f69
+bbc-news&sortBy=top
+bloomberg&sortBy=top
+ars-technica&sortBy=top
+financial-times&sortBy=top
+reddit-r-all&sortBy=top
+mirror-online&sortBy=top
+the-economist&sortBy=top
+the-times-of-india&sortBy=top
+ign&sortBy=top

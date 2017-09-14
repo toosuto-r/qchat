@@ -1,5 +1,7 @@
 labels,:("\\ne";"\\ml";"\\bc")!("news";"music";"bitcoin");
 
+.lfm.enabled:1b;
+
 news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;uct string z);}
 mulo:{[x;y;z]
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / cache lastfm usernames
