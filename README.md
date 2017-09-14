@@ -3,7 +3,7 @@ KDB+ end-to-end RSA encrypted chat fun
 
 ## Installation
 
-Clone this repo
+Clone this repo from [here](https://github.com/toosuto-r/qchat).
 
 ## Usage
 
@@ -36,8 +36,9 @@ Bots require a function to handle backslash requests on the server. This functio
 ## Contributing
 
 ## Credits
-[toosuto-r](https://github.com/toosuto-r)
-[jonathonmcmurray](https://github.com/jonathonmcmurray)
-[vibronicshark55](https://github.com/vibronicshark55)
+This repo is maintained by the creator and chief contributor [toosuto-r](https://github.com/toosuto-r).
+Additional commits have been made by:
+* [jonathonmcmurray](https://github.com/jonathonmcmurray) (Levenshtein, connect4 and Bitcoin bot)
+* [vibronicshark55](https://github.com/vibronicshark55) (Lastfm bot)
 
 ## Licence
