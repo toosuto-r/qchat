@@ -1,7 +1,7 @@
 .z.pw:{[u;p]"b"$not count .z.W}
 
 / update default seed
-system"S ",string`int$.z.t;
+system"S ",string"j"$.z.T;
 
 /Powered by News API
 /default BBC
