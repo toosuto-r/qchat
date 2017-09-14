@@ -16,7 +16,7 @@ mulo:{[x;y;z]
  };
 btcp:{[x;y;z]
  if[`~`$upper trim"c"$3_x;x:"xxxUSD"];
- if[not (c:`$upper trim"c"$3_x) in `USD`GBP`EUR;:rc[;y;0]"\033[GUnsupported currency. Supported currencies: gbp,usd,eur"];
+ if[not (c:`$upper trim"c"$3_x) in `USD`GBP`EUR`PLOT;:rc[;y;0]"\033[GUnsupported currency/option. Supported currencies: gbp,usd,eur. Options: plot"];
  rc[;y;0]"\033[GGetting BTC price";neg[wh](`.btc.getprice;trim uct string z;c);
  };
 
