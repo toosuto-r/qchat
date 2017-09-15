@@ -1,8 +1,9 @@
-labels,:("\\ne";"\\ml";"\\bc")!("news";"music";"bitcoin");
+labels,:("\\ne";"\\ml";"\\bc";"\\df")!("news";"music";"bitcoin";"defino");
 
 .lfm.enabled:1b;
 
 news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;uct string z);}
+define:{[x;y;z] neg[wh](`dictlkup;trim "c"$3_x);}
 mulo:{[x;y;z]
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / cache lastfm usernames
   msg:trim"c"$3_x;                                                                              / get user commands
@@ -22,6 +23,6 @@ btcp:{[x;y;z]
  rc[;y;0]"\033[GGetting BTC price";neg[wh](`.btc.getprice;trim uct string z;c);
  };
 
-workernames,:`news`music`bitcoin!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT")],\:"]:"
+workernames,:`news`music`bitcoin`defino!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT")],\:"]:"
 
-tf,:("\\ne";"\\ml";"\\bc")!(news;mulo;btcp);
+tf,:("\\ne";"\\ml";"\\bc";"\\df")!(news;mulo;btcp;define);
