@@ -7,7 +7,11 @@ mulo:{[x;y;z]
   msg:trim"c"$3_x;                                                                              / get user input
   if[()~key`:lfm_key;:rc[;y;0]"\033[Gmusic lookup not enabled"];                                / return error if unenabled
   if[0=count msg;                                                                               / return help message if no input is provided
-    :rc[;y;0]"\033[Gmusic lookup from lastfm enabled, available options:\n* enter a username to attempt now playing lookup\n  users:",$[0=count k:key .lfm.cache;"()";", "sv trim'[ucn'[k;string k]]],"\n* enter 'user=<USERNAME>' to enter or update your own lastfm username\n* unset username by entering 'user='"
+    options:("* enter 'user=<LFM_NAME>' to update lastfm username, leave blank to unset";
+      "* usage='\\ml <USERNAME>(&<FILTER>&<PERIOD>)'";
+      "* Filters: tracks, artists\n* Periods: overall, 7day, 1month, 3month, 6month, 12month";
+      "  users:",$[0=count k:key .lfm.cache;"()";", "sv trim'[ucn'[k;string k]]]);
+    :rc[;y;0]"\033[Gmusic lookup from lastfm enabled, available options:\n","\n"sv options;
   ];
   if[msg like"user=*";                                                                          / update username for current user
     `:lfm_cache set$[0=count uname:(1+msg?"=")_msg;.z.u _.lfm.cache;.lfm.cache,enlist[.z.u]!enlist uname]; / update cache
@@ -17,7 +21,7 @@ mulo:{[x;y;z]
   `msg2 set msg;
   if[not(`$msg`name)in key .lfm.cache;:rc[;y;0]"\033[Guser not available"];                     / return error if requested user is unavailable
   rc[;y;0]"\033[GSending Request";
-  neg[wh](`.lfm.nowPlaying;trim uct string z;.lfm.cache`$msg`name;@[msg;`name;{trim ucn[`$x;x]}]);   / send request to worker process
+  neg[wh](`.lfm.request;trim uct string z;.lfm.cache`$msg`name;@[msg;`name;{trim ucn[`$x;x]}]); / send request to worker process
  };
 btcp:{[x;y;z]
  if[`~`$upper trim"c"$3_x;x:"xxxUSD"];
