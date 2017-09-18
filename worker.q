@@ -11,8 +11,8 @@ src:(),hsym`$"http://newsapi.org/v1/articles?source=",/:@[read0;`:sources.txt;en
 getheadline:{news:.j.k .Q.hg first 1?src;
   neg[.z.w](`worker;`news;raze"(",x,") "," - "sv(),/:"c"$enlist[news`source],first each?[1;news`articles]`title`description`url)}
 
-dictlkup:{ 
-  dictf:{$[2>count t:raze raze .j.k[.Q.hg `$"http://api.pearson.com/v2/dictionaries/entries?headword=",x,"&limit=1"][`results][`senses][0][`definition];"No Results Found";t]};
+dictlkup:{
+  dictf:{$[2>count t:raze raze .j.k[.Q.hg`$"http://api.pearson.com/v2/dictionaries/entries?headword=",x,"&limit=1"][`results;`senses][0][`definition];"No Results Found";t]};
   :neg[.z.w](`worker;`defino;raze"The definition of ",x," is: ",@[dictf;x;"unable to be retrieved."])
  };
 
@@ -23,9 +23,9 @@ dictlkup:{
   msg:.lfm.req y;
   if[`error in key msg;:()];                                                                    / error returned from lfm
   if[0=count m:msg[`recenttracks]`track;:()];                                                   / no recent tracks for user
-  if[not(`$"@attr")in key a:first m;:()];                                                       / user is currently not listening
+  r:$[(`$"@attr")in key a:first m;"is listening";"last listened"];                              / determine if song is currently playing
   s:"'",a[`name],"' by ",a[`artist]`$"#text";                                                   / return track details
-  :neg[.z.w](`worker;`music;"Hey ",x,", ",z," is listening to ",s);                             / pass message back to server
+  :neg[.z.w](`worker;`music;"Hey ",x," "sv((),",";z;r;"to";s));                                 / pass message back to server
  };
 
 / bitcoin
