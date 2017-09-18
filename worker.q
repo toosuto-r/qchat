@@ -12,10 +12,9 @@ getheadline:{news:.j.k .Q.hg first 1?src;
   neg[.z.w](`worker;`news;raze"(",x,") "," - "sv(),/:"c"$enlist[news`source],first each?[1;news`articles]`title`description`url)}
 
 dictlkup:{ 
-	dictf:{$[(g:count t:raze(raze (exec senses from (.j.k  .Q.hg `$"http://api.pearson.com/v2/dictionaries/entries?headword=",x,"&limit=1")`results))`definition)<2;"No Results Found";t]};
-	definition:@[dictf;;"No such word, my friend."];
-	:neg[.z.w](`worker;`defino;raze"The definition of ",x," is: ", definition[x])
- }
+  dictf:{$[(count t:raze raze .j.k[.Q.hg `$"http://api.pearson.com/v2/dictionaries/entries?headword=",x,"&limit=1"][`results][`senses][0][`definition])<2;"No Results Found";t]};
+  :neg[.z.w](`worker;`defino;raze"The definition of ",x," is: ",@[dictf;x;"No such word, my friend."])
+ };
 
 / last fm analysis
 .lfm.key:first@[read0;`:lfm_key;""];
