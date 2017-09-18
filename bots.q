@@ -3,7 +3,7 @@ labels,:("\\ne";"\\ml";"\\bc";"\\df")!("news";"music";"bitcoin";"defino");
 .lfm.enabled:1b;
 
 news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;uct string z);}
-define:{[x;y;z] neg[wh](`dictlkup;trim "c"$3_x);}
+defn:{[x;y;z] neg[wh](`dictlkup;trim "c"$3_x);}
 mulo:{[x;y;z]
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / load cache of lastfm usernames
   msg:trim"c"$3_x;                                                                              / get user input
