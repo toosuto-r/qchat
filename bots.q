@@ -1,8 +1,9 @@
-labels,:("\\ne";"\\ml";"\\bc")!("news";"music";"bitcoin");
+labels,:("\\ne";"\\ml";"\\bc";"\\df")!("news";"music";"bitcoin";"defino");
 
 .lfm.enabled:1b;
 
 news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;uct string z);}
+defn:{[x;y;z] neg[wh](`dictlkup;trim "c"$3_x);}
 mulo:{[x;y;z]
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / load cache of lastfm usernames
   msg:trim"c"$3_x;                                                                              / get user input
@@ -24,6 +25,6 @@ btcp:{[x;y;z]
  rc[;y;0]"\033[GGetting BTC price";neg[wh](`.btc.getprice;trim uct string z;c);
  };
 
-workernames,:`news`music`bitcoin!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT")],\:"]:"            / bot names used when printing to chat
+workernames,:`news`music`bitcoin`defino!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT")],\:"]:" / bot names used when printing to chat
 
-tf,:("\\ne";"\\ml";"\\bc")!(news;mulo;btcp);
+tf,:("\\ne";"\\ml";"\\bc";"\\df")!(news;mulo;btcp;defn);
