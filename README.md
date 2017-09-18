@@ -23,24 +23,34 @@ If sucessful keys are provided the client will be connected.
 
 ## Interaction
 Client can type a `\h` to access a help message and `\` to access a list of functions, a selection of which are detailed below:
+
 `\q` quit
+
 `\u` list active users
+
 `\c` change username colour
 
 ### Bots
 Bots provide additional functionality and are handled by a worker process which allows them to make HTTP requests without interupting the chat process.
 Several chat bots are available that may be called from backslash `\` commands:
+
 `\ne`	Pulls random article from selected sources
+
 `\bc`	Gives current bitcoin price
-`\bcplot`	plot current bitcoin price
+
+`\bc plot`	plot current bitcoin price
+
 `\ml`	Look up currently playin track from a user
+
 
 ## Contributing
 
 ### Creating Bots
 
 To create a bot server code must be defined in `bots.q` and worker code in `worker.q`.
+
 In `bots.q` a help message should be added to `lables` and an input handler should be defined, with its name added to `tf`. The bots name should be added to `workernames`.
+
 In `worker.q` a function to handle the input and make any HTTP requests should be added. This function should return its result to the worker function.
 
 ## Credits
