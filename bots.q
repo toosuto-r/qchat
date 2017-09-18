@@ -27,4 +27,4 @@ btcp:{[x;y;z]
 
 workernames,:`news`music`bitcoin`defino!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT")],\:"]:" / bot names used when printing to chat
 
-tf,:("\\ne";"\\ml";"\\bc";"\\df")!(news;mulo;btcp;define);
+tf,:("\\ne";"\\ml";"\\bc";"\\df")!(news;mulo;btcp;defn);

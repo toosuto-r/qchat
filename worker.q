@@ -13,7 +13,7 @@ getheadline:{news:.j.k .Q.hg first 1?src;
 
 dictlkup:{ 
   dictf:{$[2>count t:raze raze .j.k[.Q.hg `$"http://api.pearson.com/v2/dictionaries/entries?headword=",x,"&limit=1"][`results][`senses][0][`definition];"No Results Found";t]};
-  :neg[.z.w](`worker;`defino;raze"The definition of ",x," is: ",@[dictf;x;"No such word, my friend."])
+  :neg[.z.w](`worker;`defino;raze"The definition of ",x," is: ",@[dictf;x;"unable to be retrieved."])
  };
 
 / last fm analysis
