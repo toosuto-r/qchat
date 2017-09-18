@@ -18,14 +18,41 @@ dictlkup:{
 
 / last fm analysis
 .lfm.key:first@[read0;`:lfm_key;""];                                                            / api key
-.lfm.req:{.j.k .Q.hg`$"http://ws.audioscrobbler.com/2.0/?format=json&api_key=",.lfm.key,"&method=user.getrecenttracks&user=",x};
-.lfm.nowPlaying:{[x;y;z]                                                                        / [user;lfm name;msg] return users now playing track, mentioning the user who made the request
-  msg:.lfm.req y;
-  if[`error in key msg;:()];                                                                    / error returned from lfm
-  if[0=count m:msg[`recenttracks]`track;:()];                                                   / no recent tracks for user
+.lfm.req:{.j.k .Q.hg`$"http://ws.audioscrobbler.com/2.0/?format=json&api_key=",.lfm.key,"&method=",x,"&user=",y};
+
+.lfm.filters:("tracks";"artists");
+.lfm.periods:("overall";"7day";"1month";"3month";"6month";"12month")!("";"7d ";"1m ";"3m ";"6m ";"12m ");
+
+.lfm.parseMethod:{
+  if[not x[`filter]in .lfm.filters;:"user.getrecenttracks"];
+  f:"user.gettop",x`filter;
+  if[x[`period]in key .lfm.periods;f,:"period=",x`period];
+  :f;
+ };
+
+.lfm.parse.recenttracks:{[x;y;z;m]
+  if[0=count m:m[`recenttracks]`track;:""];                                                     / no recent tracks for user
   r:$[(`$"@attr")in key a:first m;"is listening";"last listened"];                              / determine if song is currently playing
   s:"'",a[`name],"' by ",a[`artist]`$"#text";                                                   / return track details
-  :neg[.z.w](`worker;`music;"Hey ",x," "sv((),",";z;r;"to";s));                                 / pass message back to server
+  :" "sv(z`name;r;"to";s);
+ };
+.lfm.parse.toptracks:{[x;y;z;m]
+  if[0=count m:m[`toptracks]`track;:""];                                                        / no top tracks for user
+  s:" by "sv@[;0;{"'",x,"'"}]@[;1;first]first[m]`name`artist;
+  :z[`name],"'s top track ",.lfm.periods[z`period],"is ",s;
+ };
+.lfm.parse.topartists:{[x;y;z;m]
+  if[0=count m:m[`topartists]`artist;:""];                                                      / no top tracks for user
+  s:first m`name;
+  :z[`name],"'s top artist ",.lfm.periods[z`period],"is ",s;
+ };
+
+.lfm.nowPlaying:{[x;y;z]                                                                        / [user;lfm name;msg] return users now playing track, mentioning the user who made the request
+  msg:.lfm.req[.lfm.parseMethod z]y;
+  if[not(k:first[key msg])in key .lfm.parse;:()];
+  res:.lfm.parse[k][x;y;z;msg];
+  if[0=count res;:()];                                                                          / no return on bad request
+  :neg[.z.w](`worker;`music;"Hey ",x,", ",res);                                                 / pass message back to server
  };
 
 / bitcoin
