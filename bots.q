@@ -1,4 +1,4 @@
-labels,:("\\ne";"\\ml";"\\bc";"\\df")!("news";"music";"bitcoin";"defino");
+labels,:("\\ne";"\\ml";"\\bc";"\\df")!("news";"music";"bitcoin";"define");
 
 .lfm.enabled:1b;
 
