@@ -21,14 +21,12 @@ dictlkup:{
 .lfm.httpGet:{.j.k .Q.hg`$"http://ws.audioscrobbler.com/2.0/?format=json&api_key=",.lfm.key,"&method=",x,"&user=",y};
 
 .lfm.filters:("tracks";"artists");                                                              / allowed filters
-.lfm.periods:enlist["overall"]!enlist"";
-.lfm.periods:("7day";"1month";"3month";"6month";"12month")!"over last ",/:("7 days ";"1 month ";"3 months ";"6 months ";"12 months "); / allowed periods
+.lfm.periods:enlist["overall"]!enlist"overall ";
+.lfm.periods,:("7day";"1month";"3month";"6month";"12month")!"over last ",/:("7 days ";"1 month ";"3 months ";"6 months ";"12 months "); / allowed periods
 
 .lfm.parseMethod:{                                                                              / parse request methos
   if[not x[`filter]in .lfm.filters;:"user.getrecenttracks"];                                    / default to recent tracks
-  f:"user.gettop",x`filter;
-  if[x[`period]in key .lfm.periods;f,:"&period=",x`period];                                     / add period if available
-  :f;
+  :"user.gettop",x[`filter],"&period=",x`period;
  };
 
 .lfm.parse.recenttracks:{[x;y;z;m]                                                              / parser for recent tracks
@@ -47,6 +45,7 @@ dictlkup:{
  };
 
 .lfm.request:{[x;y;z]                                                                           / [user;lfm name;msg] return users now playing track, mentioning the user who made the request
+  if[not z[`period]in key .lfm.periods;z[`period]:"7day"];
   msg:.lfm.httpGet[.lfm.parseMethod z]y;                                                        / make request to last fm
   if[not(k:first[key msg])in key .lfm.parse;:()];                                               / exit if improper message returned
   res:.lfm.parse[k][x;y;z;msg];                                                                 / parse returned message
