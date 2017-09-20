@@ -22,7 +22,7 @@ dictlkup:{
 
 .lfm.filters:("tracks";"artists");                                                              / allowed filters
 .lfm.periods:enlist["overall"]!enlist"overall ";
-.lfm.periods,:("7day";"1month";"3month";"6month";"12month")!"over last ",/:("7 days ";"1 month ";"3 months ";"6 months ";"12 months "); / allowed periods
+.lfm.periods,:("7day";"1month";"3month";"6month";"12month")!"over the last ",/:("7 days ";"1 month ";"3 months ";"6 months ";"12 months "); / allowed periods
 
 .lfm.parseMethod:{                                                                              / parse request methos
   if[not x[`filter]in .lfm.filters;:"user.getrecenttracks"];                                    / default to recent tracks
@@ -51,6 +51,18 @@ dictlkup:{
   res:.lfm.parse[k][x;y;z;msg];                                                                 / parse returned message
   if[0=count res;:()];                                                                          / no return on bad request
   :neg[.z.w](`worker;`music;"Hey ",x,", ",res);                                                 / pass message back to server
+ };
+
+.lfm.getChart:{[x;y]
+  // logic to determine if request should be made or return cache
+  msg:.lfm.httpGet["user.gettoptracks&period=7day"]'[value y];                                  / make request to last fm
+  res:raze{[x;y]
+    :select name,{x`name}'[artist],"J"$playcount,users:5#enlist y from (5&count x)#x:x[`toptracks]`track;
+  }'[msg;key y];
+  res:0!5#`playcount xdesc select sum playcount,users by name,artist from res;
+  res:select no:1+i,name,artist,plays:playcount,users from res;
+  `:lfm_chart set res;
+  :neg[.z.w](`worker;`music;"The current chart is:\n","\n"sv"  ",/:"\n"vs .Q.s res);            / pass message back to server
  };
 
 / bitcoin

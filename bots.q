@@ -3,15 +3,18 @@ labels,:("\\ne";"\\ml";"\\bc";"\\df")!("news";"music";"bitcoin";"define");
 news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;uct string z);}
 defn:{[x;y;z] neg[wh](`dictlkup;trim "c"$3_x);}
 mulo:{[x;y;z]
-  .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / load cache of lastfm usernames
-  msg:trim"c"$3_x;                                                                              / get user input
   if[()~key`:lfm_key;:rc[;y;0]"\033[Gmusic lookup not enabled"];                                / return error if unenabled
-  if[0=count msg;                                                                               / return help message if no input is provided
+  .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / load cache of lastfm usernames
+  if[0=count msg:trim"c"$3_x;                                                                   / return help message if no input is provided
     options:("* enter 'user=<LFM_NAME>' to update lastfm username, leave blank to unset";
       "* usage='\\ml <USERNAME>(&<FILTER>&<PERIOD>)'";
       "* Filters: tracks, artists\n* Periods: overall, 7day, 1month, 3month, 6month, 12month";
       "  users:",$[0=count k:key .lfm.cache;"()";", "sv trim'[ucn'[k;string k]]]);
     :rc[;y;0]"\033[Gmusic lookup from lastfm enabled, available options:\n","\n"sv options;
+  ];
+  if[msg like"chart*";
+    rc[;y;0]"\033[GSending Chart Request";
+    :getchart`;
   ];
   if[msg like"user=*";                                                                          / update username for current user
     `:lfm_cache set$[0=count uname:(1+msg?"=")_msg;.z.u _.lfm.cache;.lfm.cache,enlist[.z.u]!enlist uname]; / update cache
@@ -23,6 +26,18 @@ mulo:{[x;y;z]
   rc[;y;0]"\033[GSending Request";
   neg[wh](`.lfm.request;trim uct string z;.lfm.cache`$msg`name;@[msg;`name;{trim ucn[`$x;x]}]); / send request to worker process
  };
+getchart:{
+  if[()~key`:lfm_key;:()];                                                                      / exit if unenabled
+  .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / load cache of lastfm usernames
+  if[0=count .lfm.cache;:()];
+/  if[0=count .lfm.chart;
+   neg[wh](`.lfm.getChart;"";({trim ucn'[x;string x]}key .lfm.cache)!value .lfm.cache);
+/  ];
+  if[not`getchart in cron`action;
+    `cron insert(.z.P+"v"$60*15;`getchart;`);
+  ];
+ };
+/getchart`;
 btcp:{[x;y;z]
  if[`~`$upper trim"c"$3_x;x:"xxxUSD"];
  if[not (c:`$upper trim"c"$3_x) in `USD`GBP`EUR`PLOT;:rc[;y;0]"\033[GUnsupported currency/option. Supported currencies: gbp,usd,eur. Options: plot"];
