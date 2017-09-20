@@ -14,7 +14,7 @@ mulo:{[x;y;z]
   ];
   if[msg like"chart*";
     rc[;y;0]"\033[GSending Chart Request";
-    :getchart`;
+    :getchart .z.u;
   ];
   if[msg like"user=*";                                                                          / update username for current user
     `:lfm_cache set$[0=count uname:(1+msg?"=")_msg;.z.u _.lfm.cache;.lfm.cache,enlist[.z.u]!enlist uname]; / update cache
@@ -26,12 +26,12 @@ mulo:{[x;y;z]
   rc[;y;0]"\033[GSending Request";
   neg[wh](`.lfm.request;trim uct string z;.lfm.cache`$msg`name;@[msg;`name;{trim ucn[`$x;x]}]); / send request to worker process
  };
-getchart:{
+getchart:{[x]
   if[()~key`:lfm_key;:()];                                                                      / exit if unenabled
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / load cache of lastfm usernames
   if[0=count .lfm.cache;:()];
 /  if[0=count .lfm.chart;
-   neg[wh](`.lfm.getChart;"";({trim ucn'[x;string x]}key .lfm.cache)!value .lfm.cache);
+   neg[wh](`.lfm.getChart;trim ucn[x;string x];{trim ucn'[x;string x]}key .lfm.cache;.lfm.cache);
 /  ];
   if[not`getchart in cron`action;
     `cron insert(.z.P+"v"$60*15;`getchart;`);

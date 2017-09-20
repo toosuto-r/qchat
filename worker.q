@@ -53,16 +53,16 @@ dictlkup:{
   :neg[.z.w](`worker;`music;"Hey ",x,", ",res);                                                 / pass message back to server
  };
 
-.lfm.getChart:{[x;y]
+.lfm.getChart:{[x;y;z]
   // logic to determine if request should be made or return cache
-  msg:.lfm.httpGet["user.gettoptracks&period=7day"]'[value y];                                  / make request to last fm
+  msg:.lfm.httpGet["user.gettoptracks&period=7day"]'[value z];                                  / make request to last fm
   res:raze{[x;y]
     :select name,{x`name}'[artist],"J"$playcount,users:5#enlist y from (5&count x)#x:x[`toptracks]`track;
-  }'[msg;key y];
+  }'[msg;key z];
   res:0!5#`playcount xdesc select sum playcount,users by name,artist from res;
   res:select no:1+i,name,artist,plays:playcount,users from res;
   `:lfm_chart set res;
-  :neg[.z.w](`worker;`music;"The current chart is:\n","\n"sv"  ",/:"\n"vs .Q.s res);            / pass message back to server
+  :neg[.z.w](`worker;`music;$[x~"";"T";"Hey ",x,", t"],"he current chart is:\n","\n"sv"  ",/:"\n"vs ssr/[.Q.s res;string key z;y]);          / pass message back to server
  };
 
 / bitcoin
