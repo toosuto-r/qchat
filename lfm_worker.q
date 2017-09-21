@@ -2,42 +2,39 @@
 .lfm.key:first@[read0;`:lfm_key;""];                                                            / api key
 .lfm.httpGet:{.j.k .Q.hg`$"http://ws.audioscrobbler.com/2.0/?format=json&api_key=",.lfm.key,"&method=",x,"&user=",y};
 
-.lfm.filters:("tracks";"artists");                                                              / allowed filters
+.lfm.filters:("tracks";"artists")!`toptracks`topartists;                                        / allowed filters
 .lfm.periods:enlist["overall"]!enlist"overall ";
 .lfm.periods,:("7day";"1month";"3month";"6month";"12month")!"over the last ",/:("7 days ";"1 month ";"3 months ";"6 months ";"12 months "); / allowed periods
 
-.lfm.parseMethod:{                                                                              / parse request methos
-  if[not x[`filter]in .lfm.filters;:"user.getrecenttracks"];                                    / default to recent tracks
-  :"user.gettop",x[`filter],"&limit=1&period=",x`period;
+.lfm.parse.recenttracks:{[z;m]                                                                  / parser for recent tracks
+  r:$[(`$"@attr")in key a:first m;" is listening";" last listened"];                            / determine if song is currently playing
+  s:raze{"'",x[0],"' by ",x[1]," from ",x 2}@[;1 2;first]a`name`artist`album;
+  :r," to ",s;                                                                                  / format message
+ };
+.lfm.parse.toptracks:{[z;m]                                                                     / parser for top tracks
+  s:" by "sv@[;0;{"'",x,"'"}]@[;1;first]first[m]`name`artist;
+  :"'s top track ",z,"is ",s," with ",m[`playcount]," scrobbles";                               / format message
+ };
+.lfm.parse.topartists:{[z;m]                                                                    / parser for top artists
+  :"'s top artist ",z,"is ",first[m`name]," with ",m[`playcount]," scrobbles";                  / format message
  };
 
-.lfm.parse.recenttracks:{[x;y;z;m]                                                              / parser for recent tracks
-  if[0=count m:m[`recenttracks]`track;:""];                                                     / exit if no recent tracks for user
-  r:$[(`$"@attr")in key a:first m;"is listening";"last listened"];                              / determine if song is currently playing
-  s:raze{"'",x[0],"' by ",x[1]," from ",x 2}@[;1 2;first]first[m]`name`artist`album;
-  :" "sv(z`name;r;"to";s);                                                                      / format message
- };
-.lfm.parse.toptracks:{[x;y;z;m]                                                                 / parser for top tracks
-  if[0=count m:m[`toptracks]`track;:""];                                                        / exit if no top tracks for user
-  s:" by "sv@[;0;{"'",x,"'"}]@[;1;first]first[m]`name`artist;
-  :raze z[`name],"'s top track ",.lfm.periods[z`period],"is ",s," with ",m[`playcount]," scrobbles"; / format message
- };
-.lfm.parse.topartists:{[x;y;z;m]                                                                / parser for top artists
-  if[0=count m:m[`topartists]`artist;:""];                                                      / exit if no top artists for user
-  :raze z[`name],"'s top artist ",.lfm.periods[z`period],"is ",first[m`name]," with ",m[`playcount]," scrobbles"; / format message
+.lfm.parseMethod:{                                                                              / parse request methos
+  if[not x[`filter]in key .lfm.filters;:("user.getrecenttracks";`recenttracks)];                / default to recent tracks
+  :("user.gettop",x[`filter],"&limit=1&period=",x`period;.lfm.filters x`filter);
  };
 
 .lfm.request:{[x;y;z]                                                                           / [user;lfm name;msg] return users now playing track, mentioning the user who made the request
   if[not z[`period]in key .lfm.periods;z[`period]:"7day"];                                      / set default period
-  msg:.lfm.httpGet[.lfm.parseMethod z]y;                                                        / make request to last fm
-  if[not(k:first key msg)in key .lfm.parse;:()];                                                / exit if improper message returned
-  res:.lfm.parse[k][x;y;z;msg];                                                                 / parse returned message
+  p:.lfm.parseMethod z;
+  if[0=count msg:first first .lfm.httpGet[p 0]y;:()];                                           / make request to last fm
+  res:.lfm.parse[p 1][.lfm.periods z`period;msg];                                               / parse returned message
   if[0=count res;:()];                                                                          / no return on bad request
-  :neg[.z.w](`worker;`music;"Hey ",x,", ",res);                                                 / pass message back to server
+  :neg[.z.w](`worker;`music;raze"Hey ",x,", ",z[`name],res);                                    / pass message back to server
  };
 
 .lfm.getChartUser:{[x;y]
-  res:first{
+  res:first{                                                                                    / loop over pages to get all tracks
     r:.lfm.httpGet["user.gettoptracks&period=7day&page=",string y 1;x];
     if[0=count l:r[`toptracks]`track;:y];
     y[0]:y[0],select name,{x`name}'[artist],"J"$playcount from l;
