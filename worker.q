@@ -54,19 +54,19 @@ dictlkup:{
  };
 
 .lfm.getChart:{[x;y;z]
-  .lfm.chartDate:@[get;`.lfm.chartDate;09:30+.z.D];                                             / get timestamp of next update
   res:@[get;`.lfm.chart;()];
-  if[(x~"")&(0=count res)or .z.P>.lfm.chartDate;                                                / if called from cron update results after 9.30am
-    msg:.lfm.httpGet["user.gettoptracks&period=7day"]'[value z];                                / make request to last fm
+  if[(x~"update")or 0=count res;                                                                / if called from cron update results after 9.30am
+    msg:.lfm.httpGet["user.gettoptracks&period=7day&limit=5"]'[value z];                         / make request to last fm
     res:raze{[x;y]
-      :select name,{x`name}'[artist],"J"$playcount,users:5#enlist y from(5&count x)#x:x[`toptracks]`track;
+      :select name,{x`name}'[artist],"J"$playcount,users:5#enlist y from x[`toptracks]`track;
     }'[msg;key z];
-    res:0!5#`playcount xdesc select sum playcount,users by name,artist from res;
-    res:select no:1+i,name,artist,plays:playcount,users from res;
+    res:0!5#`playcount xdesc select plays:sum playcount,users by name,artist from res;
+    res:select no:1+i,name,artist,play,users from res;
     `.lfm.chart set res;
-    `.lfm.chartDate set 09:30+1+.z.D;
+    x:"";
   ];
-  :neg[.z.w](`worker;`music;$[x~"";"T";"Hey ",x,", t"],"he current chart is:\n","\n"sv"  ",/:"\n"vs ssr/[.Q.s res;string key z;y]);          / pass message back to server
+  if[0=count res;:()];                                                                          / no return for empty chart
+  :neg[.z.w](`worker;`music;$[x~"";"T";"Hey ",x,", t"],"he current chart is:\n","\n"sv"  ",/:"\n"vs ssr/[.Q.s res;("\" ";"\""),string key z;("   ";""),y]);          / pass message back to server
  };
 
 / bitcoin

@@ -31,9 +31,9 @@ getchart:{[x]
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / load cache of lastfm usernames
   if[0=count .lfm.cache;:()];
   neg[wh](`.lfm.getChart;trim ucn[x;string x];{trim ucn'[x;string x]}key .lfm.cache;.lfm.cache);
-  if[not`getchart in cron`action;`cron insert(.z.P+"v"$60*15;`getchart;`)];
+  if[not`getchart in cron`action;`cron insert(09:30+1+.z.D;`getchart;`update)];
  };
-getchart`;
+getchart`update;
 btcp:{[x;y;z]
  if[`~`$upper trim"c"$3_x;x:"xxxUSD"];
  if[not (c:`$upper trim"c"$3_x) in `USD`GBP`EUR`PLOT;:rc[;y;0]"\033[GUnsupported currency/option. Supported currencies: gbp,usd,eur. Options: plot"];
