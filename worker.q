@@ -26,7 +26,7 @@ dictlkup:{
 
 .lfm.parseMethod:{                                                                              / parse request methos
   if[not x[`filter]in .lfm.filters;:"user.getrecenttracks"];                                    / default to recent tracks
-  :"user.gettop",x[`filter],"&period=",x`period;
+  :"user.gettop",x[`filter],"&limit=1&period=",x`period;
  };
 
 .lfm.parse.recenttracks:{[x;y;z;m]                                                              / parser for recent tracks
@@ -37,17 +37,17 @@ dictlkup:{
 .lfm.parse.toptracks:{[x;y;z;m]                                                                 / parser for top tracks
   if[0=count m:m[`toptracks]`track;:""];                                                        / exit if no top tracks for user
   s:" by "sv@[;0;{"'",x,"'"}]@[;1;first]first[m]`name`artist;
-  :z[`name],"'s top track ",.lfm.periods[z`period],"is ",s;                                     / format message
+  :raze z[`name],"'s top track ",.lfm.periods[z`period],"is ",s," with ",m[`playcount]," scrobbles"; / format message
  };
 .lfm.parse.topartists:{[x;y;z;m]                                                                / parser for top artists
   if[0=count m:m[`topartists]`artist;:""];                                                      / exit if no top artists for user
-  :z[`name],"'s top artist ",.lfm.periods[z`period],"is ",first m`name;                         / format message
+  :raze z[`name],"'s top artist ",.lfm.periods[z`period],"is ",first[m`name]," with ",m[`playcount]," scrobbles"; / format message
  };
 
 .lfm.request:{[x;y;z]                                                                           / [user;lfm name;msg] return users now playing track, mentioning the user who made the request
-  if[not z[`period]in key .lfm.periods;z[`period]:"7day"];
+  if[not z[`period]in key .lfm.periods;z[`period]:"7day"];                                      / set default period
   msg:.lfm.httpGet[.lfm.parseMethod z]y;                                                        / make request to last fm
-  if[not(k:first[key msg])in key .lfm.parse;:()];                                               / exit if improper message returned
+  if[not(k:first key msg)in key .lfm.parse;:()];                                                / exit if improper message returned
   res:.lfm.parse[k][x;y;z;msg];                                                                 / parse returned message
   if[0=count res;:()];                                                                          / no return on bad request
   :neg[.z.w](`worker;`music;"Hey ",x,", ",res);                                                 / pass message back to server
@@ -60,10 +60,10 @@ dictlkup:{
     res:raze{[x;y]
       :select name,{x`name}'[artist],"J"$playcount,users:5#enlist y from x[`toptracks]`track;
     }'[msg;key z];
-    res:0!5#`playcount xdesc select plays:sum playcount,users by name,artist from res;
-    res:select no:1+i,name,artist,play,users from res;
+    res:0!5#`scrobbles xdesc select scrobbles:sum playcount,users by name,artist from res;
+    res:select no:1+i,name,artist,scrobbles,users from res;
     `.lfm.chart set res;
-    x:"";
+    if[x~"update";x:""];
   ];
   if[0=count res;:()];                                                                          / no return for empty chart
   :neg[.z.w](`worker;`music;$[x~"";"T";"Hey ",x,", t"],"he current chart is:\n","\n"sv"  ",/:"\n"vs ssr/[.Q.s res;("\" ";"\""),string key z;("   ";""),y]);          / pass message back to server
