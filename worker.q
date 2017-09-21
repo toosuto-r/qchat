@@ -32,7 +32,8 @@ dictlkup:{
 .lfm.parse.recenttracks:{[x;y;z;m]                                                              / parser for recent tracks
   if[0=count m:m[`recenttracks]`track;:""];                                                     / exit if no recent tracks for user
   r:$[(`$"@attr")in key a:first m;"is listening";"last listened"];                              / determine if song is currently playing
-  :" "sv(z`name;r;"to";"'",a[`name],"'";"by";a[`artist]`$"#text");                              / format message
+  s:raze{"'",x[0],"' by ",x[1]," from ",x 2}@[;1 2;first]first[m]`name`artist`album;
+  :" "sv(z`name;r;"to";s);                                                                      / format message
  };
 .lfm.parse.toptracks:{[x;y;z;m]                                                                 / parser for top tracks
   if[0=count m:m[`toptracks]`track;:""];                                                        / exit if no top tracks for user
@@ -53,21 +54,28 @@ dictlkup:{
   :neg[.z.w](`worker;`music;"Hey ",x,", ",res);                                                 / pass message back to server
  };
 
+.lfm.getChartUser:{[x;y]
+  res:first{
+    r:.lfm.httpGet["user.gettoptracks&period=7day&page=",string y 1;x];
+    if[0=count l:r[`toptracks]`track;:y];
+    y[0]:y[0],select name,{x`name}'[artist],"J"$playcount from l;
+    @[y;1;1+]
+  }[y]/[(();1)];
+  if[98=type res;:update users:x from res];
+  :res;
+ };
 .lfm.getChart:{[x;y;z]
   res:@[get;`.lfm.chart;()];
   if[(""~x`u)or 0=count res;                                                                    / if called from cron update results after 9.30am
-    msg:.lfm.httpGet["user.gettoptracks&period=7day&limit=5"]'[value z];                        / make request to last fm
-    res:raze{[x;y]
-      :select name,{x`name}'[artist],"J"$playcount,users:5#enlist y from x[`toptracks]`track;
-    }'[msg;key z];
+    res:raze .lfm.getChartUser'[key z;value z];
     `.lfm.chart set res;
   ];
-  if[0=count res;:()];                                                                          / no return for empty chart
   e:"";
   if[not any ``update=x`f;
     res:select from res where users=x`f;
     e:raze"for ",string[x`c]," ";
   ];
+  if[0=count res;:()];                                                                          / no return for empty chart
   res:0!`scrobbles xdesc select scrobbles:sum playcount,users by name,artist from res;
   res:select no:1+i,name,artist,scrobbles,users from res;
   res:5#res;
