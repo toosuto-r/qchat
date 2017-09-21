@@ -14,7 +14,9 @@ mulo:{[x;y;z]
   ];
   if[msg like"chart*";
     rc[;y;0]"\033[GSending Chart Request";
-    :getchart .z.u;
+    msg:"&"vs msg;
+    if[not(u:`$trim msg 1)in key .lfm.cache;u:`];
+    :getchart[.z.u;u];
   ];
   if[msg like"user=*";                                                                          / update username for current user
     `:lfm_cache set$[0=count uname:(1+msg?"=")_msg;.z.u _.lfm.cache;.lfm.cache,enlist[.z.u]!enlist uname]; / update cache
@@ -26,14 +28,16 @@ mulo:{[x;y;z]
   neg[wh](`.lfm.request;trim uct string z;.lfm.cache`$msg`name;@[msg;`name;{trim ucn[`$x;x]}]); / send request to worker process
  };
 
-getchart:{[x]
+getchart:{[x;y]
   if[()~key`:lfm_key;:()];                                                                      / exit if unenabled
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / load cache of lastfm usernames
   if[0=count .lfm.cache;:()];
-  neg[wh](`.lfm.getChart;trim ucn[x;string x];{trim ucn'[x;string x]}key .lfm.cache;.lfm.cache);
-  if[not`getchart in cron`action;`cron insert(09:30+1+.z.D;`getchart;`update)];
+  d:`u`f`c!(trim ucn[x;string x];y;trim ucn[y;string y]);
+  neg[wh](`.lfm.getChart;d;{trim ucn'[x;string x]}key .lfm.cache;.lfm.cache);
+  if[not`getchart in cron`action;`cron insert(09:30+1+.z.D;`updatechart;`update)];
  };
-getchart`update;
+updatechart:getchart[`];
+updatechart`update;
 btcp:{[x;y;z]
  if[`~`$upper trim"c"$3_x;x:"xxxUSD"];
  if[not (c:`$upper trim"c"$3_x) in `USD`GBP`EUR`PLOT;:rc[;y;0]"\033[GUnsupported currency/option. Supported currencies: gbp,usd,eur. Options: plot"];

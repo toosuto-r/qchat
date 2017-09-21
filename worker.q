@@ -55,18 +55,23 @@ dictlkup:{
 
 .lfm.getChart:{[x;y;z]
   res:@[get;`.lfm.chart;()];
-  if[(x~"update")or 0=count res;                                                                / if called from cron update results after 9.30am
-    msg:.lfm.httpGet["user.gettoptracks&period=7day&limit=5"]'[value z];                         / make request to last fm
+  if[(""~x`u)or 0=count res;                                                                    / if called from cron update results after 9.30am
+    msg:.lfm.httpGet["user.gettoptracks&period=7day&limit=5"]'[value z];                        / make request to last fm
     res:raze{[x;y]
       :select name,{x`name}'[artist],"J"$playcount,users:5#enlist y from x[`toptracks]`track;
     }'[msg;key z];
-    res:0!5#`scrobbles xdesc select scrobbles:sum playcount,users by name,artist from res;
-    res:select no:1+i,name,artist,scrobbles,users from res;
     `.lfm.chart set res;
-    if[x~"update";x:""];
   ];
   if[0=count res;:()];                                                                          / no return for empty chart
-  :neg[.z.w](`worker;`music;$[x~"";"T";"Hey ",x,", t"],"he current chart is:\n","\n"sv"  ",/:"\n"vs ssr/[.Q.s res;("\" ";"\""),string key z;("   ";""),y]);          / pass message back to server
+  e:"";
+  if[not any ``update=x`f;
+    res:select from res where users=x`f;
+    e:raze"for ",string[x`c]," ";
+  ];
+  res:0!`scrobbles xdesc select scrobbles:sum playcount,users by name,artist from res;
+  res:select no:1+i,name,artist,scrobbles,users from res;
+  res:5#res;
+  :neg[.z.w](`worker;`music;$[""~x`u;"T";"Hey ",x[`u],", t"],"he current chart ",e,"is:\n","\n"sv"  ",/:"\n"vs ssr/[.Q.s res;("\" ";"\""),string key z;("   ";""),y]); / pass message back to server
  };
 
 / bitcoin
