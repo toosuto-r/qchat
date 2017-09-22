@@ -1,5 +1,5 @@
 /Basic functions
-usls:{[x;y;z]rc[;y;0]"j"$"\033[Gusers online: ",", "sv string key[aw] except hiddenusers;};
+usls:{[x;y;z]rc[;y;0]"j"$"\033[Gusers online: ",","sv -1_'ucn .' flip "S*"$\:string key[aw] except hiddenusers;};
 
 info:{[x;y;z]rc[;y;0]"j"$"\033[G",banner,". Chat admins: ",", "sv string (),admins};
 
@@ -19,12 +19,25 @@ thum:{[x;y;z]t:"i"$"\033[G\n         _     \n        |)\\     \n        :  )    
 
 /Ostracism
 ostd:enlist[`]!enlist`
+pold:()!()
+popt:()!()
 
-ostr:{[x;y;z]bc uvol[key aw],\:"\033[G",string[.z.u]," has initiated ostracism mode.\nYou have 10 seconds to vote for a current user who will be kicked.";
-  `cron insert (.z.P+"v"$10;`endost;`);
-  @[`tf;"";:;ostv];};
+endfuncs:`ostv`polv!`endost`endpol
+
+votr:{[x;y;z;f]if[gameon`vote;:rc[;y;0]"\033[GVoting is in progress";];
+  if[`ostv=f;
+    h:"\033[G",string[.z.u]," has initiated ostracism mode.\nYou have 10 seconds to vote for a current user who will be kicked.";];
+  if[`polv=f;
+    if[not[";"in "c"$x]or 4>count x;:rc[;y;0]"\033[GInput in the form of \"Topic;option1;option2;...";];
+    `popt set {(1+til count x)!x}1_{#[5&count[x];x]}o:";"vs"c"$3_x;
+    h:"\n"sv enlist["Poll initialised. you have 10 seconds to enter a choice number:"],{@[string[til count x],\:"]. ";0;:;""],'x}o;];
+  bc uvol[key aw],\:h;
+  @[`gameon;`vote;:;1b]; 
+  `cron insert (.z.P+"v"$10;endfuncs f;`);
+  @[`tf;"";:;value f];};
 
 ostv:{[x;y;z]x:users a?min a:lvn[x]'[string users];@[`ostd;.z.u;:;x]};
+polv:{[x;y;z];@[`pold;.z.u;:;0|(first "J"$"c"$x)&max key popt]}
 
 endost:{neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[GEnded ostracism voting";
   @[`tf;"";:;chat];
@@ -35,7 +48,16 @@ endost:{neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[GEnded ostracism voting";
     bc uvol[key aw],\:"\033[G",string[u]," has been BANISHED"];
   if[n;bc uvol[key aw],\:"\033[GInsufficient ill-will to kick."];
   `ostd set enlist[`]!enlist`;
+  @[`gameon;`vote;:;0b]
   };
+
+endpol:{bc uvol[key aw],\:"\033[GPoll Ended";
+  @[`tf;"";:;chat];
+  bc uvol[key aw],\:"\n"sv (max[count'[a]]$a:value[popt]),'"| ",/:count'[group[value pold]key popt]#\:"#";
+  @[`gameon;`vote;:;0b];
+  `pold set ()!();
+  `popt set ()!();
+  }
 
 /Game interfaces
 gamd:()
@@ -70,7 +92,7 @@ endgv:{@[`tf;"";:;chat];
 plyr:(``c4`gh!()):\:(();())
 turn:(``c4`gh!()):\:0
 gtvote:``c4`gh!(();();())
-gameon:(``c4`gh!()):\:0b
+gameon:(``c4`gh`vote!()):\:0b
 turnlengths:``c4`gh!0N 7 10
 
 gtf:`c4`gh!(`.c4.play;{})
@@ -129,7 +151,7 @@ emji:{[x;y;z] if[not(`$3_"c"$x) in key emdict;:rc[;y;0]"j"$"\033[GUnknown emoji 
   if[null`$3_"c"$x;:rc[;y;0]emdict`];
   chat[;y;z]emdict `$"c"$3_x;}
 
-labels:("\\q ";"\\h ";"\\c ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\v ";"\\me";"\\t ")!("quit";"help";"colour";"users";"info";"kick";"ostracise";"(y)";"add";"newchat";"delete";"emoji";"game";"volume";"action";"topic")
+labels:("\\q ";"\\h ";"\\c ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\v ";"\\me";"\\t ";"\\p ")!("quit";"help";"colour";"users";"info";"kick";"ostracise";"(y)";"add";"newchat";"delete";"emoji";"game";"volume";"action";"topic";"poll")
 
 words:@[read0;`:works;enlist"unknown"];
 / cache topic list in random order to ensure all topics have been used once before repeating
@@ -165,4 +187,4 @@ worker:{publ[y;0;n:workernames x]}
 
 tf[""]:chat
 
-tf,:("\\  ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4";"\\b ";"\\bb";"\\t ";"\\me")!(func;usls;info;kick;ostr;thum;addu;mkct;dlte;emji;gamr;c4tn;boks;bbks;topc;medo);
+tf,:("\\  ";"\\u ";"\\i ";"\\k ";"\\o ";"\\p ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4";"\\b ";"\\bb";"\\t ";"\\me")!(func;usls;info;kick;votr[;;;`ostv];votr[;;;`polv];thum;addu;mkct;dlte;emji;gamr;c4tn;boks;bbks;topc;medo);
