@@ -1,5 +1,5 @@
 /Basic functions
-usls:{[x;y;z]rc[;y;0]"j"$"\033[Gusers online: ",", "sv string key[aw] except hiddenusers;};
+usls:{[x;y;z]rc[;y;0]"j"$"\033[Gusers online: ",", "sv ucn .' flip "S*"$\:string key[aw] except hiddenusers;};
 
 info:{[x;y;z]rc[;y;0]"j"$"\033[G",banner,". Chat admins: ",", "sv string (),admins};
 
