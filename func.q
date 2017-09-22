@@ -59,8 +59,6 @@ endpol:{bc uvol[key aw],\:"\033[GPoll Ended";
   `popt set ()!();
   }
 
-votd:()!()
-
 /Game interfaces
 gamd:()
 games:`connect4`ghost!`c4`gh
