@@ -33,21 +33,26 @@
   :neg[.z.w](`worker;`music;raze"Hey ",x,", ",z[`name],res);                                    / pass message back to server
  };
 
-.lfm.getChartUser:{[x;y]
-  res:first{                                                                                    / loop over pages to get all tracks
-    r:.lfm.httpGet["user.gettoptracks&period=7day&page=",string y 1;x];
-    if[0=count l:r[`toptracks]`track;:y];
-    y[0]:y[0],select name,{x`name}'[artist],"J"$playcount from l;
-    @[y;1;1+]
-  }[y]/[(();1)];
-  if[98=type res;:update users:x from res];
+.lfm.httpWrap:{[p;x;y;z]
+  q:$[p=0W;("";1b);("&limit=",string p;0b)];                                                    / limit results if necessary
+  res:first{[q;x;y;z]                                                                           / loop over pages to get all tracks
+    r:.lfm.httpGet[x,q[0],"&page=",string z 1;y];
+    if[0=count l:first raze r;:z];
+    z[0]:distinct z[0],{@/[;x;y]x#z}[z 2;z 3]'[l];
+    :@[z;1;+;q 1];
+  }[q;x;y]/[(();1;key z;value z)];
   :res;
  };
 
+.lfm.ch:.lfm.httpWrap[0W;"user.gettoptracks&period=7day";;`name`artist`playcount!(::;first;"J"$)];
+.lfm.rec:.lfm.httpWrap[1;"user.getrecenttracks";;(`name`artist`album,`$"@attr")!(::;first;first;{"true"~last x})];
+.lfm.tt:.lfm.httpWrap[1;"user.gettoptracks&period=7day";;`name`artist`playcount!(::;first;"J"$)];
+.lfm.ta:.lfm.httpWrap[1;"user.gettopartists&period=7day";;`name`playcount!(::;first)];
+
 .lfm.getChart:{[x;y;z]
   res:@[get;`.lfm.chart;()];
-  if[(""~x`u)or 0=count res;                                                                    / if called from cron update results after 9.30am
-    res:raze .lfm.getChartUser'[key z;value z];
+  if[(""~x`u)or 0=count res;                                                                    / if called from cron update results
+    res:raze{r:.lfm.getOver y;if[98=type r;r:update user:x from r];r}'[key z;value z];
     `.lfm.chart set res;
   ];
   e:"";
