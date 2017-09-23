@@ -2,35 +2,36 @@
 .lfm.key:first@[read0;`:lfm_key;""];                                                            / api key
 .lfm.httpGet:{.j.k .Q.hg`$"http://ws.audioscrobbler.com/2.0/?format=json&api_key=",.lfm.key,"&method=",x,"&user=",y};
 
+/ variables required to build up messages
 .lfm.filters:("tracks";"artists")!`toptracks`topartists;                                        / allowed filters
-.lfm.periods:enlist["overall"]!enlist"overall ";
-.lfm.periods,:("7day";"1month";"3month";"6month";"12month")!"over the last ",/:("7 days ";"1 month ";"3 months ";"6 months ";"12 months "); / allowed periods
-
-.lfm.parse.recenttracks:{[z;m]                                                                  / parser for recent tracks
-  r:$[(`$"@attr")in key a:first m;" is listening";" last listened"];                            / determine if song is currently playing
-  s:raze{"'",x[0],"' by ",x[1]," from ",x 2}@[;1 2;first]a`name`artist`album;
-  :r," to ",s;                                                                                  / format message
- };
-.lfm.parse.toptracks:{[z;m]                                                                     / parser for top tracks
-  s:" by "sv@[;0;{"'",x,"'"}]@[;1;first]first[m]`name`artist;
-  :"'s top track ",z,"is ",s," with ",m[`playcount]," scrobbles";                               / format message
- };
-.lfm.parse.topartists:{[z;m]                                                                    / parser for top artists
-  :"'s top artist ",z,"is ",first[m`name]," with ",m[`playcount]," scrobbles";                  / format message
- };
-
-.lfm.parseMethod:{                                                                              / parse request methos
-  if[not x[`filter]in key .lfm.filters;:("user.getrecenttracks";`recenttracks)];                / default to recent tracks
-  :("user.gettop",x[`filter],"&limit=1&period=",x`period;.lfm.filters x`filter);
- };
+.lfm.periods:("overall";"7day";"1month";"3month";"6month";"12month")!("overall";"7 day";"1 month";"3 month";"6 month";"12 month"); / allowed periods
+.lfm.funcs:(`artist`playcount`album,`$"@attr")!(first;"J"$;first;{"true"~last x});              / column functions
+.lfm.cols:(`topartists;`toptracks;`recenttracks)!(`name`playcount;`name`artist`playcount;(`name`artist`playcount`album,`$"@attr")); / columns for parsing requests
 
 .lfm.request:{[x;y;z]                                                                           / [user;lfm name;msg] return users now playing track, mentioning the user who made the request
+  res:.lfm.parseMethod[x;y;z];
+  :neg[.z.w](`worker;`music;raze"Hey @",string[x],", @",string[first key y],res);               / pass message back to server
+ };
+
+.lfm.parseMethod:{[x;y;z]                                                                       / parse request methos
   if[not z[`period]in key .lfm.periods;z[`period]:"7day"];                                      / set default period
-  p:.lfm.parseMethod z;
-  if[0=count msg:first first .lfm.httpGet[p 0]y;:()];                                           / make request to last fm
-  res:.lfm.parse[p 1][.lfm.periods z`period;msg];                                               / parse returned message
-  if[0=count res;:()];                                                                          / no return on bad request
-  :neg[.z.w](`worker;`music;raze"Hey ",x,", ",z[`name],res);                                    / pass message back to server
+  a:$[z[`filter]in key .lfm.filters;
+    ("user.gettop",z[`filter],"&limit=1&period=",z`period;.lfm.filters z`filter);
+    ("user.getrecenttracks";`recenttracks)
+  ];
+  res:.lfm.httpWrap[1;a 0;first value y;(.lfm.cols a 1)#.lfm.funcs];
+  :.lfm.parse[a 1][.lfm.periods z`period;first res];
+ };
+
+.lfm.parse.recenttracks:{[z;m]                                                                  / parser for recent tracks
+  r:$[m`$"@attr";" is listening";" last listened"];                                             / determine if song is currently playing
+  :r," to '",m[`name],"' by ",m[`artist]," from ",m`album;                                      / format message
+ };
+.lfm.parse.toptracks:{[z;m]                                                                     / parser for top tracks
+  :"'s ",z," top track is '",m[`name],"' by ",m[`artist]," with ",string[m`playcount]," scrobbles"; / format message
+ };
+.lfm.parse.topartists:{[z;m]                                                                    / parser for top artists
+  :"'s ",z," top artist is ",m[`name]," with ",string[m`playcount]," scrobbles";                / format message
  };
 
 .lfm.httpWrap:{[p;x;y;z]
@@ -45,14 +46,11 @@
  };
 
 .lfm.ch:.lfm.httpWrap[0W;"user.gettoptracks&period=7day";;`name`artist`playcount!(::;first;"J"$)];
-.lfm.rec:.lfm.httpWrap[1;"user.getrecenttracks";;(`name`artist`album,`$"@attr")!(::;first;first;{"true"~last x})];
-.lfm.tt:.lfm.httpWrap[1;"user.gettoptracks&period=7day";;`name`artist`playcount!(::;first;"J"$)];
-.lfm.ta:.lfm.httpWrap[1;"user.gettopartists&period=7day";;`name`playcount!(::;first)];
 
 .lfm.getChart:{[x;y;z]
   res:@[get;`.lfm.chart;()];
   if[(""~x`u)or 0=count res;                                                                    / if called from cron update results
-    res:raze{r:.lfm.getOver y;if[98=type r;r:update user:x from r];r}'[key z;value z];
+    res:raze{r:.lfm.ch y;if[98=type r;r:update users:x from r];r}'[key z;value z];
     `.lfm.chart set res;
   ];
   e:"";
@@ -61,8 +59,8 @@
     e:raze"for ",string[x`c]," ";
   ];
   if[0=count res;:()];                                                                          / no return for empty chart
+  res:update("@",'string users)from res;                                                        / allow colours
   res:0!`scrobbles xdesc select scrobbles:sum playcount,users by name,artist from res;
-  res:select no:1+i,name,artist,scrobbles,users from res;
-  res:5#res;
-  :neg[.z.w](`worker;`music;$[""~x`u;"T";"Hey ",x[`u],", t"],"he current chart ",e,"is:\n","\n"sv"  ",/:"\n"vs ssr/[.Q.s res;("\" ";"\""),string key z;("   ";""),y]); / pass message back to server
+  res:5#select no:1+i,name,artist,scrobbles,users from res;
+  :neg[.z.w](`worker;`music;ssr[;"\n";"\n  "]$[""~x`u;"T";"Hey ",x[`u],", t"],"he current chart ",e,"is:\n",.Q.s@[res;cols[res]where"C"=exec t from meta res;`$]); / pass message back to server
  };

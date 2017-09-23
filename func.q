@@ -32,7 +32,7 @@ votr:{[x;y;z;f]if[gameon`vote;:rc[;y;0]"\033[GVoting is in progress";];
     `popt set {(1+til count x)!x}1_{#[5&count[x];x]}o:";"vs"c"$3_x;
     h::value[`atproc]"\n"sv enlist["Poll initialised. you have 10 seconds to enter a choice number:"],{@[string[til count x],\:"]. ";0;:;""],'x}o;];
   bc uvol[key aw],\:h;
-  @[`gameon;`vote;:;1b]; 
+  @[`gameon;`vote;:;1b];
   `cron insert (.z.P+"v"$10;endfuncs f;`);
   @[`tf;"";:;value f];};
 
@@ -183,7 +183,7 @@ bbks:{[x;y;z]chat[;y;z]'["j"$biggerbox . {(5&1^"J"$x[1];" " sv 2_x)} " " vs "c"$
 
 workernames:enlist[`]!enlist"[",$[10;"BLANK"],"]";
 
-worker:{publ[y;0;n:workernames x]}
+worker:{publ[atproc y;0;n:workernames x]}
 
 tf[""]:chat
 

@@ -3,6 +3,7 @@ labels,:("\\ne";"\\ml";"\\bc";"\\df")!("news";"music";"bitcoin";"define");
 news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;uct string z);}
 defn:{[x;y;z] neg[wh](`dictlkup;trim "c"$3_x);}
 mulo:{[x;y;z]
+  `aa set(x;y;z);
   if[()~key`:lfm_key;:rc[;y;0]"\033[Gmusic lookup not enabled"];                                / return error if unenabled
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / load cache of lastfm usernames
   if[0=count msg:trim"c"$3_x;                                                                   / return help message if no input is provided
@@ -22,10 +23,10 @@ mulo:{[x;y;z]
     `:lfm_cache set$[0=count uname:(1+msg?"=")_msg;.z.u _.lfm.cache;.lfm.cache,enlist[.z.u]!enlist uname]; / update cache
     :rc[;y;0]"\033[GUpdated username";
   ];
-  msg:@[;`filter`period;lower]{(count[x]#`name`filter`period)!x}"&"vs msg;                      / split message parameters
+  msg:@[;`filter`period;lower]{(!).(3&count x)#/:(`name`filter`period;x)}"&"vs msg;             / split message parameters
   if[not(`$msg`name)in key .lfm.cache;:rc[;y;0]"\033[Guser not available"];                     / return error if requested user is unavailable
   rc[;y;0]"\033[GSending Request";
-  neg[wh](`.lfm.request;trim uct string z;.lfm.cache`$msg`name;@[msg;`name;{trim ucn[`$x;x]}]); / send request to worker process
+  neg[wh](`.lfm.request;z;((),`$msg`name)#.lfm.cache;msg);                                      / send request to worker process
  };
 
 getchart:{[x;y]
