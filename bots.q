@@ -8,7 +8,7 @@ mulo:{[x;y;z]
   if[0=count msg:trim"c"$3_x;                                                                   / return help message if no input is provided
     options:("* enter 'user=<LFM_NAME>' to update lastfm username, leave blank to unset";
       "* usage='\\ml <USERNAME>(&<FILTER>&<PERIOD>)' OR '\\ml chart'";
-      "* Filters: tracks, artists\n* Periods: overall, 7day, 1month, 3month, 6month, 12month";
+      "* Filters: tracks, artists, chart\n* Periods: overall, 7day, 1month, 3month, 6month, 12month";
       "  users: ",$[0=count k:key .lfm.cache;"()";atproc", "sv "@",'string k]);
     :rc[;y;0]"\033[Gmusic lookup from lastfm enabled, available options:\n","\n"sv options;
   ];
