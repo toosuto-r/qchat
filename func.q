@@ -30,7 +30,7 @@ votr:{[x;y;z;f]if[gameon`vote;:rc[;y;0]"\033[GVoting is in progress";];
   if[`polv=f;
     if[not[";"in "c"$x]or 4>count x;:rc[;y;0]"\033[GInput in the form of \"Topic;option1;option2;...";];
     `popt set {(1+til count x)!x}1_{#[5&count[x];x]}o:";"vs"c"$3_x;
-    h:"\n"sv enlist["Poll initialised. you have 10 seconds to enter a choice number:"],{@[string[til count x],\:"]. ";0;:;""],'x}o;];
+    h::value[`atproc]"\n"sv enlist["Poll initialised. you have 10 seconds to enter a choice number:"],{@[string[til count x],\:"]. ";0;:;""],'x}o;];
   bc uvol[key aw],\:h;
   @[`gameon;`vote;:;1b]; 
   `cron insert (.z.P+"v"$10;endfuncs f;`);
@@ -53,7 +53,7 @@ endost:{neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[GEnded ostracism voting";
 
 endpol:{bc uvol[key aw],\:"\033[GPoll Ended";
   @[`tf;"";:;chat];
-  bc uvol[key aw],\:"\n"sv (max[count'[a]]$a:value[popt]),'"| ",/:count'[group[value pold]key popt]#\:"#";
+  bc uvol[key aw],\:value[`atproc]"\n"sv (max[count'[a]]$a:value[popt]),'"| ",/:count'[group[value pold]key popt]#\:"#";
   @[`gameon;`vote;:;0b];
   `pold set ()!();
   `popt set ()!();
