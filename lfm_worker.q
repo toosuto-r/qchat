@@ -49,18 +49,15 @@
 
 .lfm.getChart:{[x;y;z]
   res:@[get;`.lfm.chart;()];
-  if[(""~x`u)or 0=count res;                                                                    / if called from cron update results
-    res:raze{r:.lfm.ch y;if[98=type r;r:update users:x from r];r}'[key z;value z];
+  if[(`update~z`c)or 0=count res;                                                               / if called from cron update results
+    res:raze{r:.lfm.ch y;if[98=type r;r:update users:x from r];r}'[key y;value y];
     `.lfm.chart set res;
   ];
-  e:"";
-  if[not any ``update=x`f;
-    res:select from res where users=x`f;
-    e:raze"for ",string[x`c]," ";
-  ];
+  res:select from res where users in key y;
   if[0=count res;:()];                                                                          / no return for empty chart
+  e:$[1=count key y;"for @",string[first key y]," ";""];
   res:update("@",'string users)from res;                                                        / allow colours
   res:0!`scrobbles xdesc select scrobbles:sum playcount,users by name,artist from res;
   res:5#select no:1+i,name,artist,scrobbles,users from res;
-  :neg[.z.w](`worker;`music;ssr[;"\n";"\n  "]$[""~x`u;"T";"Hey ",x[`u],", t"],"he current chart ",e,"is:\n",.Q.s@[res;cols[res]where"C"=exec t from meta res;`$]); / pass message back to server
+  :neg[.z.w](`worker;`music;ssr[;"\n";"\n  "]$[`~x;"T";"Hey @",string[x],", t"],"he current chart ",e,"is:\n",.Q.s@[res;cols[res]where any"C "=\:exec t from meta res;`$]); / pass message back to server
  };
