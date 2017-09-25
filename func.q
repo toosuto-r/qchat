@@ -29,7 +29,7 @@ votr:{[x;y;z;f]if[gameon`vote;:rc[;y;0]"\033[GVoting is in progress";];
     h:"\033[G",string[.z.u]," has initiated ostracism mode.\nYou have 10 seconds to vote for a current user who will be kicked.";];
   if[`polv=f;
     if[not[";"in "c"$x]or 4>count x;:rc[;y;0]"\033[GInput in the form of \"Topic;option1;option2;...";];
-    `popt set {(1+til count x)!x}1_{#[5&count[x];x]}o:";"vs"c"$3_x;
+    `popt set {(1+til count x)!x}1_{#[count[x];x]}o:";"vs"c"$3_x;
     h::value[`atproc]"\n"sv enlist["Poll initialised. you have 10 seconds to enter a choice number:"],{@[string[til count x],\:"]. ";0;:;""],'x}o;];
   bc uvol[key aw],\:h;
   @[`gameon;`vote;:;1b];
