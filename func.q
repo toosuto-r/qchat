@@ -164,6 +164,8 @@ topc:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[GThe current topic is: ",topc
 
 medo:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",1_uct[string z],4_x;}
 
+slps:{[x;y;z]bc uvol[key aw],\:"\033[G [SANTABOT  ] Sleeps until...",", "sv("Santa: ";"AoC: "),'string-[;.z.d]24 0+`date$a+11-mod[a:`month$.z.d;12];}
+
 / music lookup from lastfm
 func:{[x;y;z]rc[;y;0]"\n"sv key[labels],'" ",'value labels}
 
@@ -187,4 +189,4 @@ worker:{publ[y;0;n:workernames x]}
 
 tf[""]:chat
 
-tf,:("\\  ";"\\u ";"\\i ";"\\k ";"\\o ";"\\p ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4";"\\b ";"\\bb";"\\t ";"\\me")!(func;usls;info;kick;votr[;;;`ostv];votr[;;;`polv];thum;addu;mkct;dlte;emji;gamr;c4tn;boks;bbks;topc;medo);
+tf,:("\\  ";"\\u ";"\\i ";"\\k ";"\\o ";"\\p ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\c4";"\\b ";"\\bb";"\\t ";"\\me";"\\sl")!(func;usls;info;kick;votr[;;;`ostv];votr[;;;`polv];thum;addu;mkct;dlte;emji;gamr;c4tn;boks;bbks;topc;medo;slps);
