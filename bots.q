@@ -28,11 +28,11 @@ mulo:{[x;y;z]
   neg[wh](`.lfm.request;z;((),`$msg`name)#.lfm.cache;msg);                                      / send request to worker process
  };
 getchart:{[x;y;z]
+  if[not`updatechart in cron`action;`cron insert(09:30+1+.z.D;`updatechart;`update)];           / update cron
   if[()~key`:lfm_key;:()];                                                                      / exit if unenabled
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / load cache of lastfm usernames
   if[0=count .lfm.cache;:()];                                                                   / exit if no users are cached
   neg[wh](`.lfm.request;x;$[y=`;(::);((),y)#].lfm.cache;`filter`c!("chart";z));                 / send request
-  if[not`updatechart in cron`action;`cron insert(09:30+1+.z.D;`updatechart;`update)];           / update cron
  };
 updatechart:getchart[`;`];
 updatechart`update;                                                                             / initialise cron job
