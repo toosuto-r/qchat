@@ -181,7 +181,7 @@ publ:{[x;y;z]bc uvol[key aw],\:"\033[G",uct[z],x;};
 
 boks:{[x;y;z]chat[;y;z]'["j"$("╔",((3*1+2*count x)#"═"),"╗";"║",(raze " ",'upper x)," ║";"╚",((3*1+2*count x:"c"$3_x)#"═"),"╝")];}
 biggerbox:{"\n" vs "╔",(a#"═"),"╗\n",c,"║",(raze " ",'upper y)," ║\n",(c:raze x#enlist "║",(b#" "),"║\n"),"╚",((a:3*b:1+2*count y)#"═"),"╝"}
-bbks:{[x;y;z]chat[;y;z]'["j"$biggerbox . {(5&1^"J"$x[1];" " sv 2_x)} " " vs "c"$3_x];}
+bbks:{[x;y;z]chat[;y;z]'["j"$biggerbox . {(0|5&1^"J"$x[1];" " sv 2_x)} " " vs "c"$3_x];}
 
 workernames:enlist[`]!enlist"[",$[10;"BLANK"],"]";
 
