@@ -176,9 +176,9 @@ atproc:{#[a;x],$[count b:ucol`$t;1_first b;e=count[x];"";"@"],t,_[-1;(),last[uco
 
 htproc:{x,$["#"=x 0;" http://twitter.com/hashtag/",1_x except " ";""]}
 
-proc:(htproc;atproc;pcols;pemji)
+proc:reverse distinct (htproc;atproc;pcols;pemji),$[`flist.tsv in key`:.;@[("S*";"\t")0:`:flist.tsv;1;value']1;()]
 
-chat:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",uct["[",$[10;string z],"]:"],('[;]/[reverse proc])"c"$x;}
+chat:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",uct["[",$[10;string z],"]:"],('[;]/[proc])"c"$x;}
 
 publ:{[x;y;z]bc uvol[key aw],\:"\033[G",uct[z],x;};
 
