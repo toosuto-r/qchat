@@ -49,7 +49,7 @@ Several chat bots are available that may be called from backslash `\` commands:
 
 To create a bot server code must be defined in `bots.q` and worker code in `worker.q`.
 
-In `bots.q` a help message should be added to `lables` and an input handler should be defined, with its name added to `tf`. The bots name should be added to `workernames`.
+In `bots.q` a help message should be added to `labels` and an input handler should be defined, with its name added to `tf`. The bots name should be added to `workernames`.
 
 In `worker.q` a function to handle the input and make any HTTP requests should be added. This function should return its result to the worker function.
 
