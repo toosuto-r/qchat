@@ -53,6 +53,17 @@ In `bots.q` a help message should be added to `lables` and an input handler shou
 
 In `worker.q` a function to handle the input and make any HTTP requests should be added. This function should return its result to the worker function.
 
+### Extending Chat Filters
+
+Chat filter functions are extended by adding to flist.tsv - a tab separated document of the format
+
+```
+funcname1   {func1}
+funcname2   {func2}
+```
+
+Functions must be monadic, and return a suitably modified input string. Calls to external functions should to avoid slowing of the main chat functionality - preferably these should be handled by the worker process.
+
 ## Credits
 This repo is maintained by the creator [toosuto-r](https://github.com/toosuto-r).
 Additional commits have been made by:
