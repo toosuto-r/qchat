@@ -12,11 +12,21 @@ dcsv:{[s] /s:sym
   ("DFFFFI";enlist ",")0: 3_a
  }
 
+/ dict of gnuplot timefmts based on kdb datatype
+timefmt:"dpzvutm"!
+  ("'%Y-%m-%d'";            /d
+   "'%Y-%m-%dD%H:%M:%S'";   /p
+   "'%Y-%m-%d %H:%M:%S'";   /z
+   "'%H:%M:%S'";            /v
+   "'%H:%M'";               /u
+   "'%H:%M:%S'";            /t
+   "'%Y-%m'")               /m
+
 / gnuplot program
 c:("set terminal dumb";
    "set datafile separator ','";
    "set xdata time";
-   "set timefmt '%Y-%m-%d'";
+   "set timefmt ",timefmt["d"];
    "set key off";
    "plot '-' using 1:5 with lines")
 
