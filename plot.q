@@ -38,7 +38,7 @@ plt:{[c;s] /c:gnuplot commands,s:sym
 
 / stock plot
 .plot.getplot:{[u;s;h] /u:user,s:sym,h:user handle
-  if[()~p:.plot.plt s;:neg[.z.w](`stkerr;h)];
+  if[()~p:.plot.plt s;:neg[.z.w](`errw;"\033[GError: stock not found";h)];
   :neg[.z.w](`worker;`stock;"Hey ",u,", plot for ",string[s]," over last month:",p)
  }
 

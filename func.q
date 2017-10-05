@@ -186,6 +186,7 @@ bbks:{[x;y;z]chat[;y;z]'["j"$biggerbox . {(0|5&1^"J"$x[1];" " sv 2_x)} " " vs "c
 workernames:enlist[`]!enlist"[",$[10;"BLANK"],"]";
 
 worker:{publ[atproc y;0;n:workernames x]}
+errw:rc[;;0]                                / rc projection used for returning errors from workers
 
 tf[""]:chat
 
