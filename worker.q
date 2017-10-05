@@ -5,6 +5,7 @@ system"S ",string"j"$.z.T;
 
 / load additional worker code
 \l lfm_worker.q
+\l plot.q
 
 /Powered by News API
 /default BBC
@@ -26,4 +27,3 @@ dictlkup:{
  d:`GBP`USD`EUR!("£";"$";"€");
  :neg[.z.w](`worker;`bitcoin;"Hey ",x,", bitcoin price is currently: ",d[y],j[`bpi][y][`rate]," (",string[y],")");
  }
-

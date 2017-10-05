@@ -43,6 +43,10 @@ btcp:{[x;y;z]
  rc[;y;0]"\033[GGetting BTC price";neg[wh](`.btc.getprice;trim uct string z;c);
  };
 
-workernames,:`news`music`bitcoin`defino!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT")],\:"]:" / bot names used when printing to chat
+stkp:{[x;y;z]
+  rc[;y;0]"\033[GGetting stock plot";neg[wh](`.plot.getplot;trim uct string z;`$"c"$3_x;y);
+ }
 
-tf,:("\\ne";"\\ml";"\\bc";"\\df")!(news;mulo;btcp;defn);
+workernames,:`news`music`bitcoin`defino`stock!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT")],\:"]:" / bot names used when printing to chat
+
+tf,:("\\ne";"\\ml";"\\bc";"\\df";"\\st")!(news;mulo;btcp;defn;stkp);
