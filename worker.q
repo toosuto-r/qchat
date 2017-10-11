@@ -35,7 +35,7 @@ dictlkup:{
  }
 
 topcheck:30
-shamethresh:50
+shamethresh:70
 toptab:([]pid:"i"%();user:0#`;mem:0#0f;cmd:0#`;time:0#.z.P)
 shamed:([]time:0#.z.P;user:`)
 gettop:{toptab,:select from 
