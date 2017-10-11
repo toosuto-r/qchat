@@ -49,4 +49,4 @@ gettop:{toptab,:select from
   `cron insert (.z.P+"v"$topcheck;`gettop;(shamethresh,topcheck));
   }
 
-`cron insert (.z.P+"v"$topcheck;`gettop;(shamethresh,topcheck))
+`cron insert (.z.P+"v"$topcheck;`gettop;(shamethresh,topcheck));
