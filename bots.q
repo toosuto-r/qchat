@@ -47,6 +47,6 @@ stkp:{[x;y;z]
   rc[;y;0]"\033[GGetting stock plot";neg[wh](`.plot.getplot;trim uct string z;`$"c"$3_x;y);
  }
 
-workernames,:`news`music`bitcoin`defino`stock!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT")],\:"]:" / bot names used when printing to chat
+workernames,:`news`music`bitcoin`defino`stock`shame!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT";"SHAMEBOT")],\:"]:" / bot names used when printing to chat
 
 tf,:("\\ne";"\\ml";"\\bc";"\\df";"\\st")!(news;mulo;btcp;defn;stkp);
