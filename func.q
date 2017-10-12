@@ -171,7 +171,7 @@ func:{[x;y;z]rc[;y;0]"\n"sv key[labels],'" ",'value labels}
 
 cemdict:"c"$emdict
 pemji:{raze#[1;r],(cemdict`$td#'dr),'(td:?\:[dr;" "])_'dr:1_r:"//e "vs x}
-pcols:{raze#[1;r],(1_'coldict coldict?coldict`$td#'dr),'(1+td:?\:[dr;" "])_'dr:1_r:"//c "vs x}
+pcols:{raze[#[1;r],(1_'coldict coldict?coldict`$td#'dr),'(1+td:?\:[dr;" "])_'dr:1_r:"//c "vs x],coldict`}
 atproc:{#[a;x],$[count b:ucol`$t;1_first b;e=count[x];"";"@"],t,_[-1;(),last[ucol`$t::1_a _e#x]],_[e:count[x]^w?[(a:?[x;"@"])<w:where not x in .Q.an;1b];x]}/
 
 htproc:{x,$["#"=x 0;" http://twitter.com/hashtag/",1_x except " ";""]}
