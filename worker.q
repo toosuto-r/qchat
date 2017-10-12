@@ -31,7 +31,11 @@ dictlkup:{
  if[y=`PLOT;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BTC price over last month:","\n" sv 1_read0`:/tmp/btc.txt)];
  j:.j.k .Q.hg`$":http://api.coindesk.com/v1/bpi/currentprice.json";
  d:`GBP`USD`EUR!("£";"$";"€");
- :neg[.z.w](`worker;`bitcoin;"Hey ",x,", bitcoin price is currently: ",d[y],j[`bpi][y][`rate]," (",string[y],")");
+ if[y<>`KFC;m:"Hey ",x,", bitcoin price is currently: ",d[y],j[`bpi][y][`rate]," (",string[y],")"];
+ if[(y<>`KFC) & z<>0;m,:" and your holding is worth: ",d[y],string z*j[`bpi][y][`rate_float]];
+ if[y=`KFC;z:$[0<>z;z;1f];m:"Hey ",x,", with ",string[z]," BTC you can currently buy this many bargain buckets:\n",
+              -1_.Q.s `6pc`10pc`14pc!floor z*j[`bpi][`GBP][`rate_float]%10.49 13.49 16.49];
+ :neg[.z.w](`worker;`bitcoin;m);
  }
 
 topcheck:30
