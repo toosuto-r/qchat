@@ -22,8 +22,8 @@ getheadline:{news:.j.k .Q.hg first 1?src;
   neg[.z.w](`worker;`news;raze"(",x,") "," - "sv(),/:"c"$enlist[news`source],first each?[1;news`articles]`title`description`url)}
 
 dictlkup:{
-  dictf:{$[2>count t:raze raze rand[.j.k[.Q.hg `$"http://api.pearson.com/v2/dictionaries/ldoce5/entries?headword=",x][`results]][`senses][`definition];"No Results Found";t]};
-  :neg[.z.w](`worker;`defino;raze"The definition of ",x," is: ",@[dictf;x;"unable to be retrieved."])
+  dictf:{$[2>count t:@[rand[.j.k[.Q.hg `$"http://api.pearson.com/v2/dictionaries/ldoce5/entries?headword=",x][`results]][`headword`senses];1;{raze raze x`definition}];"No Results Found";t]};
+  :neg[.z.w](`worker;`defino;raze"The definition of ",x[0]," is: ",(x:@[dictf;x;(x;"unable to be retrieved.")])1)
  };
 
 / bitcoin
