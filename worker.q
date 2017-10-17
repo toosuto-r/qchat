@@ -26,6 +26,21 @@ dictlkup:{
   :neg[.z.w](`worker;`defino;raze"The definition of ",x[0]," is: ",(x:@[dictf;x;(x;"unable to be retrieved.")])1)
  };
 
+wikilkup:{
+  x:ssr[x;" ";"%20"];
+  w:.j.k .Q.hg`$":https://en.wikipedia.org/w/api.php?action=query&titles=",x,"&prop=revisions&rvprop=content&format=json";
+  a:ssr[;;"}"]/[;("}}";"-->")]ssr[;;"{"]/[raze (first w[`query][`pages])[`revisions][`$"*"];("{{";"<!--")];
+  if["#REDIRECT"~upper 9#a;
+     :.z.s a b+til first ss[a;"[]]]"]-b:1+last ss[a;"[[[]"]];
+  a@:where not {x or (<>)scan x} a in "{}";
+  a@:where not {x or (<>)scan x} a in "()";
+  c:ss[a]'[("'''";".")];
+  c:@[c;0;first];
+  c:@[c;1;{y^first z where z>x}[c 0;count a]];
+  d:except[;"'[]\n"] a c[0]+til 1+c[1]-c[0];
+  :neg[.z.w](`worker;`wiki;d)
+ };
+
 / bitcoin
 .btc.getprice:{
  if[y=`PLOT;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BTC price over last month:","\n" sv 1_read0`:/tmp/btc.txt)];
