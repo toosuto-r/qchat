@@ -2,6 +2,7 @@ labels,:("\\ne";"\\ml";"\\bc";"\\df")!("news";"music";"bitcoin";"define");
 
 news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;uct string z);}
 defn:{[x;y;z] neg[wh](`dictlkup;trim "c"$3_x);}
+wiki:{[x;y;z] neg[wh](`wikilkup;trim "c"$3_x);}
 mulo:{[x;y;z]
   if[()~key`:lfm_key;:rc[;y;0]"\033[Gmusic lookup not enabled"];                                / return error if unenabled
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / load cache of lastfm usernames
@@ -38,15 +39,17 @@ updatechart:getchart[`;`];
 updatechart`update;                                                                             / initialise cron job
 
 btcp:{[x;y;z]
- if[`~`$upper trim"c"$3_x;x:"xxxUSD"];
- if[not (c:`$upper trim"c"$3_x) in `USD`GBP`EUR`PLOT;:rc[;y;0]"\033[GUnsupported currency/option. Supported currencies: gbp,usd,eur. Options: plot"];
- rc[;y;0]"\033[GGetting BTC price";neg[wh](`.btc.getprice;trim uct string z;c);
+ a:" " vs trim"c"$3_x;
+ if[1=count a;a,:enlist"0"];
+ if[`~`$upper a[0];a[0]:"USD"];
+ if[not (c:`$upper a[0]) in `USD`GBP`EUR`PLOT`KFC;:rc[;y;0]"\033[GUnsupported currency/option. Supported currencies: gbp,usd,eur,kfc. Options: plot"];
+ rc[;y;0]"\033[GGetting BTC price";neg[wh](`.btc.getprice;trim uct string z;c;"F"$a[1]);
  };
 
 stkp:{[x;y;z]
   rc[;y;0]"\033[GGetting stock plot";neg[wh](`.plot.getplot;trim uct string z;`$"c"$3_x;y);
  }
 
-workernames,:`news`music`bitcoin`defino`stock`shame!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT";"SHAMEBOT")],\:"]:" / bot names used when printing to chat
+workernames,:`news`music`bitcoin`defino`stock`shame`wiki!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT";"SHAMEBOT";"WIKIBOT")],\:"]:" / bot names used when printing to chat
 
-tf,:("\\ne";"\\ml";"\\bc";"\\df";"\\st")!(news;mulo;btcp;defn;stkp);
+tf,:("\\ne";"\\ml";"\\bc";"\\df";"\\st";"\\wk")!(news;mulo;btcp;defn;stkp;wiki);
