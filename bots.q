@@ -4,6 +4,8 @@ news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;uct string z);}
 defn:{[x;y;z] neg[wh](`dictlkup;trim "c"$3_x);}
 urbd:{[x;y;z] neg[wh](`udlkup;trim "c"$3_x);}
 wiki:{[x;y;z] neg[wh](`wikilkup;trim "c"$3_x);}
+anty:{[x;y;z] neg[wh](`anty;trim "c"$3_x);}
+syny:{[x;y;z] neg[wh](`syny;trim "c"$3_x);}
 mulo:{[x;y;z]
   if[()~key`:lfm_key;:rc[;y;0]"\033[Gmusic lookup not enabled"];                                / return error if unenabled
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / load cache of lastfm usernames
@@ -51,6 +53,6 @@ stkp:{[x;y;z]
   rc[;y;0]"\033[GGetting stock plot";neg[wh](`.plot.getplot;trim uct string z;`$"c"$3_x;y);
  }
 
-workernames,:`news`music`bitcoin`defino`stock`shame`wiki`urbd!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT";"SHAMEBOT";"WIKIBOT";"URBANBOT")],\:"]:" / bot names used when printing to chat
+workernames,:`news`music`bitcoin`defino`stock`shame`wiki`urbd`ant`syn!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT";"SHAMEBOT";"WIKIBOT";"URBANBOT";"ANTONYMBOT";"SYNONYMBOT")],\:"]:" / bot names used when printing to chat
 
-tf,:("\\ne";"\\ml";"\\bc";"\\df";"\\st";"\\wk";"\\ud")!(news;mulo;btcp;defn;stkp;wiki;urbd);
+tf,:("\\ne";"\\ml";"\\bc";"\\df";"\\st";"\\wk";"\\ud";"\\an";"\\sn")!(news;mulo;btcp;defn;stkp;wiki;urbd;anty;syny);

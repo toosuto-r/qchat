@@ -50,6 +50,16 @@ wikilkup:{
   :neg[.z.w](`worker;`wiki;d)
  };
 
+word:{[t;x]
+ j:.j.k .Q.hg`$"http://words.bighugelabs.com/api/2/f4c57c19c2c2f0f1021c3c145959ef40/",x,"/json";
+ a:"\n" sv {$[y in key a:x@z;string[z],": ",", " sv 5 sublist a@y;""]}[j;t]'[key j];
+ r:$[a~"";"No ",string[t],"onyms found for ",x;string[t],"onyms for ",x," by category:\n",a];
+ :neg[.z.w](`worker;t;r);
+ }
+
+anty:word[`ant]
+syny:word[`syn]
+
 / bitcoin
 .btc.getprice:{
  if[y=`PLOT;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BTC price over last month:","\n" sv 1_read0`:/tmp/btc.txt)];
