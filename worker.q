@@ -51,9 +51,9 @@ wikilkup:{
  };
 
 word:{[t;x]
- j:.j.k .Q.hg`$"http://words.bighugelabs.com/api/2/f4c57c19c2c2f0f1021c3c145959ef40/",x,"/json";
+ j:@[.j.k;.Q.hg`$"http://words.bighugelabs.com/api/2/f4c57c19c2c2f0f1021c3c145959ef40/",x,"/json";enlist[`]!enlist enlist[`]!enlist`];
  a:"\n" sv {$[y in key a:x@z;string[z],": ",", " sv 5 sublist a@y;""]}[j;t]'[key j];
- r:$[a~"";"No ",string[t],"onyms found for ",x;string[t],"onyms for ",x," by category:\n",a];
+ r:$[""~a except "\n";"No ",string[t],"onyms found for ",x;string[t],"onyms for ",x," by category:\n",a];
  :neg[.z.w](`worker;t;r);
  }
 

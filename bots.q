@@ -1,4 +1,4 @@
-labels,:("\\ne";"\\ml";"\\bc";"\\df")!("news";"music";"bitcoin";"define");
+labels,:("\\ne";"\\ml";"\\bc";"\\df";"\\an";"\\sn";"\\ud";"\\wk")!("news";"music";"bitcoin";"define";"antonym";"synonym";"urbandictionary";"wikipedia");
 
 news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;uct string z);}
 defn:{[x;y;z] neg[wh](`dictlkup;trim "c"$3_x);}
