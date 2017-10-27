@@ -60,6 +60,13 @@ word:{[t;x]
 anty:word[`ant]
 syny:word[`syn]
 
+rhym:{
+ j:@[.j.k;.Q.hg`$"https://api.datamuse.com/words?rel_rhy=",x;flip `word`score`numSyllables!()];
+ r:$[0=count j;
+     "No rhymes found for",x;
+     "Rhymes for ",x,": "," " sv 5 sublist j[;`word]];
+ :neg[.z.w](`worker;`rhym;r);
+ }
 / bitcoin
 .btc.getprice:{
  if[y=`PLOT;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BTC price over last month:","\n" sv 1_read0`:/tmp/btc.txt)];
