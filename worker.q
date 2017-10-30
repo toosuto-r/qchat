@@ -63,8 +63,8 @@ syny:word[`syn]
 rhym:{
  j:@[.j.k;.Q.hg`$"https://api.datamuse.com/words?rel_rhy=",x;flip `word`score`numSyllables!()];
  r:$[0=count j;
-     "No rhymes found for",x;
-     "Rhymes for ",x,": "," " sv 5 sublist j[;`word]];
+     "No rhymes found for ",x;
+     "Rhymes for ",x,": ",", " sv 5 sublist j[;`word]];
  :neg[.z.w](`worker;`rhym;r);
  }
 / bitcoin
