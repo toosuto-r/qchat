@@ -87,7 +87,7 @@ strm:{
     "host:utelly-tv-shows-and-movies-availability-v1.p.mashape.com\r\n\r\n";
  j:.j.k {(first ss[x;"{"])_x} (`$":https://utelly-tv-shows-and-movies-availability-v1.p.mashape.com") rq;
  r:"Matches found on streaming services for '",x,"'\n";
- r,:"\n" sv {"Locations for '",x[`name],"': ",", " sv exec display_name from x[`locations]}'[j`results];
+ r,:"\n" sv {"Locations for '",x[`name],"': ",", " sv raze value {x where c=min c:count'[x]} each a@group 5#'a:exec display_name from x[`locations]}'[j`results];
  :neg[.z.w](`worker;`stream;r);
  }
 
