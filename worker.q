@@ -36,8 +36,9 @@ udlkup:{
 .w.hu:{raze .w.hu1 x}
 
 wikilkup:{
-  x:.w.hu x;
-  w:.j.k .Q.hg`$":https://en.wikipedia.org/w/api.php?action=query&titles=",x,"&prop=revisions&rvprop=content&format=json";
+  q:.w.hu x;
+  w:.j.k .Q.hg`$":https://en.wikipedia.org/w/api.php?action=query&titles=",q,"&prop=revisions&rvprop=content&format=json";
+  if[$[`;"-1"] in key w[`query][`pages];:neg[.z.w](`worker;`wiki;"No wiki entry found for ",x)];
   a:ssr[;;"}"]/[;("}}";"-->")]ssr[;;"{"]/[raze (first w[`query][`pages])[`revisions][`$"*"];("{{";"<!--")];
   if["#REDIRECT"~upper 9#a;
      :.z.s a b+til first ss[a;"[]]]"]-b:1+last ss[a;"[[[]"]];
