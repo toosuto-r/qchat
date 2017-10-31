@@ -79,6 +79,17 @@ rhym:{
  :neg[.z.w](`worker;`bitcoin;m);
  }
 
+strm:{
+ rq:"GET /lookup?country=uk&term=",.w.hu[x]," http/1.0\r\n",
+    "X-Mashape-Key: ZcDyNcEqBTmshqEcRa21k5UjoukWp1w6WNSjsn2oOehFjAHN05\r\n",
+    "Accept: application/json\r\n",
+    "host:utelly-tv-shows-and-movies-availability-v1.p.mashape.com\r\n\r\n";
+ j:.j.k {(first ss[x;"{"])_x} (`$":https://utelly-tv-shows-and-movies-availability-v1.p.mashape.com") rq;
+ r:"Matches found on streaming services for '",x,"'\n";
+ r,:"\n" sv {"Locations for '",x[`name],"': ",", " sv exec display_name from x[`locations]}'[j`results];
+ :neg[.z.w](`worker;`stream;r);
+ }
+
 topcheck:30
 shamethresh:70
 toptab:([]pid:"i"%();user:0#`;mem:0#0f;cmd:0#`;time:0#.z.P)
