@@ -28,7 +28,7 @@ dictlkup:{
 
 udlkup:{
   d:.j.k .Q.hg`$":http://api.urbandictionary.com/v0/define?term=",x;
-  d:$["no_results"~d`result_type;"not found";rand d[`list][`definition]];
+  d:$["no_results"~d`result_type;"not found";rand d[`list;where s>0.25*max[s:sum d[`list;`thumbs_up`thumbs_down]];`definition]];
   :neg[.z.w](`worker;`urbd;raze"The definition of ",x," is: ",d)
  };
 
