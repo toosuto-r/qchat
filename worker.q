@@ -75,7 +75,7 @@ rhym:{
  if[y<>`KFC;m:"Hey ",x,", bitcoin price is currently: ",d[y],j[`bpi][y][`rate]," (",string[y],")"];
  if[(y<>`KFC) & z<>0;m,:" and your holding is worth: ",d[y],string z*j[`bpi][y][`rate_float]];
  if[y=`KFC;z:$[0<>z;z;1f];m:"Hey ",x,", with ",string[z]," BTC you can currently buy this many bargain buckets:\n",
-              -1_.Q.s `6pc`10pc`14pc!floor z*j[`bpi][`GBP][`rate_float]%10.49 13.49 16.49];
+              -1_.Q.s `6pc`10pc`14pc!`${string[x 0]," (",string[x 1]," pieces)"}'[(1 6;1 10;1 14)*\:'floor z*j[`bpi][`GBP][`rate_float]%10.49 13.49 16.49]];
  :neg[.z.w](`worker;`bitcoin;m);
  }
 
