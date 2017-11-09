@@ -1,10 +1,10 @@
-.z.pw:{[u;p]"b"$not count .z.W}
+.z.pw:{[u;p]"b"$not count .z.W};
 \t 1000
 
 /cron
-cron:([]time:"p"$();action:`$();args:())
+cron:([]time:"p"$();action:`$();args:());
 
-.z.ts:{pi:exec i from cron where time<.z.P;if[count pi;r:exec action,args from cron where i in pi;delete from `cron where i in pi;({value[x]. (),y}.)'[flip value r]];}
+.z.ts:{pi:exec i from cron where time<.z.P;if[count pi;r:exec action,args from cron where i in pi;delete from `cron where i in pi;({value[x]. (),y}.)'[flip value r]];};
 
 / update default seed
 system"S ",string"j"$.z.T;
