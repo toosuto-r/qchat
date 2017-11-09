@@ -9,8 +9,6 @@ syny:{[x;y;z] neg[wh](`syny;trim "c"$3_x);}
 rhym:{[x;y;z] neg[wh](`rhym;trim "c"$3_x);}
 strm:{[x;y;z] if[""~trim "c"$3_x;:rc[;y;0]"\033[GSTREAMBOT: usage \\tv {show or movie name}"];neg[wh](`strm;trim "c"$3_x);}
 mulo:{[m;h;u]                                                                                   / [message;handle;user]
-  `aa set (m;h;u);
-  / m:aa 0;h:aa 1;u:aa 2;
   if[()~key`:lfm_key;:rc[;h;0]"\033[Gmusic lookup not enabled"];                                / return error if unenabled
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / load cache of lastfm usernames
   if[0=count msg:trim"c"$3_m;                                                                   / return help message if no input is provided
