@@ -178,6 +178,12 @@ htproc:{x,$["#"=x 0;" http://twitter.com/hashtag/",1_x except " ";""]}
 
 proc:reverse distinct (htproc;atproc;pcols;pemji),$[`flist.tsv in key`:.;@[("S*";"\t")0:`:flist.tsv;1;value']1;()]
 
+//md:()!()
+//pm:{md+:{count''[group'[wl[2]group flip(wl:w til[count w:(iw where not (iw:" "vs x)like\:"\033*")]+/:0 1 2)0 1]]}x;x}
+//ms:{rtrim " "sv r where 1&count'[r:{sums[t]binr rand sum t:md rand key md}\[x;""]]}
+//mrkv:{[x;y;z] bc uvol[key aw],\:"\033[G",uct["[",$[10;string z],"]:"],rr:ms 0N!"J"$"c"$4_x}
+//proc:pm,proc
+
 chat:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",uct["[",$[10;string z],"]:"],('[;]/[proc])"c"$x;}
 
 publ:{[x;y;z]bc uvol[key aw],\:"\033[G",uct[z],x;};
