@@ -149,7 +149,7 @@ emdict:(!)."Sj"$flip {enlist[("";"Available: ",", "sv x[;0])],x}2 cut read0`:emo
 
 emji:{[x;y;z] if[not(`$3_"c"$x) in key emdict;:rc[;y;0]"j"$"\033[GUnknown emoji - meme deficiency detected."];
   if[null`$3_"c"$x;:rc[;y;0]emdict`];
-  chat[;y;z]emdict `$"c"$3_x;}
+  ccht[;y;z]emdict `$"c"$3_x;}
 
 labels:("\\q ";"\\h ";"\\c ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\v ";"\\me";"\\t ";"\\p ")!("quit";"help";"colour";"users";"info";"kick";"ostracise";"(y)";"add";"newchat";"delete";"emoji";"game";"volume";"action";"topic";"poll")
 
@@ -180,17 +180,20 @@ proc:reverse distinct (htproc;atproc;pcols;pemji),$[`flist.tsv in key`:.;@[("S*"
 
 //md:()!()
 //pm:{md+:{count''[group'[wl[2]group flip(wl:w til[count w:(iw where not (iw:" "vs x)like\:"\033*")]+/:0 1 2)0 1]]}x;x}
-//ms:{rtrim " "sv r where 1&count'[r:{sums[t]binr rand sum t:md rand key md}\[x;""]]}
-//mrkv:{[x;y;z] bc uvol[key aw],\:"\033[G",uct["[",$[10;string z],"]:"],rr:ms 0N!"J"$"c"$4_x}
+//ms:{" "sv r where 0<count each r:{(last x;sums[md x]binr rand sum md x:$[x in key md;x;rand key md])}\[x;rand key md][;0]}
+//mrkv:{[x;y;z] bc uvol[key aw],\:"\033[G",uct["[",$[10;string z],"]:"],rr:ms "J"$"c"$4_x}
 //proc:pm,proc
 
 chat:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",uct["[",$[10;string z],"]:"],('[;]/[proc])"c"$x;}
 
+//clean chat - doesn't use proc
+ccht:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",uct["[",$[10;string z],"]:"],"c"$x;}
+
 publ:{[x;y;z]bc uvol[key aw],\:"\033[G",uct[z],x;};
 
-boks:{[x;y;z]chat[;y;z]'["j"$("╔",((3*1+2*count x)#"═"),"╗";"║",(raze " ",'upper x)," ║";"╚",((3*1+2*count x:"c"$3_x)#"═"),"╝")];}
+boks:{[x;y;z]ccht[;y;z]'["j"$("╔",((3*1+2*count x)#"═"),"╗";"║",(raze " ",'upper x)," ║";"╚",((3*1+2*count x:"c"$3_x)#"═"),"╝")];}
 biggerbox:{"\n" vs "╔",(a#"═"),"╗\n",c,"║",(raze " ",'upper y)," ║\n",(c:raze x#enlist "║",(b#" "),"║\n"),"╚",((a:3*b:1+2*count y)#"═"),"╝"}
-bbks:{[x;y;z]chat[;y;z]'["j"$biggerbox . {(0|5&1^"J"$x[1];" " sv 2_x)} " " vs "c"$3_x];}
+bbks:{[x;y;z]ccht[;y;z]'["j"$biggerbox . {(0|5&1^"J"$x[1];" " sv 2_x)} " " vs "c"$3_x];}
 
 workernames:enlist[`]!enlist"[",$[10;"BLANK"],"]";
 
