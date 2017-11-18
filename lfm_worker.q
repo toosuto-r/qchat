@@ -41,7 +41,7 @@
   ];
   res:.lfm.http[a 2][1;a 0;;;.lfm.cols[a 1]#.lfm.funcs]'[key l;get l];                          / http request
   if[`table=a 2;res:first raze res];
-  :.lfm.parse[a 1][string first key l;.lfm.periods msg`period;res];                             / parse results
+  :.lfm.parse[a 1]["@",string first key l;.lfm.periods msg`period;res];                         / parse results
  };
 
 .lfm.getChart:{[u;l;msg]
@@ -61,16 +61,16 @@
  };
 .lfm.parse.recenttracks:{[l;p;m]                                                                / [req user;period;message] parser for recent tracks
   r:$[m`$"@attr";" is listening";" last listened"];                                             / determine if song is currently playing
-  :"@",l,r," to '",m[`name],"' by ",m[`artist]," from ",m`album;                                / format message
+  :l,r," to '",m[`name],"' by ",m[`artist]," from ",m`album;                                    / format message
  };
 .lfm.parse.tracks:{[l;p;m]                                                                      / [req user;period;message] parser for top tracks
-  :"@",l,"'s ",p," top track is '",m[`name],"' by ",m[`artist]," with ",string[m`playcount]," scrobbles"; / format message
+  :l,"'s ",p," top track is '",m[`name],"' by ",m[`artist]," with ",string[m`playcount]," scrobbles"; / format message
  };
 .lfm.parse.artists:{[l;p;m]                                                                     / [req user;period;message] parser for top artists
-  :"@",l,"'s ",p," top artist is ",m[`name]," with ",string[m`playcount]," scrobbles";          / format message
+  :l,"'s ",p," top artist is ",m[`name]," with ",string[m`playcount]," scrobbles";              / format message
  };
 .lfm.parse.albums:{[l;p;m]                                                                      / [req user;period;message] parser for top albums
-  :"@",l,"'s ",p," top album is '",m[`name],"' by ",m[`artist]," with ",string[m`playcount]," scrobbles"; / format message
+  :l,"'s ",p," top album is '",m[`name],"' by ",m[`artist]," with ",string[m`playcount]," scrobbles"; / format message
  };
 .lfm.parse.getInfo:{[l;p;m]                                                                     / [req user;period;message] get info for a user
   if[1=count m;:"@",l," has ",string[first m`playcount]," scrobbles"];
