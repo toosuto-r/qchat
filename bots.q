@@ -1,6 +1,6 @@
 labels,:("\\ne";"\\ml";"\\bc";"\\df";"\\st";"\\an";"\\sn";"\\ud";"\\wk";"\\rh";"\\tv")!("news";"music";"bitcoin";"define";"stock";"antonym";"synonym";"urbandictionary";"wikipedia";"rhymes";"streaming lookup");
 
-news:{[x;y;z]rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;uct string z);}
+news:{[x;y;z] rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;uct string z);}
 defn:{[x;y;z] neg[wh](`dictlkup;trim "c"$3_x);}
 urbd:{[x;y;z] neg[wh](`udlkup;trim "c"$3_x);}
 wiki:{[x;y;z] neg[wh](`wikilkup;trim "c"$3_x);}
@@ -13,8 +13,8 @@ mulo:{[m;h;u]                                                                   
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / load cache of lastfm usernames
   if[0=count msg:trim"c"$3_m;                                                                   / return help message if no input is provided
     options:("* enter 'user=<LFM_NAME>' to update lastfm username, leave blank to unset";
-      "* usage='\\ml <USERNAME>{&<FILTER>}{&<PERIOD>}' OR '\\ml chart{&<USER>}{&artists}'";
-      "* Filters: tracks, artists, chart\n* Periods: overall, 7day, 1month, 3month, 6month, 12month";
+      "* usage='\\ml <USERNAME>{&<FILTER>}{&<PERIOD>}' OR '\\ml chart{&<USER>}{&<FILTER>}'";
+      "* Filters: tracks, artists, albums\n* Periods: overall, 7day, 1month, 3month, 6month, 12month";
       "  users: ",$[0=count k:key .lfm.cache;"()";atproc", "sv "@",'string k]);
     :rc[;h;0]"\033[Gmusic lookup from lastfm enabled, available options:\n","\n"sv options;     / display available options
   ];
@@ -26,8 +26,8 @@ mulo:{[m;h;u]                                                                   
   if[`chart in p;                                                                               / chart has been requested
     rc[;h;0]"\033[GSending Chart Request";
     p _:p?`chart;
-    ad:`;
-    if[not r:p[0]in key .lfm.cache;r:`;ad:p 0];                                                 / return error if user is unavailable
+    ad:p 1;
+    if[not(r:p[0])in key .lfm.cache;r:`;ad:p 0];                                                / return error if user is unavailable
     :getchart[u;r;ad];
   ];
   msg:@[;`filter`period;lower]`name`filter`period!msg;
@@ -42,7 +42,6 @@ getchart:{[u;r;ad]                                                              
     .lfm.cache:@[get;`:lfm_cache;()!()];                                                        / load cache of lastfm usernames
     if[0=count .lfm.cache;:()];                                                                 / exit if no users are cached
   ];
-  `:aa set (u;$[r=`;(::);((),r)#].lfm.cache;`filter`c!("chart";ad));
   neg[wh](`.lfm.request;u;$[r=`;(::);((),r)#].lfm.cache;`filter`c!("chart";ad));                / send request
  };
 updatechart:getchart[`;`];

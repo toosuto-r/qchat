@@ -22,7 +22,7 @@
     (1;"user.gettop",msg[`filter],"&period=",msg`period;.lfm.filters.np msg`filter);
     (1;"user.getrecenttracks";`recenttracks)
   ];
-  res:first raze .lfm.httpWrap[a 0;a 1;;;.lfm.cols[a 2]#.lfm.funcs]'[key l;get l];              / http request
+  res:first raze .lfm.httpLimit[a 0;a 1;;;.lfm.cols[a 2]#.lfm.funcs]'[key l;get l];             / http request
   :.lfm.parse[a 2][.lfm.periods msg`period;res];                                                / parse results
  };
 
@@ -37,29 +37,27 @@
   :"'s ",p," top artist is ",m[`name]," with ",string[m`playcount]," scrobbles";                / format message
  };
 
-.lfm.httpWrap:{[p;r;u;l;c]                                                                      / [limit;request;user;lfm name;cols+funcs]
-  q:$[p=0W;("";1b);("&limit=",string p;0b)];                                                    / limit results if necessary
-  res:first{[q;p;x;y;z]                                                                         / loop over pages to get all results
-    if[p<=count z 0;:@[z;0;sublist[p]]];                                                        / exit early if limit is reached, ensures limit is definitely kept
-    r:.lfm.httpGet[x,q[0],"&page=",string z 1;y];                                               / api request
-    if[0=count l:first raze r;:z];                                                              / exit early if no results
-    z[0]:distinct z[0],{@/[;x;y]x#z}[z 2;z 3]'[l];                                              / update results
-    :@[z;1;+;q 1];                                                                              / increment page number
-  }[q;p;r;l]/[(();1;key c;get c)];
+.lfm.httpLimit:{[p;r;u;l;c]                                                                     / [limit;request;user;lfm name;cols+funcs]
+  q:$[p=0W;"";"&limit=",string p];                                                              / limit results if necessary
+  res:{[q;r;l;c]                                                                                / loop over pages to get all results
+    if[0=count d:first raze .lfm.httpGet[r,q;l];:()];                                           / return empty list if no results
+    :({@/[;x;y]x#z}.(key c;get c))'[d];                                                         / apply column functions
+  }[q;r;l;c];
   if[98=type res;:update users:u from res];                                                     / add username
   :res;
  };
 
-.lfm.filters.chart:`tracks`artists`albums!`tracks_ch`artists_ch`albums_ch;                      / allowed filtersi
-.lfm.chart.artists:{`artist`scrobbles xcol x};                                                  / get counts by artists
-.lfm.chart.tracks:{`name`artist`scrobbles xcol @[x;`name;trim 50$]};                            / get counts by tracks
-.lfm.chart.albums:{`album`scrobbles xcol x};                                                    / get counts by albums
+.lfm.filters.chart:`tracks`artists`albums!`tracks_ch`artists_ch`albums_ch;                      / allowed filters
+.lfm.chart.tracks:{select scrobbles:sum playcount,distinct users by track:name,artist from @[x;`name;trim 50$]}; / get counts by tracks
+.lfm.chart.artists:{select scrobbles:playcount,distinct users by artist:name from x};           / get counts by artists
+.lfm.chart.albums:{select scrobbles:sum playcount,distinct users by album:name,artist from @[x;`name;trim 50$]}; / get counts by albums
 .lfm.getChart:{[u;l;msg]
   if[not msg[`c]in key .lfm.filters.chart;msg[`c]:`tracks];                                     / default to tracks
-  res:`playcount xdesc raze .lfm.httpWrap[5;"user.getweekly",(-1_string msg`c),"chart";;;.lfm.cols[.lfm.filters.chart msg`c]#.lfm.funcs]'[key l;get l]; / http request
+  e:$[1=count k:key l;("for @",string[first k]," ";5);("";0W)];                                 / name of requested user
+  lbl:-1_string msg`c;
+  res:raze .lfm.httpLimit[e 1;"user.getweekly",lbl,"chart";;;.lfm.cols[.lfm.filters.chart msg`c]#.lfm.funcs]'[key l;get l]; / http request
   if[0=count res;:()];                                                                          / no return for empty chart
-  e:$[1=count k:key l;"for @",string[first k]," ";""];                                          / name of requested user
   res:update("@",'string users)from res;                                                        / allow colours
-  res:`no xcols update no:1+i from 5 sublist .lfm.chart[msg`c]res;                              / return top 5
-  :neg[.z.w](`worker;`music;ssr[;"\n";"\n  "]$[`~u;"T";"Hey @",string[u],", t"],"he current chart ",e,"is:\n",.Q.s@[res;cols[res]where any"C "=\:exec t from meta res;`$]); / pass message back to server
+  res:`no xcols update no:fills?[differ scrobbles;1+i;0N]from 5 sublist`scrobbles xdesc 0!.lfm.chart[msg`c]res;   / collate results and return top 5
+  :neg[.z.w](`worker;`music;ssr[;"\n";"\n  "]$[`~u;"T";"Hey @",string[u],", t"],"he current ",lbl," chart ",e[0],"is:\n",.Q.s@[res;cols[res]where any"C "=\:exec t from meta res;`$]); / pass message back to server
  };
