@@ -9,11 +9,12 @@ syny:{[x;y;z] neg[wh](`syny;trim "c"$3_x);}
 rhym:{[x;y;z] neg[wh](`rhym;trim "c"$3_x);}
 strm:{[x;y;z] if[""~trim "c"$3_x;:rc[;y;0]"\033[GSTREAMBOT: usage \\tv {show or movie name}"];neg[wh](`strm;trim "c"$3_x);}
 mulo:{[m;h;u]                                                                                   / [message;handle;user]
+  `:bb set(m;h;u);
   if[()~key`:lfm_key;:rc[;h;0]"\033[Gmusic lookup not enabled"];                                / return error if unenabled
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / load cache of lastfm usernames
   if[0=count msg:trim"c"$3_m;                                                                   / return help message if no input is provided
     options:("* enter 'user=<LFM_NAME>' to update lastfm username, leave blank to unset";
-      "* usage='\\ml <USERNAME>{&<FILTER>}{&<PERIOD>}' OR '\\ml chart{&<USER>}{&<FILTER>}'";
+      "* usage='\\ml <USERNAME>{&<FILTER>{&<PERIOD>}}' OR '\\ml chart{&<USER>}{&<FILTER>}'";
       "* Filters: tracks, artists, albums\n* Periods: overall, 7day, 1month, 3month, 6month, 12month";
       "  users: ",$[0=count k:key .lfm.cache;"()";atproc", "sv "@",'string k]);
     :rc[;h;0]"\033[Gmusic lookup from lastfm enabled, available options:\n","\n"sv options;     / display available options
@@ -22,18 +23,18 @@ mulo:{[m;h;u]                                                                   
     `:lfm_cache set$[0=count uname:(1+msg?"=")_msg;u _.lfm.cache;.lfm.cache,enlist[u]!enlist uname]; / update cache
     :rc[;h;0]"\033[GUpdated username";
   ];
-  p:`$msg:("***";"&")0:msg;
-  if[`chart in p;                                                                               / chart has been requested
+  msg:("SSS";"&")0:msg;
+  if[`chart in msg;                                                                               / chart has been requested
     rc[;h;0]"\033[GSending Chart Request";
-    p _:p?`chart;
-    ad:p 1;
-    if[not(r:p[0])in key .lfm.cache;r:`;ad:p 0];                                                / return error if user is unavailable
+    msg _:msg?`chart;
+    ad:msg 1;
+    if[not(r:msg 0)in key .lfm.cache;r:`;ad:msg 0];                                             / return error if user is unavailable
     :getchart[u;r;ad];
   ];
   msg:@[;`filter`period;lower]`name`filter`period!msg;
-  if[not(`$msg`name)in key .lfm.cache;:rc[;h;0]"\033[Guser not available"];                     / return error if requested user is unavailable
+  if[not msg[`name]in key .lfm.cache;:rc[;h;0]"\033[Guser not available"];                      / return error if requested user is unavailable
   rc[;h;0]"\033[GSending Request";
-  neg[wh](`.lfm.request;u;enlist[`$msg`name]#.lfm.cache;msg);                                   / send request to worker process
+  neg[wh](`.lfm.request;u;enlist[msg`name]#.lfm.cache;msg);                                     / send request to worker process
  };
 getchart:{[u;r;ad]                                                                              / [user;request;additional] get chart for given parameters
   if[not`updatechart in cron`action;`cron insert(09:30+1+.z.D;`updatechart;`)];                 / update cron
@@ -42,7 +43,8 @@ getchart:{[u;r;ad]                                                              
     .lfm.cache:@[get;`:lfm_cache;()!()];                                                        / load cache of lastfm usernames
     if[0=count .lfm.cache;:()];                                                                 / exit if no users are cached
   ];
-  neg[wh](`.lfm.request;u;$[r=`;(::);((),r)#].lfm.cache;`filter`c!("chart";ad));                / send request
+  `:aa set(u;$[r=`;(::);((),r)#].lfm.cache;`filter`c!(`chart;ad));
+  neg[wh](`.lfm.request;u;$[r=`;(::);((),r)#].lfm.cache;`filter`c!(`chart;ad));                 / send request
  };
 updatechart:getchart[`;`];
 updatechart`;                                                                                   / initialise cron job
