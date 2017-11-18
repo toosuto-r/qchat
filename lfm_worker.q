@@ -74,7 +74,7 @@
  };
 .lfm.parse.getInfo:{[l;p;m]                                                                     / [req user;period;message] get info for a user
   if[1=count m;:"@",l," has ",string[first m`playcount]," scrobbles"];
-  :"the current scrobbles are:",.lfm.parse.table{@[;`users;enlist']x xdesc x xcol y}[`scrobbles;m];
+  :"the current scrobble counts are:",.lfm.parse.table{@[;`users;enlist']x xdesc x xcol y}[`scrobbles;m];
  };
 
 .lfm.chart.tracks:{select scrobbles:sum playcount,distinct users by track:name,artist from @[x;`name;trim 50$]}; / get counts by tracks
