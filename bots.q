@@ -27,8 +27,7 @@ mulo:{[m;h;u]                                                                   
     rc[;h;0]"\033[GSending Chart Request";
     p _:p?`chart;
     ad:`;
-    if[`artists in p;ad:`artists;p _:p?`artists];
-    if[not(r:p 0)in`,key .lfm.cache;:rc[;h;0]"\033[Guser not available"];                       / return error if user is unavailable
+    if[not r:p[0]in key .lfm.cache;r:`;ad:p 0];                                                 / return error if user is unavailable
     :getchart[u;r;ad];
   ];
   msg:@[;`filter`period;lower]`name`filter`period!msg;
@@ -37,16 +36,17 @@ mulo:{[m;h;u]                                                                   
   neg[wh](`.lfm.request;u;enlist[`$msg`name]#.lfm.cache;msg);                                   / send request to worker process
  };
 getchart:{[u;r;ad]                                                                              / [user;request;additional] get chart for given parameters
-  if[not`updatechart in cron`action;`cron insert(09:30+1+.z.D;`updatechart;`update)];           / update cron
+  if[not`updatechart in cron`action;`cron insert(09:30+1+.z.D;`updatechart;`)];                 / update cron
   if[null u;                                                                                    / need to check for skipped steps if run by cron
     if[()~key`:lfm_key;:()];                                                                    / exit if unenabled
     .lfm.cache:@[get;`:lfm_cache;()!()];                                                        / load cache of lastfm usernames
     if[0=count .lfm.cache;:()];                                                                 / exit if no users are cached
   ];
+  `:aa set (u;$[r=`;(::);((),r)#].lfm.cache;`filter`c!("chart";ad));
   neg[wh](`.lfm.request;u;$[r=`;(::);((),r)#].lfm.cache;`filter`c!("chart";ad));                / send request
  };
 updatechart:getchart[`;`];
-updatechart`update;                                                                             / initialise cron job
+updatechart`;                                                                                   / initialise cron job
 
 btcp:{[x;y;z]
  a:" " vs trim"c"$3_x;
