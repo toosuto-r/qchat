@@ -14,7 +14,7 @@
   r,:$[p=0W;"";"&limit=",string p];                                                             / limit results if necessary
   if[0=count d:first raze .lfm.httpGet[r;l];:()];                                               / return empty list if no results
   res:{@/[;x;y]x#z}[key c;get c]'[d];                                                           / apply column functions
-  if[98=type res;:update users:u from res];                                              / add username
+  if[type[res]in 98 99h;:update users:u from res];                                              / add username
   :res;
  };
 
@@ -28,7 +28,7 @@
 .lfm.request:{[u;l;msg]                                                                         / [user;lfm name;msg] return users now playing track, mentioning the user who made the request
   if[`chart=msg`filter;:.lfm.getChart[u;l;msg]];                                                / use chart specific method
   res:.lfm.parseMethod[u;l;msg];                                                                / parse inputs
-  :neg[.z.w](`worker;`music;raze"Hey @",string[u],", @",string[first key l],res);               / pass message back to server
+  :neg[.z.w](`worker;`music;raze"Hey @",string[u],", ",res);               / pass message back to server
  };
 
 .lfm.parseMethod:{[u;l;msg]                                                                     / [user;lfm name;msg] parse request methos
@@ -39,8 +39,9 @@
       ("user.getinfo";`getInfo;`dict);
       ("user.getrecenttracks";`recenttracks;`table)
   ];
-  res:first raze .lfm.http[a 2][1;a 0;;;.lfm.cols[a 1]#.lfm.funcs]'[key l;get l];                     / http request
-  :.lfm.parse[a 1][.lfm.periods msg`period;res];                                                / parse results
+  res:.lfm.http[a 2][1;a 0;;;.lfm.cols[a 1]#.lfm.funcs]'[key l;get l];                          / http request
+  if[`table=a 2;res:first raze res];
+  :.lfm.parse[a 1][string first key l;.lfm.periods msg`period;res];                             / parse results
  };
 
 .lfm.getChart:{[u;l;msg]
@@ -49,26 +50,31 @@
   lbl:-1_string msg`c;
   res:raze .lfm.http.table[e 1;"user.getweekly",lbl,"chart";;;.lfm.cols[msg`c]#.lfm.funcs]'[key l;get l]; / http request
   if[0=count res;:()];                                                                          / no return for empty chart
-  res:update("@",'string users)from res;                                                        / allow colours
-  res:`no xcols update no:fills?[differ scrobbles;1+i;0N]from 5 sublist`scrobbles xdesc 0!.lfm.chart[msg`c]res;   / collate results and return top 5
-  :neg[.z.w](`worker;`music;ssr[;"\n";"\n  "]$[`~u;"T";"Hey @",string[u],", t"],"he current ",lbl," chart ",e[0],"is:\n",.Q.s@[res;cols[res]where any"C "=\:exec t from meta res;`$]); / pass message back to server
+  res:.lfm.parse.table 5 sublist`scrobbles xdesc .lfm.chart[msg`c]res;
+  :neg[.z.w](`worker;`music;$[`~u;"T";"Hey @",string[u],", t"],"he current ",lbl," chart ",e[0],"is:",res); / pass message back to server
  };
 
-.lfm.parse.recenttracks:{[p;m]                                                                  / [period;message] parser for recent tracks
+.lfm.parse.table:{                                                                              / neatly format tables
+  x:update("@",''string users)from 0!x;
+  x:`no xcols update no:fills?[differ scrobbles;1+i;0N]from x;
+  :ssr[;"\n";"\n  "]"\n",.Q.s@[x;cols[x]where any"C "=\:exec t from meta x;`$];
+ };
+.lfm.parse.recenttracks:{[l;p;m]                                                                / [req user;period;message] parser for recent tracks
   r:$[m`$"@attr";" is listening";" last listened"];                                             / determine if song is currently playing
-  :r," to '",m[`name],"' by ",m[`artist]," from ",m`album;                                      / format message
+  :"@",l,r," to '",m[`name],"' by ",m[`artist]," from ",m`album;                                / format message
  };
-.lfm.parse.tracks:{[p;m]                                                                        / [period;message] parser for top tracks
-  :"'s ",p," top track is '",m[`name],"' by ",m[`artist]," with ",string[m`playcount]," scrobbles"; / format message
+.lfm.parse.tracks:{[l;p;m]                                                                      / [req user;period;message] parser for top tracks
+  :"@",l,"'s ",p," top track is '",m[`name],"' by ",m[`artist]," with ",string[m`playcount]," scrobbles"; / format message
  };
-.lfm.parse.artists:{[p;m]                                                                       / [period;message] parser for top artists
-  :"'s ",p," top artist is ",m[`name]," with ",string[m`playcount]," scrobbles";                / format message
+.lfm.parse.artists:{[l;p;m]                                                                     / [req user;period;message] parser for top artists
+  :"@",l,"'s ",p," top artist is ",m[`name]," with ",string[m`playcount]," scrobbles";          / format message
  };
-.lfm.parse.albums:{[p;m]                                                                        / [period;message] parser for top albums
-  :"'s ",p," top album is '",m[`name],"' by ",m[`artist]," with ",string[m`playcount]," scrobbles"; / format message
+.lfm.parse.albums:{[l;p;m]                                                                      / [req user;period;message] parser for top albums
+  :"@",l,"'s ",p," top album is '",m[`name],"' by ",m[`artist]," with ",string[m`playcount]," scrobbles"; / format message
  };
-.lfm.parse.getInfo:{[p;m]
-  :" has ",string[m]," scrobbles";
+.lfm.parse.getInfo:{[l;p;m]                                                                     / [req user;period;message] get info for a user
+  if[1=count m;:"@",l," has ",string[first m`playcount]," scrobbles"];
+  :"the current scrobbles are:",.lfm.parse.table{@[;`users;enlist']x xdesc x xcol y}[`scrobbles;m];
  };
 
 .lfm.chart.tracks:{select scrobbles:sum playcount,distinct users by track:name,artist from @[x;`name;trim 50$]}; / get counts by tracks

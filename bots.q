@@ -32,8 +32,9 @@ mulo:{[m;h;u]                                                                   
   ];
   if[`scrobbles in msg;                                                                         / return number of scrobbles for a user
     msg _:msg?`scrobbles;
-    if[not msg[0]in key .lfm.cache;:rc[;h;0]"\033[Guser not available"];                        / return error if requested user is unavailable
-    neg[wh](`.lfm.request;u;enlist[msg 0]#.lfm.cache;enlist[`filter]!enlist`scrobbles);
+    r:.lfm.cache;
+    if[msg[0]in key r;r:((),msg 0)#r];                                                          / return error if requested user is unavailable
+    :neg[wh](`.lfm.request;u;r;enlist[`filter]!enlist`scrobbles);
   ];
   msg:@[;`filter`period;lower]`name`filter`period!msg;
   if[not msg[`name]in key .lfm.cache;:rc[;h;0]"\033[Guser not available"];                      / return error if requested user is unavailable
