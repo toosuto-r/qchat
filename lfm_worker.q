@@ -50,7 +50,7 @@
   lbl:-1_string msg`c;
   res:raze .lfm.http.table[e 1;"user.getweekly",lbl,"chart";;;.lfm.cols[msg`c]#.lfm.funcs]'[key l;get l]; / http request
   if[0=count res;:()];                                                                          / no return for empty chart
-  res:.lfm.parse.table 5 sublist`scrobbles xdesc .lfm.chart[msg`c]res;
+  res:.lfm.parse.table 5 sublist`scrobbles xdesc .lfm.chart[msg`c]@[res;`name;trim 50$];        / trim wide columns
   :neg[.z.w](`worker;`music;$[`~u;"T";"Hey @",string[u],", t"],"he current ",lbl," chart ",e[0],"is:",res); / pass message back to server
  };
 
@@ -77,6 +77,6 @@
   :"the current scrobble counts are:",.lfm.parse.table{@[;`users;enlist']x xdesc x xcol y}[`scrobbles;m];
  };
 
-.lfm.chart.tracks:{select scrobbles:sum playcount,distinct users by track:name,artist from @[x;`name;trim 50$]}; / get counts by tracks
-.lfm.chart.artists:{select scrobbles:playcount,distinct users by artist:name from x};           / get counts by artists
-.lfm.chart.albums:{select scrobbles:sum playcount,distinct users by album:name,artist from @[x;`name;trim 50$]}; / get counts by albums
+.lfm.chart.tracks:{select scrobbles:sum playcount,distinct users by track:name,artist from x};  / get counts by tracks
+.lfm.chart.artists:{select scrobbles:sum playcount,distinct users by artist:name from x};       / get counts by artists
+.lfm.chart.albums:{select scrobbles:sum playcount,distinct users by album:name,artist from x};  / get counts by albums
