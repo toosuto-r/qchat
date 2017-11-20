@@ -58,9 +58,9 @@ dis:{-1"Too many players connected";exit 0;}                                    
 \
 / move to next turn
 step:{[]
-  nc[;pl:raze value[`..plyr]`c4;2]raze "\033[J",bnr,"\n\033[J\n\033[J\n\033[J\n\033[J\n\033[J\n\033[J\n\033[J\n\033[J";
-  nc[;pl;2]raze"\033[15H\033[JTeam ",string[1+t],"'s Turn\n",("\033[31mX\033[m: ";"\033[32mO\033[m: ")[t],sv[", ";string value[`..plyr][`c4;t:value[`..turn][`c4]mod 2]],"\nCurrent board:\n\n",sv["\n";" ",/:disp b],"\n";
-  neg[value[`..aw]pl]@'2,'cc[pl]@'raze'["\033[28H\033[J",/:("Enter column to make a move. You have ",string[value[`..turnlengths]`c4]," seconds:\n";"The other team is moving.\n")raze count'[value[`..plyr]`c4]#'mod[value[`..turn][`c4]+0 1;2]];
+  value[`..nc][;pl:raze value[`..plyr]`c4;2]raze "\033[J",bnr,"\n\033[J\n\033[J\n\033[J\n\033[J\n\033[J\n\033[J\n\033[J\n\033[J";
+  value[`..nc][;pl;2]raze"\033[15H\033[JTeam ",string[1+t],"'s Turn\n",("\033[31mX\033[m: ";"\033[32mO\033[m: ")[t],sv[", ";string value[`..plyr][`c4;t:value[`..turn][`c4]mod 2]],"\nCurrent board:\n\n",sv["\n";" ",/:disp b],"\n";
+  neg[value[`..aw]pl]@'2,'value[`..ccache][pl]@'raze'["\033[28H\033[J",/:("Enter column to make a move. You have ",string[value[`..turnlengths]`c4]," seconds:\n";"The other team is moving.\n")raze count'[value[`..plyr]`c4]#'mod[value[`..turn][`c4]+0 1;2]];
  }
 
 / check if there's a winner along any line or diagonal
@@ -85,6 +85,7 @@ play:{[x]
   if[checkboard[b] or 0=count value[`..plyr][`c4;not curplayer];                                                                             / check for a winner
     record[;;;moves;0b] . (value[`..plyr]`c4)@0 1,curplayer;
     neg[value[`..aw]pl]@'2,'value[`..ccache][pl:raze value[`..plyr]`c4]@\:raze"\033[15H\033[JTeam ",string[1+curplayer]," wins!\n\nWinning board:\n\n",("\n" sv disp b),"\n\nGame Over, exiting...\n";
+    if[`pts in key`.;@[`..pts;;+;]'[value[`..plyr][`c4]curplayer,1-curplayer;2 -2]];
     value[`..resetgame]`c4;
     :b::6#enlist 7#" ";];
   if[not any " " in/:b;                                                                         / if no spaces & no one has one, it's a draw
