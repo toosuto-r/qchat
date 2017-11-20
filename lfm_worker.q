@@ -12,8 +12,7 @@
 
 .lfm.httpLimit:{[p;r;c;u;l]                                                                     / [limit;request;cols+funcs;user;lfm name]
   r,:$[p=0W;"";"&limit=",string p];                                                             / limit results if necessary
-  m:(`$"@attr")in key d:raze .lfm.httpGet[r;l];                                                 / determine method
-  d:$[m:(`$"@attr")in key d;first;(::)]d;
+  d:$[m:(`$"@attr")in key d:raze .lfm.httpGet[r;l];first;(::)]d;                                / determine method
   if[0=count d;:()];                                                                            / return empty list if no results
   res:{@/[;x;y]x#z}[key c;get c]'[$[m;(::);enlist]d];                                           / apply column functions
   :update users:u from res;                                                                     / add username and return
