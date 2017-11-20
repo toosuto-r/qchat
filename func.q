@@ -42,6 +42,8 @@ polv:{[x;y;z];@[`pold;.z.u;:;0|(first "J"$"c"$x)&max key popt]}
 endost:{neg[value[aw]]@'0,'ccache[key[aw]]@\:"\033[GEnded ostracism voting";
   @[`tf;"";:;chat];
   h:aw u:c?max c:1_count'[group raze ostd];
+  if[in[`pts;key`.] & -1>neg[first dc]^first 1_deltas dc:desc c;
+    @[`pts;u;-;5]];
   if[not n:null h;
     neg[h]@0,ccache[u]"j"$"\033[GYou know what you did.";
     neg[h]@1,ccache[u]"j"$"exit 0";

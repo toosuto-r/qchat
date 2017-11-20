@@ -8,3 +8,4 @@ if[workeron;`SSL_VERIFY_SERVER setenv "no";system"q worker.q -p ",string[wp:{$[x
 \d .
 \l levenshtein.q
 \l bots.q
+\l pts.q
