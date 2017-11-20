@@ -16,10 +16,10 @@ cot:ptcst[;;5] //5 points to ostracise
 cpl:ptchk[;;1] //1 point to poll
 cdv:ptchk[;;1] //1 point to downvote
 
-upvt:{[x;y;z]x:string t:users a?min a:lvn["c"$3_x]'[string users];
-  @[`pts;t;+;1];@[`dnt;z;-;1];bc uvol[key aw],\:"\033[G",ucn[z;string z]," upvoted ",ucn[t;x];}
+upvt:{[x;y;z]x:string t:nu a?min a:lvn["c"$3_x]'[string nu:users except z];
+  @[`pts;t;+;1];@[`dnt;z;-;1];bc uvol[key aw],\:"\033[G",ucn[z;string z],"upvoted",ucn[t;x];}
 dnvt:{[x;y;z]x:string t:users a?min a:lvn["c"$3_x]'[string users];
-  @[`pts;;-;1]'[z,t];bc uvol[key aw],\:"\033[G",ucn[z;string z],"downvoted ",ucn[t;x];}
+  @[`pts;;-;1]'[z,t];bc uvol[key aw],\:"\033[G",ucn[z;string z],"downvoted",ucn[t;x];}
 wllt:{[x;y;z]rc[;y;0] "\033[G",ucn[u;string u],"has ",string[pts u],"q, and can give ",string dnt[u:z^`$"c"$3_x];}
 
 fchk,:("\\mk";"\\o ";"\\p ";"\\uv";"\\dv")!(cmk;cot;cpl;cdt;cdv)
