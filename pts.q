@@ -8,7 +8,7 @@ fchk:enlist[""]!enlist{[x;y]0b}
 chatter:{if[not fchk[fchk?fchk 3$"c"$r:dc[chatprikey;x];.z.w;.z.u];tf[tf?tf 3$"c"$r][r;.z.w;.z.u]];};
 
 ptchk:{[x;y;z] if[r:z>pts[y];rc["\033[GInsufficient q";x;0]];r}
-ptcst:{[x;y;z] if[r:z>pts[y];rc["\033[GInsufficient q";x;0];@[`pts;y;-;z]];r}
+ptcst:{[x;y;z] if[r:z>pts[y];rc["\033[GInsufficient q";x;0]];@[`pts;y;-;not[r]*z];r}
 
 cdt:{[x;y] if[r:1>dnt[y];rc["\033[GInsufficient q";x;0]];r} //1 point to donate/upvote
 cmk:ptcst[;;1] //1 point to markov
