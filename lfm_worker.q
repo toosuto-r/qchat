@@ -10,45 +10,39 @@
 .lfm.funcs:(`artist`playcount`album,`$"@attr")!(first;"J"$;first;{"true"~last x});              / column functions
 .lfm.cols:`artists`tracks`albums`recenttracks`getInfo!(`name`playcount;`name`artist`playcount;`name`artist`playcount;(`name`artist`playcount`album,`$"@attr");(),`playcount); / columns for parsing requests
 
-.lfm.http.table:{[p;r;u;l;c]                                                                    / [limit;request;user;lfm name;cols+funcs]
+.lfm.httpLimit:{[p;r;c;u;l]                                                                     / [limit;request;cols+funcs;user;lfm name]
   r,:$[p=0W;"";"&limit=",string p];                                                             / limit results if necessary
-  if[0=count d:first raze .lfm.httpGet[r;l];:()];                                               / return empty list if no results
-  res:{@/[;x;y]x#z}[key c;get c]'[d];                                                           / apply column functions
-  if[type[res]in 98 99h;:update users:u from res];                                              / add username
-  :res;
- };
-
-.lfm.http.dict:{[p;r;u;l;c]                                                                     / [limit;request;user;lfm name;cols+funcs]
-  if[0=count d:raze .lfm.httpGet[r;l];:()];                                                     / return empty list if no results
-  res:{@/[;x;y]x#z}[key c;get c;d];                                                             / apply column functions
-  if[type[res]in 98 99h;:update users:u from res];                                              / add username
-  :res;
+  m:(`$"@attr")in key d:raze .lfm.httpGet[r;l];                                                 / determine method
+  d:$[m:(`$"@attr")in key d;first;(::)]d;
+  if[0=count d;:()];                                                                            / return empty list if no results
+  res:{@/[;x;y]x#z}[key c;get c]'[$[m;(::);enlist]d];                                           / apply column functions
+  :update users:u from res;                                                                     / add username and return
  };
 
 .lfm.request:{[u;l;msg]                                                                         / [user;lfm name;msg] return users now playing track, mentioning the user who made the request
+  `:aa set (u;l;msg);
   if[`chart=msg`filter;:.lfm.getChart[u;l;msg]];                                                / use chart specific method
   res:.lfm.parseMethod[u;l;msg];                                                                / parse inputs
-  :neg[.z.w](`worker;`music;raze"Hey @",string[u],", ",res);               / pass message back to server
+  :neg[.z.w](`worker;`music;raze"Hey @",string[u],", ",res);                                    / pass message back to server
  };
 
 .lfm.parseMethod:{[u;l;msg]                                                                     / [user;lfm name;msg] parse request methos
   if[not msg[`period]in key .lfm.periods;msg[`period]:`7day];                                   / set default period
-  a:$[msg[`filter]in .lfm.filters;                                                              / determine request params
-    ("user.gettop",string[msg`filter],"&period=",string msg`period;msg`filter;`table);
+  a:`h`m`f!$[msg[`filter]in .lfm.filters;                                                       / determine request params
+    ("user.gettop",string[msg`filter],"&period=",string msg`period;msg`filter;first);
     `scrobbles=msg`filter;
-      ("user.getinfo";`getInfo;`dict);
-      ("user.getrecenttracks";`recenttracks;`table)
+      ("user.getinfo";`getInfo;(::));
+      ("user.getrecenttracks";`recenttracks;first)
   ];
-  res:.lfm.http[a 2][1;a 0;;;.lfm.cols[a 1]#.lfm.funcs]'[key l;get l];                          / http request
-  if[`table=a 2;res:first raze res];
-  :.lfm.parse[a 1]["@",string first key l;.lfm.periods msg`period;res];                         / parse results
+  res:a[`f]raze .lfm.httpLimit[1;a`h;.lfm.cols[a`m]#.lfm.funcs]'[key l;get l];                  / http request
+  :.lfm.parse[a`m]["@",string first key l;.lfm.periods msg`period;res];                         / parse results
  };
 
 .lfm.getChart:{[u;l;msg]
   if[not msg[`c]in .lfm.filters;msg[`c]:`tracks];                                               / default to tracks
   e:$[1=count k:key l;("for @",string[first k]," ";5);("";0W)];                                 / name of requested user
   lbl:-1_string msg`c;
-  res:raze .lfm.http.table[e 1;"user.getweekly",lbl,"chart";;;.lfm.cols[msg`c]#.lfm.funcs]'[key l;get l]; / http request
+  res:raze .lfm.httpLimit[e 1;"user.getweekly",lbl,"chart";.lfm.cols[msg`c]#.lfm.funcs]'[key l;get l]; / http request
   if[0=count res;:()];                                                                          / no return for empty chart
   res:.lfm.parse.table 5 sublist`scrobbles xdesc .lfm.chart[msg`c]@[res;`name;trim 50$];        / trim wide columns
   :neg[.z.w](`worker;`music;$[`~u;"T";"Hey @",string[u],", t"],"he current ",lbl," chart ",e[0],"is:",res); / pass message back to server
@@ -73,7 +67,7 @@
   :l,"'s ",p," top album is '",m[`name],"' by ",m[`artist]," with ",string[m`playcount]," scrobbles"; / format message
  };
 .lfm.parse.getInfo:{[l;p;m]                                                                     / [req user;period;message] get info for a user
-  if[1=count m;:"@",l," has ",string[first m`playcount]," scrobbles"];
+  if[1=count m;:l," has ",string[first m`playcount]," scrobbles"];
   :"the current scrobble counts are:",.lfm.parse.table{@[;`users;enlist']x xdesc x xcol y}[`scrobbles;m];
  };
 
