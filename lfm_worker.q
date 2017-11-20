@@ -7,19 +7,19 @@
 / variables required to build up messages
 .lfm.filters:`tracks`artists`albums;                                                            / allowed filters
 .lfm.periods:`overall`7day`1month`3month`6month`12month!("overall";"7 day";"1 month";"3 month";"6 month";"12 month"); / allowed periods
-.lfm.funcs:(`artist`playcount`album,`$"@attr")!(first;"J"$;first;{"true"~last x});              / column functions
-.lfm.cols:`artists`tracks`albums`recenttracks`getInfo!(`name`playcount;`name`artist`playcount;`name`artist`playcount;(`name`artist`playcount`album,`$"@attr");(),`playcount); / columns for parsing requests
+.lfm.funcs:(`artist`playcount`album`attr)!(first;"J"$;first;{"true"~last x});                   / column functions
+.lfm.cols:`artists`tracks`albums`recenttracks`getInfo!(`name`playcount;`name`artist`playcount;`name`artist`playcount;(`name`artist`playcount`album`attr);(),`playcount); / columns for parsing requests
 
 .lfm.httpLimit:{[p;r;c;u;l]                                                                     / [limit;request;cols+funcs;user;lfm name]
   r,:$[p=0W;"";"&limit=",string p];                                                             / limit results if necessary
-  d:$[m:(`$"@attr")in key d:raze .lfm.httpGet[r;l];first;(::)]d;                                / determine method
+  d:qid raze .lfm.httpGet[r;l];                                                                 / http request
+  d:$[m:`attr in key d;first;(::)]d;                                                            / determine method
   if[0=count d;:()];                                                                            / return empty list if no results
   res:{@/[;x;y]x#z}[key c;get c]'[$[m;(::);enlist]d];                                           / apply column functions
   :update users:u from res;                                                                     / add username and return
  };
 
 .lfm.request:{[u;l;msg]                                                                         / [user;lfm name;msg] return users now playing track, mentioning the user who made the request
-  `:aa set (u;l;msg);
   if[`chart=msg`filter;:.lfm.getChart[u;l;msg]];                                                / use chart specific method
   res:.lfm.parseMethod[u;l;msg];                                                                / parse inputs
   :neg[.z.w](`worker;`music;raze"Hey @",string[u],", ",res);                                    / pass message back to server
@@ -29,9 +29,9 @@
   if[not msg[`period]in key .lfm.periods;msg[`period]:`7day];                                   / set default period
   a:`h`m`f!$[msg[`filter]in .lfm.filters;                                                       / determine request params
     ("user.gettop",string[msg`filter],"&period=",string msg`period;msg`filter;first);
-    `scrobbles=msg`filter;
-      ("user.getinfo";`getInfo;(::));
-      ("user.getrecenttracks";`recenttracks;first)
+  `scrobbles=msg`filter;
+    ("user.getinfo";`getInfo;(::));
+    ("user.getrecenttracks";`recenttracks;first)
   ];
   res:a[`f]raze .lfm.httpLimit[1;a`h;.lfm.cols[a`m]#.lfm.funcs]'[key l;get l];                  / http request
   :.lfm.parse[a`m]["@",string first key l;.lfm.periods msg`period;res];                         / parse results
@@ -53,7 +53,7 @@
   :ssr[;"\n";"\n  "]"\n",.Q.s@[x;cols[x]where any"C "=\:exec t from meta x;`$];
  };
 .lfm.parse.recenttracks:{[l;p;m]                                                                / [req user;period;message] parser for recent tracks
-  r:$[m`$"@attr";" is listening";" last listened"];                                             / determine if song is currently playing
+  r:$[m`attr;" is listening";" last listened"];                                                 / determine if song is currently playing
   :l,r," to '",m[`name],"' by ",m[`artist]," from ",m`album;                                    / format message
  };
 .lfm.parse.tracks:{[l;p;m]                                                                      / [req user;period;message] parser for top tracks
