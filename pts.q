@@ -1,7 +1,7 @@
 if[not `pts in key`.;pts:(users!()):\:10];
 if[not `dnt in key`.;dnt:(users!()):\:8];
 if[not `qbonus in key`.;qbonus:(users!()):\:1b];
-rtk:{pts+:(users!()):\:10;dnt+:(users!()):\:8;qbonus:(users!()):\:1b}
+rtk:{pts+:(users!()):\:10;dnt+:(users!()):\:8;qbonus:(users!()):\:1b;`cron insert (00:00+1+.z.D;`rtk;`);}
 
 `cron insert (00:00+1+.z.D;`rtk;`)
 
