@@ -1,7 +1,7 @@
 if[not `pts in key`.;pts:(users!()):\:10];
 if[not `dnt in key`.;dnt:(users!()):\:8];
 if[not `qbonus in key`.;qbonus:(users!()):\:1b];
-rtk:{pts+:(users!()):\:10;dnt+:(users!()):\:8;qbonus:(users!()):\:1b}
+rtk:{pts+:(users!()):\:10;dnt+:(users!()):\:8;qbonus:(users!()):\:1b;`cron insert (00:00+1+.z.D;`rtk;`);}
 
 `cron insert (00:00+1+.z.D;`rtk;`)
 
@@ -32,8 +32,23 @@ wllt:{[x;y;z]rc[;y;0] "\033[G",1_ucn[u;string u],"has ",string[pts u],"q, and ca
 
 wltb:{[x;y;z] bc uvol[key aw],\:"\033[G","hey",(-1_ucn[z;string z]),", current wallets for active users are:\n",.Q.s !/:[`points`donates;flip key[aw]#/:(pts;dnt)]}
 
+ptpl:{[x;y;z]
+  x:trim "c"$3_x;
+  t:update c:((`$("\\uv";"\\dv";"\\mk";"\\o"))!1 1 1 5)func from quse;
+  if[not[x~""] & not count select from quse where func=`$("\\",x);
+     :rc[;y;0]"\033[GInsufficient number of actions or invalid action - usage: \\wp [{func}] where {func} is one of dv,uv,o or mk, or blank for all funcs weighted by cost";
+    ];
+  if[x~"";t:update func:`$"\\" from t];                                                         /update table for selecting all results
+  t:([] user:users;c:count[users]#0) lj select sum c by user from t where func=`$("\\",x);      /produce plot
+  a:.plot.c 0 1 4;
+  a,:"set yrange [0:",string[exec max c from t],"]";
+  a,:"plot '-' using 3:2:xtic(1) with boxes";                                   /set up gnuplot commands
+  p:.plot.gplt[a] update i:i from t;
+  bc uvol[key aw],\:"\033[G","hey",(-1_ucn[z;string z]),", plot of q use ",$[x~"";"across all funcs";"by ",x],"\n","\n" sv p; /broadcast plot
+ }
+
 fchk,:("\\mk";"\\o ";"\\p ";"\\uv";"\\dv")!(cmk;cot;cpl;cdt;cdv)
 
-tf,:("\\uv";"\\dv";"\\w ";"\\wt")!(upvt;dnvt;wllt;wltb)
+tf,:("\\uv";"\\dv";"\\w ";"\\wt";"\\wp")!(upvt;dnvt;wllt;wltb;ptpl)
 
-labels,:("\\uv";"\\dv";"\\w ";"\\wt")!("upvote";"downvote";"wallet";"wallettable")
+labels,:("\\uv";"\\dv";"\\w ";"\\wt";"\\wp")!("upvote";"downvote";"wallet";"wallettable";"walletplot")
