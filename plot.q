@@ -23,12 +23,13 @@ timefmt:"dpzvutm"!
    "'%Y-%m'")               /m
 
 / gnuplot program
-c:("set terminal dumb";
-   "set datafile separator ','";
-   "set xdata time";
-   "set timefmt ",timefmt["d"];
-   "set key off";
-   "plot '-' using 1:5 with lines")
+base:("set terminal dumb";
+      "set datafile separator ','";
+      "set key off");
+
+c:base,("set xdata time";
+        "set timefmt ",timefmt["d"];
+        "plot '-' using 1:5 with lines");
 
 / plot close prices for given sym, make red
 plt:{[c;s] /c:gnuplot commands,s:sym
@@ -37,9 +38,24 @@ plt:{[c;s] /c:gnuplot commands,s:sym
  }[c]
 
 / stock plot
-.plot.getplot:{[u;s;h] /u:user,s:sym,h:user handle
+getplot:{[u;s;h] /u:user,s:sym,h:user handle
   if[()~p:.plot.plt s;:neg[.z.w](`errw;"\033[GError: stock not found";h)];
   :neg[.z.w](`worker;`stock;"Hey ",u,", plot for ",string[s]," over last month:",p)
  }
 
+auto:{[t;c;p] /t:table,c:cols to plot (x;y),p:plot type (line,boxes etc.)
+  if[not (11=type c)&(type[t] in 98 99h)&(-11=type p);'`type];  //check types of args
+  if[not all c in cols[t];'`cols];                              //ensure columns are present
+  t:c#0!t;                                                      //filter to plot columns
+  a:base;                                                       //begin with base gnuplot "program"
+  if[s:(10=type first t@c 0)|(f within 20 76)|f:type[t@c 0]=11; //check for sym/enum or string x column
+     t:update i:i from t;                                       //add col numbers for x range
+     a,:"plot '-' using 3:2:xtic(1) with ",string p             //plot command
+    ];
+  if[(f:.Q.t[type[t@c 0]]) in key timefmt;                      //check for supported timefmt in first col
+     a,:("set xdata time";"set timefmt ",timefmt[f])            //add timefmt stuff
+    ];
+  if[not s;a,:"plot '-' using 1:2 with ",string p];             //plot x=c[0],y=c[1]
+  :gplt[a;t];                                                   //plot & return
+ }
 \d .

@@ -40,10 +40,7 @@ ptpl:{[x;y;z]
     ];
   if[x~"";t:update func:`$"\\" from t];                                                         /update table for selecting all results
   t:([] user:users;c:count[users]#0) lj select sum c by user from t where func=`$("\\",x);      /produce plot
-  a:.plot.c 0 1 4;
-  a,:"set yrange [0:",string[exec max c from t],"]";
-  a,:"plot '-' using 3:2:xtic(1) with boxes";                                   /set up gnuplot commands
-  p:.plot.gplt[a] update i:i from t;
+  p:.plot.auto[t;`user`c;`boxes];
   bc uvol[key aw],\:"\033[G","hey",(-1_ucn[z;string z]),", plot of q use ",$[x~"";"across all funcs";"by ",x],"\n","\n" sv p; /broadcast plot
  }
 
