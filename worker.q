@@ -3,6 +3,7 @@
 
 /cron
 cron:([]time:"p"$();action:`$();args:());
+qid:{$[99h=type x;.Q.id'[key x]!get x;.Q.id x]};                                                / purge bad chars
 
 .z.ts:{pi:exec i from cron where time<.z.P;if[count pi;r:exec action,args from cron where i in pi;delete from `cron where i in pi;({value[x]. (),y}.)'[flip value r]];};
 
@@ -95,7 +96,7 @@ topcheck:30
 shamethresh:70
 toptab:([]pid:"i"%();user:0#`;mem:0#0f;cmd:0#`;time:0#.z.P)
 shamed:([]time:0#.z.P;user:`)
-gettop:{toptab,:select from 
+gettop:{toptab,:select from
   (update time:.z.P from `pid`user`mem`cmd xcol
     ("IS       F S";enlist",")0:","sv'{x where 0<count@'x}@'" "vs'6_system"top -bn1 -o \"%MEM\"") where mem>x;
   shame:(key exec avg mem by user from toptab where time>.z.P-"v"$y+5)except raze exec user from shamed where time>.z.P-"v"$900;
