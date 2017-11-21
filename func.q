@@ -164,7 +164,7 @@ topcReturn:{[]
 
 topc:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[GThe current topic is: ",topcReturn[];}
 
-medo:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",1_uct[string z],4_x;}
+medo:{[x;y;z]lastmsg::.z.P;bc uvol[key aw],\:"\033[G",1_uct[string z],atproc"c"$4_x;}
 
 slps:{[x;y;z]bc uvol[key aw],\:"\033[G [SANTABOT  ]: Sleeps until...",", "sv("Santa: ";"AoC: ";"Party: "),'string-[;.z.d]24 0 8+`date$a+11-mod[a:`month$.z.d;12];}
 
