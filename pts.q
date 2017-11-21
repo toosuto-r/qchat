@@ -38,9 +38,12 @@ ptpl:{[x;y;z]
   if[not[x~""] & not count select from quse where func=`$("\\",x);
      :rc[;y;0]"\033[GInsufficient number of actions or invalid action - usage: \\wp [{func}] where {func} is one of dv,uv,o or mk, or blank for all funcs weighted by cost";
     ];
-  a:.plot.c 0 1 4;a,:"plot '-' using 3:2:xtic(1) with boxes";                                   /set up gnuplot commands
   if[x~"";t:update func:`$"\\" from t];                                                         /update table for selecting all results
-  p:.plot.gplt[a] update i:i from select sum c by user from t where func=`$("\\",x);            /produce plot
+  t:([] user:users;c:count[users]#0) lj select sum c by user from t where func=`$("\\",x);      /produce plot
+  a:.plot.c 0 1 4;
+  a,:"set yrange [0:",string[exec max c from t],"]";
+  a,:"plot '-' using 3:2:xtic(1) with boxes";                                   /set up gnuplot commands
+  p:.plot.gplt[a] update i:i from t;
   bc uvol[key aw],\:"\033[G","hey",(-1_ucn[z;string z]),", plot of q use ",$[x~"";"across all funcs";"by ",x],"\n","\n" sv p; /broadcast plot
  }
 
