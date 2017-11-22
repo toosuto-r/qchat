@@ -68,7 +68,7 @@ auto:{[t;c;p;z] /t:table,c:cols to plot (x;y),p:plot type (line,boxes etc.),z:y 
   if[(f:.Q.t[type[t@c 0]]) in key timefmt;                      //check for supported timefmt in first col
      a,:("set xdata time";"set timefmt ",dispfmt[f]);           //add timefmt stuff
      a,:("set format x ",timefmt[f]);                           //set display format to match input
-     a,:("set xtics ",string tic binr 0N!"i"$"v"$.[-;(max;min)@\:t@c 0])
+     a,:("set xtics ",string tic binr "i"$"v"$.[-;(max;min)@\:t@c 0])
     ];
   if[not s;a,:"plot '-' using 1:2 with ",string p];             //plot x=c[0],y=c[1]
   :gplt[a;t];                                                   //plot & return
