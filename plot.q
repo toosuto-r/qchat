@@ -22,6 +22,18 @@ timefmt:"dpzvutm"!
    "'%H:%M:%S'";            /t
    "'%Y-%m'")               /m
 
+dispfmt:"dpzvutm"!timefmt"ddduuum"
+
+/ dict of tic separation based on time range
+tic:(!). flip (
+    600 3600;       /1  hr range, 10 min tics
+    7200 43200;     /12 hr range, 2  hr tics
+    14400 86400;    /24 hr range, 4  hr tics
+    43200 604800;   /1  wk range, 12 hr tics
+    76400 2678400;  /1 mth range, 1  dy tics
+    152800 0W       />1 mth range, 2 dy tics
+ );
+
 / gnuplot program
 base:("set terminal dumb";
       "set datafile separator ','";
@@ -54,7 +66,9 @@ auto:{[t;c;p;z] /t:table,c:cols to plot (x;y),p:plot type (line,boxes etc.),z:y 
      a,:"plot '-' using 3:2:xtic(1) with ",string p             //plot command
     ];
   if[(f:.Q.t[type[t@c 0]]) in key timefmt;                      //check for supported timefmt in first col
-     a,:("set xdata time";"set timefmt ",timefmt[f])            //add timefmt stuff
+     a,:("set xdata time";"set timefmt ",dispfmt[f]);           //add timefmt stuff
+     a,:("set format x ",timefmt[f]);                           //set display format to match input
+     a,:("set xtics ",string tic binr 0N!"i"$"v"$.[-;(max;min)@\:t@c 0])
     ];
   if[not s;a,:"plot '-' using 1:2 with ",string p];             //plot x=c[0],y=c[1]
   :gplt[a;t];                                                   //plot & return
