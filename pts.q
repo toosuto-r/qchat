@@ -3,7 +3,7 @@ if[not `dnt in key`.;dnt:(users!()):\:8];
 if[not `qbonus in key`.;qbonus:(users!()):\:1b];
 rtk:{pts+:(users!()):\:10;dnt+:(users!()):\:8;qbonus:(users!()):\:1b;`cron insert (00:00+1+.z.D;`rtk;`);}
 
-`cron insert (00:00+1+.z.D;`rtk;`)
+if[not `rtk in cron`action;`cron insert (00:00+1+.z.D;`rtk;`)];
 
 recorded:`$("\\o ";"\\mk";"\\uv";"\\dv")
 quse:([]time:0#.z.p;user:0#`;func:0#`)
