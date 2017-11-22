@@ -22,7 +22,7 @@ timefmt:"dpzvutm"!
    "'%H:%M:%S'";            /t
    "'%Y-%m'")               /m
 
-dispfmt:"dpzvutm"!timefmt"ddduuum"
+dispfmt:"dpzvutm"!timefmt"duuuuum"
 
 / dict of tic separation based on time range
 tic:(!). flip (
@@ -66,8 +66,8 @@ auto:{[t;c;p;z] /t:table,c:cols to plot (x;y),p:plot type (line,boxes etc.),z:y 
      a,:"plot '-' using 3:2:xtic(1) with ",string p             //plot command
     ];
   if[(f:.Q.t[type[t@c 0]]) in key timefmt;                      //check for supported timefmt in first col
-     a,:("set xdata time";"set timefmt ",dispfmt[f]);           //add timefmt stuff
-     a,:("set format x ",timefmt[f]);                           //set display format to match input
+     a,:("set xdata time";"set timefmt ",timefmt[f]);           //add timefmt stuff
+     a,:("set format x ",dispfmt[f]);                           //set display format to match input
      a,:("set xtics ",string tic binr "i"$"v"$.[-;(max;min)@\:t@c 0])
     ];
   if[not s;a,:"plot '-' using 1:2 with ",string p];             //plot x=c[0],y=c[1]
