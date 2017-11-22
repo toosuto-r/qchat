@@ -39,7 +39,7 @@ ptpl:{[x;y;z]
      :rc[;y;0]"\033[GInsufficient number of actions or invalid action - usage: \\wp [{func}] where {func} is one of dv,uv,o or mk, or blank for all funcs weighted by cost";
     ];
   if[x~"";t:update func:`$"\\" from t];                                                         /update table for selecting all results
-  t:([] user:users;c:count[users]#0) lj select sum c by user from t where func=`$("\\",x);      /produce plot
+  t:([] user:key[aw];c:count[users]#0) lj select sum c by user from t where func=`$("\\",x);    /produce plot
   p:.plot.auto[t;`user`c;`boxes;1b];
   bc uvol[key aw],\:"\033[G","hey",(-1_ucn[z;string z]),", plot of q use ",$[x~"";"across all funcs";"by ",x],"\n","\n" sv p; /broadcast plot
  }
