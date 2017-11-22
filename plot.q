@@ -65,6 +65,7 @@ auto:{[t;c;p;z] /t:table,c:cols to plot (x;y),p:plot type (line,boxes etc.),z:y 
      t:update i:i from t;                                       //add col numbers for x range
      a,:"plot '-' using 3:2:xtic(1) with ",string p             //plot command
     ];
+  if[16=type t@c 0;t:![t;();0b;(1#c 0)!enlist($;19h;c 0)]];     //if timespan, convert to time
   if[(f:.Q.t[type[t@c 0]]) in key timefmt;                      //check for supported timefmt in first col
      a,:("set xdata time";"set timefmt ",timefmt[f]);           //add timefmt stuff
      a,:("set format x ",dispfmt[f]);                           //set display format to match input
