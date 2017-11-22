@@ -54,7 +54,10 @@ auto:{[t;c;p;z] /t:table,c:cols to plot (x;y),p:plot type (line,boxes etc.),z:y 
      a,:"plot '-' using 3:2:xtic(1) with ",string p             //plot command
     ];
   if[(f:.Q.t[type[t@c 0]]) in key timefmt;                      //check for supported timefmt in first col
-     a,:("set xdata time";"set timefmt ",timefmt[f])            //add timefmt stuff
+     a,:("set xdata time";"set timefmt ",timefmt[f]);           //add timefmt stuff
+     a,:("set format x ",timefmt[f]);                           //set display format to match input
+     a,:("set xrange ['",("':'" sv (csv 0: (1#c[0])#t)@/:1+t[c 0]?(min t@c 0;max t@c 0)),"']");  //compute & set xrange
+     a,:("set xtics ",string %[;5]"i"$"v"$.[-;(max;min)@\:t@c 0]);                               //calculate points for x labels, about 5 labels
     ];
   if[not s;a,:"plot '-' using 1:2 with ",string p];             //plot x=c[0],y=c[1]
   :gplt[a;t];                                                   //plot & return
