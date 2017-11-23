@@ -7,7 +7,7 @@ gplt:{[c;i] /c:commands,i:input
 
 / download csv from Google finance for sym
 dcsv:{[s] /s:sym
-  a:.Q.hg `$":http://finance.google.com/finance/historical?output=csv&q=",string[s];
+  a:.Q.hg `$":http://finance.google.com/finance/historical?output=csv&q=",.w.hu string[s];
   if[0<count ss[a;"Error 400"];:()];
   ("DFFFFI";enlist ",")0: 3_a
  }
