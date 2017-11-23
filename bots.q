@@ -75,7 +75,7 @@ bstk:{[x;y;z] d:(!)."S=;"0:x:4_"c"$x;
   d:@[d;`size;{1|"J"$(1|count[x])$x}];
   d:@[d;`exp;{1|"J"$(1|count[x])$x}];
   d:@[d;`lev;{0.01|1f^"F"$(1|count[x])$x}];
-  neg[wh]0N!(`.st.buy;enlist[ucn[.z.u;string .z.u]];d`size;d`lev;d`exp;d`sym);
+  neg[wh](`.st.buy;enlist[ucn[.z.u;string .z.u]];.z.u;d`size;d`lev;d`exp;d`sym);
   }
 
 gtqt:{[x;y;z]neg[wh](`.st.getqt;4_"c"$x;ucn[z;string z]);}
