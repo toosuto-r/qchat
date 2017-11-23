@@ -47,6 +47,10 @@
   :neg[.z.w](`worker;`music;$[`~u;"T";"Hey @",string[u],", t"],"he current ",lbl," chart ",e[0],"is:",res); / pass message back to server
  };
 
+.lfm.parse.plot:{
+  c:first[`track`artist`album`users inter cols x],`scrobbles;
+  :"\n" sv .plot.autokey[x;c;`boxes;1b];
+ }
 .lfm.parse.table:{                                                                              / neatly format tables
   x:update("@",''string users)from 0!x;
   x:`no xcols update no:fills?[differ scrobbles;1+i;0N]from x;
