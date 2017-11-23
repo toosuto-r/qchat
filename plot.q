@@ -83,4 +83,14 @@ auto:{[t;c;p;z] /t:table,c:cols to plot (x;y),p:plot type (line,boxes etc.),z:y 
   if[not s;a,:"plot '-' using 1:2 with ",string p];             //plot x=c[0],y=c[1]
   :gplt[a;t];                                                   //plot & return
  }
+
+pc:,\:[;"m"],/:["\033["] string `default`black`red`green`yellow`blue`purple`cyan`white!0,30+til 8
+
+/ colour point function, takes point char, colour & x:plot
+cp0:{[p;c;x]
+ :ssr[;p;pc[c],p,pc`default]'[x];
+ }
+
+/ colour point project, default * point
+cp:cp0["*"];
 \d .
