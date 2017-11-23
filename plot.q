@@ -80,6 +80,7 @@ auto:{[t;c;p;z] /t:table,c:cols to plot (x;y),p:plot type (line,boxes etc.),z:y 
      a,:("set xrange ['",("':'" sv (csv 0: (1#c[0])#t)@/:1+t[c 0]?(min t@c 0;max t@c 0)),"']");  //compute & set xrange
      a,:("set xtics ",string $["d"=f;dtic;tic] binr "i"$"v"$.[-;(max;min)@\:t@c 0])
     ];
+  if[(f in "jhi")&p=`boxes;a,:"set xtics 1"];                   //histogram with number x values, label everything
   if[not s;a,:"plot '-' using 1:2 with ",string p];             //plot x=c[0],y=c[1]
   :gplt[a;t];                                                   //plot & return
  }
