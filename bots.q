@@ -57,15 +57,29 @@ updatechart`;                                                                   
 btcp:{[x;y;z]
  a:" " vs trim"c"$3_x;
  if[1=count a;a,:enlist"0"];
- if[`~`$upper a[0];:rc[;y;0]"\033[GBITCOIN BOT HELP\nUsage: \\bc <cur/opt> [amt].\nSpecify a currency to get current value of 1BTC in currency. Optionally include an amount to convert that amount of BTC to given currency.\nAlternativley, supply an option (i.e. \"plot\") for different action e.g. \\bc plot\nSupported currencies: gbp,usd,eur,kfc. Options: plot"];
+ if[`~`$upper a[0];:rc[;y;0]"\033[GBITCOIN BOT HELP\nUsage: \\bc <cur/opt> [amt].\nSpecify a currency to get current value of 1BTC in currency. Optionally include an amount to convert that amount of BTC to given currency.\nAlternativley, supply an option (i.e. \"plot\") for different action e.g. \\bc plot\nSupported currencies: gbp,usd,eur,kfc. Options: plot [month|today|yday] (default: month)"];
  if[not (c:`$upper a[0]) in `USD`GBP`EUR`PLOT`KFC;:rc[;y;0]"\033[GUnsupported currency/option. Supported currencies: gbp,usd,eur,kfc. Options: plot"];
- rc[;y;0]"\033[GGetting BTC price";neg[wh](`.btc.getprice;trim uct string z;c;"F"$a[1]);
+ rc[;y;0]"\033[GGetting BTC price";neg[wh](`.btc.getprice;trim uct string z;c;a[1]);
  };
 
 stkp:{[x;y;z]
   rc[;y;0]"\033[GGetting stock plot";neg[wh](`.plot.getplot;trim uct string z;`$"c"$3_x;y);
  }
 
-workernames,:`news`music`bitcoin`defino`stock`shame`wiki`urbd`ant`syn`rhym`stream!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT";"SHAMEBOT";"WIKIBOT";"URBANBOT";"ANTONYMBOT";"SYNONYMBOT";"RHYMEBOT";"STREAMBOT")],\:"]:" / bot names used when printing to chat
+/TODO manageq
+manageq:@[`pts;;+;]
 
-tf,:("\\ne";"\\ml";"\\bc";"\\df";"\\st";"\\wk";"\\ud";"\\an";"\\sn";"\\rh";"\\tv")!(news;mulo;btcp;defn;stkp;wiki;urbd;anty;syny;rhym;strm);
+bstk:{[x;y;z] d:(!)."S=;"0:x:4_"c"$x;
+  if[not`sym in key d;
+    :rc["Please input in the form:\nsym=SYM;size=1;exp=1;lev=1.0\nwhere size is the number of stocks, expiry is in hours, and lev is amount you want to leverage from 0 to 1\nAbove values as default";y;0]];
+  d:@[d;`size;{1|"J"$(1|count[x])$x}];
+  d:@[d;`exp;{1|"J"$(1|count[x])$x}];
+  d:@[d;`lev;{0.01|1f^"F"$(1|count[x])$x}];
+  neg[wh](`.st.buy;enlist[ucn[.z.u;string .z.u]];.z.u;d`size;d`lev;d`exp;d`sym);
+  }
+
+gtqt:{[x;y;z]neg[wh](`.st.getqt;4_"c"$x;ucn[z;string z]);}
+
+workernames,:`news`music`bitcoin`defino`stock`shame`wiki`urbd`ant`syn`rhym`stream`buyr!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT";"SHAMEBOT";"WIKIBOT";"URBANBOT";"ANTONYMBOT";"SYNONYMBOT";"RHYMEBOT";"STREAMBOT";"INVESTOBOT")],\:"]:" / bot names used when printing to chat
+
+tf,:("\\ne";"\\ml";"\\bc";"\\df";"\\st";"\\wk";"\\ud";"\\an";"\\sn";"\\rh";"\\tv";"\\by";"\\qt")!(news;mulo;btcp;defn;stkp;wiki;urbd;anty;syny;rhym;strm;bstk;gtqt);

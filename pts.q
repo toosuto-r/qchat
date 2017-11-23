@@ -1,12 +1,12 @@
 if[not `pts in key`.;pts:(users!()):\:10];
 if[not `dnt in key`.;dnt:(users!()):\:8];
-if[not `qbonus in key`.;qbonus:(users!()):\:1b];
-rtk:{pts+:(users!()):\:10;dnt+:(users!()):\:8;qbonus:(users!()):\:1b;`cron insert (00:00+1+.z.D;`rtk;`);}
+if[not `qbonus in key`.;qbonus:(users!()):\:1];
+rtk:{pts+:(users!()):\:10;dnt+:(users!()):\:8;qbonus:(users!()):\:1;`cron insert (00:00+1+.z.D;`rtk;`);}
 
-`cron insert (00:00+1+.z.D;`rtk;`)
+if[not `rtk in cron`action;`cron insert (00:00+1+.z.D;`rtk;`)];
 
 recorded:`$("\\o ";"\\mk";"\\uv";"\\dv")
-quse:([]time:0#.z.p;user:0#`;func:0#`)
+if[not `quse in key`.;quse:([]time:0#.z.p;user:0#`;func:0#`)]
 
 fchk:enlist[""]!enlist{[x;y]0b}
 chatter:{if[not fchk[fchk?fchk l:3$"c"$r:dc[chatprikey;x];.z.w;.z.u];
@@ -17,7 +17,7 @@ ptchk:{[x;y;z] if[r:z>pts[y];rc["\033[GInsufficient q";x;0]];r}
 ptcst:{[x;y;z] if[r:z>pts[y];rc["\033[GInsufficient q";x;0]];@[`pts;y;-;not[r]*z];r}
 
 cdt:{[x;y]
-  if[qbonus[y]&2>dnt[y];@[`qbonus;y;:;0b];@[`pts;y;+;5];rc["\033[GBonus awarded";x;0]]; //bonus on spending all votes
+  if[qbonus[y]&2>dnt[y];@[`qbonus;y;:;0];@[`pts;y;+;5];rc["\033[GBonus awarded";x;0]]; //bonus on spending all votes
   if[r:1>dnt[y];rc["\033[GInsufficient q";x;0]];r} //1 point to donate/upvote
 cmk:ptcst[;;1] //1 point to markov
 cot:ptcst[;;5] //5 points to ostracise
@@ -40,11 +40,8 @@ ptpl:{[x;y;z]
      :rc[;y;0]"\033[GInsufficient number of actions or invalid action - usage: \\wp [{func}] where {func} is one of dv,uv,o or mk, or blank for all funcs weighted by cost";
     ];
   if[x~"";t:update func:`$"\\" from t];                                                         /update table for selecting all results
-  t:([] user:users;c:count[users]#0) lj select sum c by user from t where func=`$("\\",x);      /produce plot
-  a:.plot.c 0 1 4;
-  a,:"set yrange [0:",string[exec max c from t],"]";
-  a,:"plot '-' using 3:2:xtic(1) with boxes";                                   /set up gnuplot commands
-  p:.plot.gplt[a] update i:i from t;
+  t:([] user:key[aw];c:count[key[aw]]#0) lj select sum c by user from t where func=`$("\\",x);    /produce plot
+  p:.plot.auto[t;`user`c;`boxes;1b];
   bc uvol[key aw],\:"\033[G","hey",(-1_ucn[z;string z]),", plot of q use ",$[x~"";"across all funcs";"by ",x],"\n","\n" sv p; /broadcast plot
  }
 
