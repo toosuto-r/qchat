@@ -66,6 +66,20 @@ stkp:{[x;y;z]
   rc[;y;0]"\033[GGetting stock plot";neg[wh](`.plot.getplot;trim uct string z;`$"c"$3_x;y);
  }
 
-workernames,:`news`music`bitcoin`defino`stock`shame`wiki`urbd`ant`syn`rhym`stream!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT";"SHAMEBOT";"WIKIBOT";"URBANBOT";"ANTONYMBOT";"SYNONYMBOT";"RHYMEBOT";"STREAMBOT")],\:"]:" / bot names used when printing to chat
+/TODO manageq
+manageq:@[`pts;;+;]
 
-tf,:("\\ne";"\\ml";"\\bc";"\\df";"\\st";"\\wk";"\\ud";"\\an";"\\sn";"\\rh";"\\tv")!(news;mulo;btcp;defn;stkp;wiki;urbd;anty;syny;rhym;strm);
+bstk:{[x;y;z] d:(!)."S=;"0:x:4_"c"$x;
+  if[not`sym in key d;
+    :rc["Please input in the form:\nsym=SYM;size=1;exp=1;lev=1.0\nwhere size is the number of stocks, expiry is in hours, and lev is amount you want to leverage from 0 to 1\nAbove values as default";y;0]];
+  d:@[d;`size;{1|"J"$(1|count[x])$x}];
+  d:@[d;`exp;{1|"J"$(1|count[x])$x}];
+  d:@[d;`lev;{0.01|1f^"F"$(1|count[x])$x}];
+  neg[wh]0N!(`.st.buy;enlist[ucn[.z.u;string .z.u]];d`size;d`lev;d`exp;d`sym);
+  }
+
+gtqt:{[x;y;z]neg[wh](`.st.getqt;4_"c"$x;ucn[z;string z]);}
+
+workernames,:`news`music`bitcoin`defino`stock`shame`wiki`urbd`ant`syn`rhym`stream`buyr!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT";"SHAMEBOT";"WIKIBOT";"URBANBOT";"ANTONYMBOT";"SYNONYMBOT";"RHYMEBOT";"STREAMBOT";"INVESTOBOT")],\:"]:" / bot names used when printing to chat
+
+tf,:("\\ne";"\\ml";"\\bc";"\\df";"\\st";"\\wk";"\\ud";"\\an";"\\sn";"\\rh";"\\tv";"\\by";"\\qt")!(news;mulo;btcp;defn;stkp;wiki;urbd;anty;syny;rhym;strm;bstk;gtqt);

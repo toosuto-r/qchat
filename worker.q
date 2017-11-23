@@ -1,3 +1,4 @@
+
 .z.pw:{[u;p]"b"$not count .z.W};
 \t 1000
 
@@ -13,6 +14,7 @@ system"S ",string"j"$.z.T;
 / load additional worker code
 \l lfm_worker.q
 \l plot.q
+\l stock.q
 
 /Powered by News API
 /default BBC
