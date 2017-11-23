@@ -5,7 +5,10 @@ txhist:futures,'([]cpx:0#0f)
 
 greq:("http://finance.google.com/finance?q=";"";"&output=json")
 
-qt:{r:.Q.hg`$raze@[greq;1;,;x];if[not "/" in 3#r;:enlist "sym not found"];flip[.j.k 3_r][`name`l;0]}
+qt:{r:.Q.hg`$raze@[greq;1;,;x];if[not "/" in 3#r;:enlist "sym not found"];
+  d:flip[.j.k 3_r];
+  if[not `l in key d;:enlist"price not found for ",first d`name];
+  d[`name`l;0]}
 
 getqt:{[x;u] neg[.z.w](`worker;`buyr;"hey",(-1_u),": "," is "sv qt x)}
 
