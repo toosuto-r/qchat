@@ -24,14 +24,22 @@ timefmt:"dpzvutm"!
 
 dispfmt:"dpzvutm"!timefmt"duuuuum"
 
-/ dict of tic separation based on time range
+/ dict of tic separation based on time range (seconds)
 tic:(!). flip (
     600 3600;       /1  hr range, 10 min tics
     7200 43200;     /12 hr range, 2  hr tics
     14400 86400;    /24 hr range, 4  hr tics
-    43200 604800;   /1  wk range, 12 hr tics
-    76400 2678400;  /1 mth range, 1  dy tics
-    152800 0W       />1 mth range, 2 dy tics
+    86400 604800;   /1  wk range, 24 hr tics
+    432000 2678400; /1 mth range, 5  dy tics
+    2592000 0W      />1 mth range,30 dy tics
+ );
+
+/ dict of tic separation based on date range
+dtic:(!). flip (
+    14400   1;      /1 day, 4 hr tics
+    86400   7;      /1 wk,  24 hr tics
+    864000  31;     /1 mnth,10 day tics
+    2592000 0W      />1mnth, 30 days tics
  );
 
 / gnuplot program
@@ -69,7 +77,8 @@ auto:{[t;c;p;z] /t:table,c:cols to plot (x;y),p:plot type (line,boxes etc.),z:y 
   if[(f:.Q.t[type[t@c 0]]) in key timefmt;                      //check for supported timefmt in first col
      a,:("set xdata time";"set timefmt ",timefmt[f]);           //add timefmt stuff
      a,:("set format x ",dispfmt[f]);                           //set display format to match input
-     a,:("set xtics ",string tic binr "i"$"v"$.[-;(max;min)@\:t@c 0])
+     a,:("set xrange ['",("':'" sv (csv 0: (1#c[0])#t)@/:1+t[c 0]?(min t@c 0;max t@c 0)),"']");  //compute & set xrange
+     a,:("set xtics ",string $["d"=f;dtic;tic] binr "i"$"v"$.[-;(max;min)@\:t@c 0])
     ];
   if[not s;a,:"plot '-' using 1:2 with ",string p];             //plot x=c[0],y=c[1]
   :gplt[a;t];                                                   //plot & return
