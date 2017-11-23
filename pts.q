@@ -1,12 +1,12 @@
 if[not `pts in key`.;pts:(users!()):\:10];
 if[not `dnt in key`.;dnt:(users!()):\:8];
-if[not `qbonus in key`.;qbonus:(users!()):\:1b];
-rtk:{pts+:(users!()):\:10;dnt+:(users!()):\:8;qbonus:(users!()):\:1b;`cron insert (00:00+1+.z.D;`rtk;`);}
+if[not `qbonus in key`.;qbonus:(users!()):\:1];
+rtk:{pts+:(users!()):\:10;dnt+:(users!()):\:8;qbonus:(users!()):\:1;`cron insert (00:00+1+.z.D;`rtk;`);}
 
 if[not `rtk in cron`action;`cron insert (00:00+1+.z.D;`rtk;`)];
 
 recorded:`$("\\o ";"\\mk";"\\uv";"\\dv")
-quse:([]time:0#.z.p;user:0#`;func:0#`)
+if[not `quse in key`.;quse:([]time:0#.z.p;user:0#`;func:0#`)]
 
 fchk:enlist[""]!enlist{[x;y]0b}
 chatter:{if[not fchk[fchk?fchk l:3$"c"$r:dc[chatprikey;x];.z.w;.z.u];
@@ -17,7 +17,7 @@ ptchk:{[x;y;z] if[r:z>pts[y];rc["\033[GInsufficient q";x;0]];r}
 ptcst:{[x;y;z] if[r:z>pts[y];rc["\033[GInsufficient q";x;0]];@[`pts;y;-;not[r]*z];r}
 
 cdt:{[x;y] 
-  if[qbonus[y]&2>dnt[y];@[`qbonus;y;:;0b];@[`pts;y;+;5];rc["\033[GBonus awarded";x;0]]; //bonus on spending all votes
+  if[qbonus[y]&2>dnt[y];@[`qbonus;y;:;0];@[`pts;y;+;5];rc["\033[GBonus awarded";x;0]]; //bonus on spending all votes
   if[r:1>dnt[y];rc["\033[GInsufficient q";x;0]];r} //1 point to donate/upvote
 cmk:ptcst[;;1] //1 point to markov
 cot:ptcst[;;5] //5 points to ostracise
