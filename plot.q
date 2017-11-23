@@ -90,7 +90,8 @@ autokey:{[t;c;p;z] /t:table,c:cols to plot (x;y),p:plot type (line,boxes etc.),z
   t:update i:i from 0!t;                                        //add col numbers for x range
   p:.plot.auto[t;`i,c[1];p;z];                                  //plot with numbers on x-axis
   p:p,'@[count[p]#enlist"";2+til count a;:;a:"\n" vs .Q.s[til[count t@c 0]!t@c 0]];
-  :$'[max count'[p];p];                                         //pad all strings to same length
+  p:$'[max count'[p];p];                                        //pad all strings to same length
+  :@[p;n;:;](ssr/)[p[n:-2+count p];("-1";s);("  ";@[s:string count[t];::;:;" "])]; //remove first & last x-axis values
  }
 
 pc:,\:[;"m"],/:["\033["] string `default`black`red`green`yellow`blue`purple`cyan`white!0,30+til 8
