@@ -57,9 +57,9 @@ updatechart`;                                                                   
 btcp:{[x;y;z]
  a:" " vs trim"c"$3_x;
  if[1=count a;a,:enlist"0"];
- if[`~`$upper a[0];:rc[;y;0]"\033[GBITCOIN BOT HELP\nUsage: \\bc <cur/opt> [amt].\nSpecify a currency to get current value of 1BTC in currency. Optionally include an amount to convert that amount of BTC to given currency.\nAlternativley, supply an option (i.e. \"plot\") for different action e.g. \\bc plot\nSupported currencies: gbp,usd,eur,kfc. Options: plot"];
+ if[`~`$upper a[0];:rc[;y;0]"\033[GBITCOIN BOT HELP\nUsage: \\bc <cur/opt> [amt].\nSpecify a currency to get current value of 1BTC in currency. Optionally include an amount to convert that amount of BTC to given currency.\nAlternativley, supply an option (i.e. \"plot\") for different action e.g. \\bc plot\nSupported currencies: gbp,usd,eur,kfc. Options: plot [month|today|yday] (default: month)"];
  if[not (c:`$upper a[0]) in `USD`GBP`EUR`PLOT`KFC;:rc[;y;0]"\033[GUnsupported currency/option. Supported currencies: gbp,usd,eur,kfc. Options: plot"];
- rc[;y;0]"\033[GGetting BTC price";neg[wh](`.btc.getprice;trim uct string z;c;"F"$a[1]);
+ rc[;y;0]"\033[GGetting BTC price";neg[wh](`.btc.getprice;trim uct string z;c;a[1]);
  };
 
 stkp:{[x;y;z]

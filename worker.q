@@ -73,12 +73,18 @@ rhym:{
  }
 / bitcoin
 .btc.getprice:{
- if[y=`PLOT;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BTC price over last month:","\n" sv 1_read0`:/tmp/btc.txt)];
+ if[(y=`PLOT)&($[`;z] in `0`month);:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BTC price over last month:","\n" sv
+             .plot.cp[`red] .plot.auto[;`date`close;`line;0b]
+             flip `date`close!({"D"$string key x};get)@\:(.j.k .Q.hg`:https://api.coindesk.com/v1/bpi/historical/close.json)`bpi)];
+ if[(y=`PLOT)&$[`;z]=`today;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BTC price over today:","\n" sv
+             .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::1234"btc 20*til floor count[btc]%20")];
+ if[(y=`PLOT)&$[`;z]=`yday;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BTC price over yesterday:","\n" sv
+             .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::5012"b@20*til floor count[b:select from btc where date=last date]%20")];
  j:.j.k .Q.hg`$":http://api.coindesk.com/v1/bpi/currentprice.json";
  d:`GBP`USD`EUR!("£";"$";"€");
  if[y<>`KFC;m:"Hey ",x,", bitcoin price is currently: ",d[y],j[`bpi][y][`rate]," (",string[y],")"];
- if[(y<>`KFC) & z<>0;m,:" and your holding is worth: ",d[y],string z*j[`bpi][y][`rate_float]];
- if[y=`KFC;z:$[0<>z;z;1f];m:"Hey ",x,", with ",string[z]," BTC you can currently buy this many bargain buckets:\n",
+ if[(y<>`KFC) & $["F";z]<>0;m,:" and your holding is worth: ",d[y],string $["F";z]*j[`bpi][y][`rate_float]];
+ if[y=`KFC;z:$[0<>"F"$z;"F"$z;1f];m:"Hey ",x,", with ",string[z]," BTC you can currently buy this many bargain buckets:\n",
               -1_.Q.s `6pc`10pc`14pc!`${string[x 0]," (",string[x 1]," pieces)"}'[(1 6;1 10;1 14)*\:'floor z*j[`bpi][`GBP][`rate_float]%10.49 13.49 16.49]];
  :neg[.z.w](`worker;`bitcoin;m);
  }
