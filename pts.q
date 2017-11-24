@@ -16,7 +16,7 @@ chatter:{if[not fchk[fchk?fchk l:3$"c"$r:dc[chatprikey;x];.z.w;.z.u];
 ptchk:{[x;y;z] if[r:z>pts[y];rc["\033[GInsufficient q";x;0]];r}
 ptcst:{[x;y;z] if[r:z>pts[y];rc["\033[GInsufficient q";x;0]];@[`pts;y;-;not[r]*z];r}
 
-cdt:{[x;y] 
+cdt:{[x;y]
   if[qbonus[y]&2>dnt[y];@[`qbonus;y;:;0];@[`pts;y;+;5];rc["\033[GBonus awarded";x;0]]; //bonus on spending all votes
   if[r:1>dnt[y];rc["\033[GInsufficient q";x;0]];r} //1 point to donate/upvote
 cmk:ptcst[;;1] //1 point to markov
@@ -30,7 +30,7 @@ dnvt:{[x;y;z]x:string t:users a?min a:lvn["c"$3_x]'[string users];
   @[`pts;;-;1]'[z,t];bc uvol[key aw],\:"\033[G",1_ucn[z;string z],"downvoted",ucn[t;x];}
 wllt:{[x;y;z]rc[;y;0] "\033[G",1_ucn[u;string u],"has ",string[pts u],"q, and can give ",string dnt[u:z^`$"c"$3_x];}
 
-wltb:{[x;y;z] bc uvol[key aw],\:"\033[G","hey",(-1_ucn[z;string z]),", current wallets for active users are:\n",.Q.s !/:[`points`donates;flip key[aw]#/:(pts;dnt)]}
+wltb:{[x;y;z] bc uvol[key aw],\:"\033[G","hey",(-1_ucn[z;string z]),", current wallets for active users are:\n",atproc ssr[;"^";"  "].Q.s 1!@[;`user;{`$"@",/:string[x],\:"^"}]`points`donates xdesc flip`user`points`donates!(::;pts;dnt)@\:key aw};
 
 ptpl:{[x;y;z]
   x:trim "c"$3_x;
