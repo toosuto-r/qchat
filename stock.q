@@ -10,11 +10,13 @@ qt:{r:.Q.hg`$raze@[greq;1;,;x];if[not "/" in 3#r;:enlist "sym not found"];
   if[not `l in key d;:enlist"price not found for ",first d`name];
   d[`name`l;0]}
 
-getqt:{[x;u] neg[.z.w](`worker;`buyr;"hey",(-1_u),": "," is "sv qt x)}
+getqt:{[x;u;n] 
+  if[enlist["sym not found"]~r:qt[x];:neg[.z.w](`nerw;raze"\033[G",r;n)];
+  neg[.z.w](`worker;`buyr;"hey",(-1_u),": "," is "sv r)}
 
 //takes stock count, leverage, expiry, input cap; returns amount of q to subtract - null on fail
 buy:{[u;n;c;l;e;s]
-  if[~[first q:qt s]"sym not found";:neg[.z.w](`worker;`buyr;(1_ u),"has failed to specify a correct sym")];
+  if[~[first q:qt s]"sym not found";:neg[.z.w](`nerw;"Please specify a correct sym";n)];
   q:"F"$last[q]except",";
   `.st.futures upsert iv:(.z.P;.z.P+60*"v"$e;n;`$s;c;o:c*q;l;q);
   neg[.z.w](`worker;`buyr;(1_ first u),"has bought ",string[o]," of ",s," at ",string[100*l],"%, expiring in ",string[e]," minutes");}
