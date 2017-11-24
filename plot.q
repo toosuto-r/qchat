@@ -98,7 +98,7 @@ autokey:{[t;c;p;z] /t:table,c:cols to plot (x;y),p:plot type (line,boxes etc.),z
 .plot.autocbar:{[t;c;z;k;s] /t:table,c:cols to plot (x;y),z:y range start from zero,k:include key,s:colour list
   if[k;t:update i:1+i from 0!t];        //if using a key, enumerate
   p:auto[t;$[k;`i,c[1];c];`boxes;z];    //plot, using input col or enum col
-  n:@[count[t]#enlist 0 0;where 0<t@c 1;:;-1_flip 0 -1 xprev\: where (0<count'[a])&all each "*"='a:trim except[;"-+"]'[flip p]];                //find vertical lines, use (0 0) for entries of 0
+  n:@[count[t]#enlist 0 0;where 0<t@c 1;:;-1_flip 0 -1 xprev\: where (0<count'[a])&all each "*"='a:trim except[;"-+|"]'[flip -2_p]];                //find vertical lines, use (0 0) for entries of 0
   p:flip {[y;x;z] if[x~0 0;:y];@[y;x[0]+1+til x[1]-x[0]+1;{[z;x]a:ss[x;"[*]"];@[x;a[0]+1+til -1+a[1]-a 0;:;z]}[z]]}/[flip p;n;a:count[t]#.Q.A]; //fill between vertical lines with upper case letter
   p:@[p;til 22;{[a;s;t;x]ssr[;"*";" "]ssr[;"#";"█"](ssr/)[x;a;raze each (count[t]#s),\:"#",\:.plot.pc`default]}[a;s;t]];                        //replace upper case letter with coloured block of corresponding colour
   if[k;
