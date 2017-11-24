@@ -105,7 +105,7 @@ autokey:{[t;c;p;z] /t:table,c:cols to plot (x;y),p:plot type (line,boxes etc.),z
      p:p,'@[count[p]#enlist"";2+til count a;:;a:"\n" vs .Q.s[(1+til count t@c 0)!t@c 0]];   //join key
      p:.[p;(22;til[7],73+til 5);:;" "];                                                     //remove first & last x axis values
     ];
-  :.[p;(2 21;6+til 69);:;"-"];          //restore axis lines
+  :@'[;count'[p]-4;:;flip[6#'p] 5].[p;(2 21;6+til 69);:;"-"];          //restore axis lines
  }
 
 pc:,\:[;"m"],/:["\033["] string `default`black`red`green`yellow`blue`purple`cyan`white!0,30+til 8
