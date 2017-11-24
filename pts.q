@@ -25,9 +25,9 @@ cpl:ptchk[;;1] //1 point to poll
 cdv:ptchk[;;1] //1 point to downvote
 
 upvt:{[x;y;z]x:string t:nu a?min a:lvn["c"$3_x]'[string nu:users except z];
-  @[`pts;t;+;1];@[`dnt;z;-;1];bc uvol[key aw],\:"\033[G",1_ucn[z;string z],"upvoted",ucn[t;x];}
+  @[`pts;t;+;1];@[`dnt;z;-;1];bc uvol[key aw],\:"\033[G",ucn[z;string z],"upvoted",ucn[t;x];}
 dnvt:{[x;y;z]x:string t:users a?min a:lvn["c"$3_x]'[string users];
-  @[`pts;;-;1]'[z,t];bc uvol[key aw],\:"\033[G",1_ucn[z;string z],"downvoted",ucn[t;x];}
+  @[`pts;;-;1]'[z,t];bc uvol[key aw],\:"\033[G",ucn[z;string z],"downvoted",ucn[t;x];}
 wllt:{[x;y;z]rc[;y;0] "\033[G",1_ucn[u;string u],"has ",string[pts u],"q, and can give ",string dnt[u:z^`$"c"$3_x];}
 
 wltb:{[x;y;z] bc uvol[key aw],\:"\033[G","hey",(-1_ucn[z;string z]),", current wallets for active users are:\n",atproc ssr[;"^";"  "].Q.s 1!@[;`user;{`$"@",/:string[x],\:"^"}]`points`donates xdesc flip`user`points`donates!(::;pts;dnt)@\:key aw};
