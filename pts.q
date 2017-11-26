@@ -1,7 +1,7 @@
 if[not `pts in key`.;pts:(users!()):\:10];
 if[not `dnt in key`.;dnt:(users!()):\:8];
 if[not `qbonus in key`.;qbonus:(users!()):\:1];
-rtk:{pts+:(users!()):\:10;dnt+:(users!()):\:8;qbonus:(users!()):\:1;`cron insert (00:00+1+.z.D;`rtk;`);}
+rtk:{pts+:(users!()):\:10;dnt+:(users!()):\:8;qbonus::(users!()):\:1;`cron insert (00:00+1+.z.D;`rtk;`);}
 
 if[not `rtk in cron`action;`cron insert (00:00+1+.z.D;`rtk;`)];
 
@@ -25,9 +25,9 @@ cpl:ptchk[;;1] //1 point to poll
 cdv:ptchk[;;1] //1 point to downvote
 
 upvt:{[x;y;z]x:string t:nu a?min a:lvn["c"$3_x]'[string nu:users except z];
-  @[`pts;t;+;1];@[`dnt;z;-;1];bc uvol[key aw],\:"\033[G",1_ucn[z;string z],"upvoted",ucn[t;x];}
+  @[`pts;t;+;1];@[`dnt;z;-;1];bc uvol[key aw],\:"\033[G",ucn[z;string z],"upvoted",ucn[t;x];}
 dnvt:{[x;y;z]x:string t:users a?min a:lvn["c"$3_x]'[string users];
-  @[`pts;;-;1]'[z,t];bc uvol[key aw],\:"\033[G",1_ucn[z;string z],"downvoted",ucn[t;x];}
+  @[`pts;;-;1]'[z,t];bc uvol[key aw],\:"\033[G",ucn[z;string z],"downvoted",ucn[t;x];}
 wllt:{[x;y;z]rc[;y;0] "\033[G",1_ucn[u;string u],"has ",string[pts u],"q, and can give ",string dnt[u:z^`$"c"$3_x];}
 
 wltb:{[x;y;z] bc uvol[key aw],\:"\033[G","hey",(-1_ucn[z;string z]),", current wallets for active users are:\n",atproc ssr[;"^";"  "].Q.s 1!@[;`user;{`$"@",/:string[x],\:"^"}]`points`donates xdesc flip`user`points`donates!(::;pts;dnt)@\:key aw};

@@ -1,4 +1,7 @@
 /Basic functions
+fallowed:fallowed union `nerw
+
+
 usls:{[x;y;z]rc[;y;0]"j"$"\033[Gusers online: ",","sv -1_'ucn .' flip "S*"$\:string key[aw] except hiddenusers;};
 
 info:{[x;y;z]rc[;y;0]"j"$"\033[G",banner,". Chat admins: ",", "sv string (),admins};
@@ -201,6 +204,7 @@ workernames:enlist[`]!enlist"[",$[10;"BLANK"],"]";
 
 worker:{publ[atproc y;0;n:workernames x]}
 errw:rc[;;0]                                / rc projection used for returning errors from workers
+nerw:nc[;;0]
 
 tf[""]:chat
 

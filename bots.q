@@ -79,7 +79,7 @@ bstk:{[x;y;z] d:(!)."S=;"0:x:4_"c"$x;
   neg[wh](`.st.buy;enlist[ucn[.z.u;string .z.u]];.z.u;d`size;d`lev;d`exp;d`sym);
   }
 
-gtqt:{[x;y;z]neg[wh](`.st.getqt;4_"c"$x;ucn[z;string z]);}
+gtqt:{[x;y;z]neg[wh](`.st.getqt;4_"c"$x;ucn[z;string z];z);}
 
 workernames,:`news`music`bitcoin`defino`stock`shame`wiki`urbd`ant`syn`rhym`stream`buyr`simp!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT";"SHAMEBOT";"WIKIBOT";"URBANBOT";"ANTONYMBOT";"SYNONYMBOT";"RHYMEBOT";"STREAMBOT";"INVESTOBOT";"REFBOT")],\:"]:" / bot names used when printing to chat
 
