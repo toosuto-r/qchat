@@ -23,6 +23,7 @@ cmk:ptcst[;;1] //1 point to markov
 cot:ptcst[;;5] //5 points to ostracise
 cpl:ptchk[;;1] //1 point to poll
 cdv:ptchk[;;1] //1 point to downvote
+csr:ptcst[;;1] //1 point per simpsons reference
 
 upvt:{[x;y;z]x:string t:nu a?min a:lvn["c"$3_x]'[string nu:users except z];
   @[`pts;t;+;1];@[`dnt;z;-;1];bc uvol[key aw],\:"\033[G",ucn[z;string z],"upvoted",ucn[t;x];}
@@ -44,7 +45,7 @@ ptpl:{[x;y;z]
   bc uvol[key aw],\:"\033[G","hey",(-1_ucn[z;string z]),", plot of q use ",$[x~"";"across all funcs";"by ",x],"\n","\n" sv p; /broadcast plot
  }
 
-fchk,:("\\mk";"\\o ";"\\p ";"\\uv";"\\dv")!(cmk;cot;cpl;cdt;cdv)
+fchk,:("\\mk";"\\o ";"\\p ";"\\uv";"\\dv";"\\sr")!(cmk;cot;cpl;cdt;cdv;csr);
 
 tf,:("\\uv";"\\dv";"\\w ";"\\wt";"\\wp")!(upvt;dnvt;wllt;wltb;ptpl)
 
