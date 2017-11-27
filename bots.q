@@ -80,6 +80,6 @@ bstk:{[x;y;z] d:(!)."S=;"0:x:4_"c"$x;
 
 gtqt:{[x;y;z]neg[wh](`.st.getqt;4_"c"$x;ucn[z;string z];z);}
 
-workernames,:`news`music`bitcoin`defino`stock`shame`wiki`urbd`ant`syn`rhym`stream`buyr!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT";"SHAMEBOT";"WIKIBOT";"URBANBOT";"ANTONYMBOT";"SYNONYMBOT";"RHYMEBOT";"STREAMBOT";"INVESTOBOT")],\:"]:" / bot names used when printing to chat
+workernames,:`news`music`bitcoin`defino`stock`shame`wiki`urbd`ant`syn`rhym`stream`buyr`aoc!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT";"SHAMEBOT";"WIKIBOT";"URBANBOT";"ANTONYMBOT";"SYNONYMBOT";"RHYMEBOT";"STREAMBOT";"INVESTOBOT";"AOCBOT")],\:"]:" / bot names used when printing to chat
 
 tf,:("\\ne";"\\ml";"\\bc";"\\df";"\\st";"\\wk";"\\ud";"\\an";"\\sn";"\\rh";"\\tv";"\\by";"\\qt")!(news;mulo;btcp;defn;stkp;wiki;urbd;anty;syny;rhym;strm;bstk;gtqt);
