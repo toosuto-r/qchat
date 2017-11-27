@@ -15,6 +15,7 @@ system"S ",string"j"$.z.T;
 \l lfm_worker.q
 \l plot.q
 \l stock.q
+\l aoc.q
 
 /Powered by News API
 /default BBC
