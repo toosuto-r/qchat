@@ -1,7 +1,8 @@
 if[not `pts in key`.;pts:(users!()):\:10];
 if[not `dnt in key`.;dnt:(users!()):\:8];
+if[not `dvt in key`.;dvt:(users!()):\:3];
 if[not `qbonus in key`.;qbonus:(users!()):\:1];
-rtk:{pts+:(users!()):\:10;dnt+:(users!()):\:8;qbonus::(users!()):\:1;`cron insert (00:00+1+.z.D;`rtk;`);}
+rtk:{pts+:(users!()):\:10;dnt+:(users!()):\:8;dvt::(users!()):\:3;qbonus::(users!()):\:1;`cron insert (00:00+1+.z.D;`rtk;`);}
 
 if[not `rtk in cron`action;`cron insert (00:00+1+.z.D;`rtk;`)];
 
@@ -19,19 +20,19 @@ ptcst:{[x;y;z] if[r:z>pts[y];rc["\033[GInsufficient q";x;0]];@[`pts;y;-;not[r]*z
 cdt:{[x;y]
   if[qbonus[y]&2>dnt[y];@[`qbonus;y;:;0];@[`pts;y;+;5];rc["\033[GBonus awarded";x;0]]; //bonus on spending all votes
   if[r:1>dnt[y];rc["\033[GInsufficient q";x;0]];r} //1 point to donate/upvote
+cdv:{if[r:1>dvt[y];rc["\033[GInsufficient q";x;0]];r}
 cmk:ptcst[;;1] //1 point to markov
 cot:ptcst[;;5] //5 points to ostracise
 cpl:ptchk[;;1] //1 point to poll
-cdv:ptchk[;;1] //1 point to downvote
 csr:ptcst[;;1] //1 point per simpsons reference
 
 upvt:{[x;y;z]x:string t:nu a?min a:lvn["c"$3_x]'[string nu:users except z];
   @[`pts;t;+;1];@[`dnt;z;-;1];bc uvol[key aw],\:"\033[G",ucn[z;string z],"upvoted",ucn[t;x];}
 dnvt:{[x;y;z]x:string t:users a?min a:lvn["c"$3_x]'[string users];
-  @[`pts;;-;1]'[z,t];bc uvol[key aw],\:"\033[G",ucn[z;string z],"downvoted",ucn[t;x];}
-wllt:{[x;y;z]rc[;y;0] "\033[G",1_ucn[u;string u],"has ",string[pts u],"q, and can give ",string dnt[u:z^`$"c"$3_x];}
+  @[`pts;t;-;1];@[`dvt;z;-;1];bc uvol[key aw],\:"\033[G",ucn[z;string z],"downvoted",ucn[t;x];}
+wllt:{[x;y;z]rc[;y;0] "\033[G",1_ucn[u;string u],"has ",string[pts u],"q, can give ",string[dnt u]," and downvote ",string dvt[u:z^`$"c"$3_x];}
 
-wltb:{[x;y;z] bc uvol[key aw],\:"\033[G","hey",(-1_ucn[z;string z]),", current wallets for active users are:\n",atproc ssr[;"^";"  "].Q.s 1!@[;`user;{`$"@",/:string[x],\:"^"}]`points`donates xdesc flip`user`points`donates!(::;pts;dnt)@\:key aw};
+wltb:{[x;y;z] bc uvol[key aw],\:"\033[G","hey",(-1_ucn[z;string z]),", current wallets for active users are:\n",atproc ssr[;"^";"  "].Q.s 1!@[;`user;{`$"@",/:string[x],\:"^"}]`points`donates xdesc flip`user`points`donates`downvotes!(::;pts;dnt;dvt)@\:key aw};
 
 ptpl:{[x;y;z]
   x:trim "c"$3_x;
