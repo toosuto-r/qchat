@@ -81,12 +81,12 @@ rhym:{
              .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::1234"btc 20*til floor count[btc]%20")];
  if[(y=`PLOT)&$[`;z]=`yday;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BTC price over yesterday:","\n" sv
              .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::5012"b@20*til floor count[b:select from btc where date=last date]%20")];
- j:.j.k .Q.hg`$":http://api.coindesk.com/v1/bpi/currentprice.json";
+ j:c!(.j.k .Q.hg`$":https://api.coinbase.com/v2/exchange-rates")[`data][`rates]c:`GBP`USD`EUR;
  d:`GBP`USD`EUR!("£";"$";"€");
- if[y<>`KFC;m:"Hey ",x,", bitcoin price is currently: ",d[y],j[`bpi][y][`rate]," (",string[y],")"];
- if[(y<>`KFC) & $["F";z]<>0;m,:" and your holding is worth: ",d[y],string $["F";z]*j[`bpi][y][`rate_float]];
+ if[y<>`KFC;m:"Hey ",x,", bitcoin price is currently: ",d[y],j[y]," (",string[y],")"];
+ if[(y<>`KFC) & $["F";z]<>0;m,:" and your holding is worth: ",d[y],string $["F";z]*"F"$j[y]];
  if[y=`KFC;z:$[0<>"F"$z;"F"$z;1f];m:"Hey ",x,", with ",string[z]," BTC you can currently buy this many bargain buckets:\n",
-              -1_.Q.s `6pc`10pc`14pc!`${string[x 0]," (",string[x 1]," pieces)"}'[(1 6;1 10;1 14)*\:'floor z*j[`bpi][`GBP][`rate_float]%10.49 13.49 16.49]];
+              -1_.Q.s `6pc`10pc`14pc!`${string[x 0]," (",string[x 1]," pieces)"}'[(1 6;1 10;1 14)*\:'floor z*$["F";j`GBP]%10.49 13.49 16.49]];
  :neg[.z.w](`worker;`bitcoin;m);
  }
 
