@@ -1,7 +1,7 @@
 \d .st
 
-futures:([]start:0#.z.p;expiry:0#.z.p;user:0#`;sym:0#`;sz:0#0;cap:0#0f;lev:0#0f;ipx:0#0f)
-txhist:futures,'([]cpx:0#0f)
+if[not `futures in key `.st;futures:([]start:0#.z.p;expiry:0#.z.p;user:0#`;sym:0#`;sz:0#0;cap:0#0f;lev:0#0f;ipx:0#0f)]
+if[not `txhist in key `.st;txhist:futures,'([]cpx:0#0f)]
 
 greq:("http://finance.google.com/finance?q=";"";"&output=json")
 
