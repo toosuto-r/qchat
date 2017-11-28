@@ -34,8 +34,9 @@ if[enabled;
      u:where not prstrs[x]~'totstrs x;
      u:exec id from u;
      if[count u;                                                   //alert & award points
-        neg[key[.z.W]0](`worker;`aoc;"[",string[`minute$.z.T],"] The following users have received stars in the last 10 mins: ",", "sv string u);
-        neg[key[.z.W]0]@/:`manageq,'flip raze get@'flip@'(key;get)@\:update stars:3*stars from totstrs[x]-prstrs x;
+        neg[key[.z.W]0](`worker;`aoc;"[",string[`minute$.z.T],"] The following users have received stars in the last 10 mins:\n",
+                                      .Q.s select from (totstrs[x]-prstrs[x]) where id in u);
+        neg[key[.z.W]0]@/:`manageq,'flip raze get@'flip@'(key;get)@\:update stars*3 from totstrs[x]-prstrs x;
         prstrs[x]:totstrs x;                                       //update state of prev stars
       ];
      `cron insert (.z.P+"u"$10;`.aoc.newstrs;x);                   //check again on this same leaderboard in 10 mins
