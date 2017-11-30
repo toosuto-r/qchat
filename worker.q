@@ -118,7 +118,7 @@ gettop:{toptab,:select from
 
 `cron insert (.z.P+"v"$topcheck;`gettop;(shamethresh,topcheck));
 
-simp:{
+simp:{[u;m]
   r:.j.k .Q.hg`:https://thesimpsonsquoteapi.glitch.me/quotes;
-  :neg[.z.w](`worker;`simp;" "sv raze each("\"",r[`quote],"\"";"-";r`character));
+  :neg[.z.w](`worker;`simp;" "sv raze each("@",string u;"-";"\"",r[`quote],"\"";"-";r`character));
  };
