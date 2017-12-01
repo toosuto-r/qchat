@@ -61,5 +61,5 @@ if[enabled;
 if[.aoc.enabled;
   .aoc.updst .' a:.aoc.lbs[`legacy`openaccess] cross .aoc.yrlst;   //update state dict for both leaderboards across all three years
   @[`.aoc.prstrs;;:;]'[.aoc.lbs;.aoc.totstrs'[.aoc.lbs]];          //get the initial no. of stars for each user
-  `cron insert (.z.P+"u"$10;`.aoc.newstrs;.aoc.lbs`openacess);        //insert cron job to update & detect new stars every 10 mins
+  `cron insert (.z.P+"u"$10;`.aoc.newstrs;.aoc.lbs`openaccess);        //insert cron job to update & detect new stars every 10 mins
   ];
