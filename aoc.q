@@ -16,7 +16,7 @@ if[enabled;
                                  "host:adventofcode.com\r\n",
                                  "Cookie:session=",cookie,"\r\n\r\n";
      t:`name`local_score`stars`global_score`id`last_star_ts`completion_day_level#/:value .j.k[first[j ss "{"]_j]`members;
-     :update name:count[i]#"" from t where 10h<>type each name;
+     :update name:("anon",/:id) from t where 10h<>type each name;
     };
 
    / updst: update state dictionary of leaderboards & years /
@@ -32,8 +32,8 @@ if[enabled;
    / newstrs: detect new stars for a any users in a given leaderboard (include all years) /
    newstrs:{[x] /x:leaderboard
      updst .' x cross yrlst;                                       //update state for all years on this board
-     u:where not prstrs[x]~'totstrs x;
-     u:exec id from u;
+     u:(where not prstrs[x]~'totstrs x);
+     u:(exec id from u) inter exec id from totstrs x where stars>0;
      if[count u;                                                   //alert & award points
         neg[key[.z.W]0](`worker;`aoc;"[",string[`minute$.z.T],"] The following users have received stars in the last 10 mins:\n",
                                       .Q.s select from (totstrs[x]-prstrs[x]) where id in u);
