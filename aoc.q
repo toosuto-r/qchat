@@ -45,7 +45,7 @@ if[enabled;
 
     / gtlb: get leaderboard for given lb & year /
     gtlb:{[x;y]
-      t:select id,stars,local_score,global_score from (update .aoc.idmap id from .aoc.st[(x;y)]) where stars>0;
+      t:select id,stars,local_score,global_score from (update .aoc.idmap id from .aoc.st[(x;y)]) where stars>0,not null id;
       :$[`;("User";"Stars";"Local Score";"Global Score")] xcol `local_score`stars xdesc t;
     };
 
