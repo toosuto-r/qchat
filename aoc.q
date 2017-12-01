@@ -41,6 +41,18 @@ if[enabled;
       ];
      `cron insert (.z.P+"u"$10;`.aoc.newstrs;x);                   //check again on this same leaderboard in 10 mins
     };
+
+    / gtlb: get leaderboard for given lb & year /
+    gtlb:{[x;y]
+      t:select id,stars,local_score,global_score from (update .aoc.idmap id from .aoc.st[(x;y)]) where stars>0;
+      :$[`;("User";"Stars";"Local Score";"Global Score")] xcol `local_score`stars xdesc t;
+    };
+
+    / aclb: API function for getting table from qchat /
+    aclb:{[x;y;z]
+      :neg[.z.w](`worker;`aoc;"Hey ",x," here's the current AOC leaderboard for this year:\n",.Q.s gtlb[.aoc.lbs`legacy;last .aoc.yrlst]);
+    };
+
   ];
 
 \d .

@@ -63,6 +63,10 @@ btcp:{[x;y;z]
  rc[;y;0]"\033[GGetting BTC price";neg[wh](`.btc.getprice;trim uct string z;c;a[1]);
  };
 
+aocl:{[x;y;z]
+ neg[wh](`.aoc.aclb;trim uct string z;x;y);
+ }
+
 stkp:{[x;y;z]
   rc[;y;0]"\033[GGetting stock plot";neg[wh](`.plot.getplot;trim uct string z;`$"c"$3_x;y);
  }
@@ -83,4 +87,4 @@ gtqt:{[x;y;z]neg[wh](`.st.getqt;4_"c"$x;ucn[z;string z];z);}
 
 workernames,:`news`music`bitcoin`defino`stock`shame`wiki`urbd`ant`syn`rhym`stream`buyr`aoc`simp!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT";"SHAMEBOT";"WIKIBOT";"URBANBOT";"ANTONYMBOT";"SYNONYMBOT";"RHYMEBOT";"STREAMBOT";"INVESTOBOT";"AOCBOT";"REFBOT")],\:"]:" / bot names used when printing to chat
 
-tf,:("\\ne";"\\ml";"\\bc";"\\df";"\\st";"\\wk";"\\ud";"\\an";"\\sn";"\\rh";"\\tv";"\\by";"\\qt";"\\sr")!(news;mulo;btcp;defn;stkp;wiki;urbd;anty;syny;rhym;strm;bstk;gtqt;simp);
+tf,:("\\ne";"\\ml";"\\bc";"\\df";"\\st";"\\wk";"\\ud";"\\an";"\\sn";"\\rh";"\\tv";"\\by";"\\qt";"\\sr";"\\ac")!(news;mulo;btcp;defn;stkp;wiki;urbd;anty;syny;rhym;strm;bstk;gtqt;simp;aocl);
