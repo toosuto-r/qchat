@@ -15,7 +15,8 @@ if[enabled;
      j:`:http://adventofcode.com "GET /",string[y],"/leaderboard/private/view/",string[x],".json HTTP/1.1\r\n",
                                  "host:adventofcode.com\r\n",
                                  "Cookie:session=",cookie,"\r\n\r\n";
-     :`name`local_score`stars`global_score`id`last_star_ts`completion_day_level#/:value .j.k[first[j ss "{"]_j]`members;
+     t:`name`local_score`stars`global_score`id`last_star_ts`completion_day_level#/:value .j.k[first[j ss "{"]_j]`members;
+     :update name:count[i]#"" from t where 10h<>type each name;
     };
 
    / updst: update state dictionary of leaderboards & years /
@@ -25,7 +26,7 @@ if[enabled;
 
    / totstrs: get total stars per user for a given leaderboard across all years /
    totstrs:{[x] /x:leaderboard
-     :update .aoc.idmap id,"j"$stars from (pj/) {1!select id,stars from x where id in key .aoc.idmap}'[st@(x cross yrlst)];
+     :delete name from update (`$name)^.aoc.idmap id,"j"$stars from 1!0!(pj/){2!select id,name,stars from x}'[st@(x cross yrlst)];
     };
 
    / newstrs: detect new stars for a any users in a given leaderboard (include all years) /
@@ -60,5 +61,5 @@ if[enabled;
 if[.aoc.enabled;
   .aoc.updst .' a:.aoc.lbs[`legacy`openaccess] cross .aoc.yrlst;   //update state dict for both leaderboards across all three years
   @[`.aoc.prstrs;;:;]'[.aoc.lbs;.aoc.totstrs'[.aoc.lbs]];          //get the initial no. of stars for each user
-  `cron insert (.z.P+"u"$10;`.aoc.newstrs;.aoc.lbs`legacy);        //insert cron job to update & detect new stars every 10 mins
+  `cron insert (.z.P+"u"$10;`.aoc.newstrs;.aoc.lbs`openacess);        //insert cron job to update & detect new stars every 10 mins
   ];
