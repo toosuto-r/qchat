@@ -42,7 +42,7 @@ ptpl:{[x;y;z]
     ];
   if[x~"";t:update func:`$"\\" from t];                                                         /update table for selecting all results
   t:([] user:key[aw];c:count[key[aw]]#0) lj select sum c by user from t where func=`$("\\",x);    /produce plot
-  p:.plot.autocbar[t;`user`c;1b;0b;trim ucol[t`user;0]];
+  p:.plot.autocbar[t;`user`c;1b;1b;trim ucol[t`user;0]];
   bc uvol[key aw],\:"\033[G","hey",(-1_ucn[z;string z]),", plot of q use ",$[x~"";"across all funcs";"by ",x],"\n","\n" sv p; /broadcast plot
  }
 
