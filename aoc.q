@@ -36,7 +36,7 @@ if[enabled;
      u:(exec id from u) inter exec id from totstrs x where stars>0;
      if[count u;                                                   //alert & award points
         neg[key[.z.W]0](`worker;`aoc;"[",string[`minute$.z.T],"] The following users have received stars in the last 10 mins:\n",
-                                      .Q.s select from (totstrs[x]-prstrs[x]) where id in u);
+                                      -1_.Q.s select from (totstrs[x]-prstrs[x]) where id in u);
         neg[key[.z.W]0]@/:`manageq,'flip raze get@'flip@'(key;get)@\:update stars*3 from totstrs[x]-prstrs x;
         prstrs[x]:totstrs x;                                       //update state of prev stars
       ];
