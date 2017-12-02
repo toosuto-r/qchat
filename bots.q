@@ -17,7 +17,7 @@ mulo:{[m;h;u]                                                                   
       "* usage, where {} indicates optional parameters:";
       "  * top: '\\ml <USER>{&<FILTER>{&<PERIOD>}}'";
       "  * chart: '\\ml chart{&<USER>}{&<FILTER>}{&plot}'";
-      "  * scrobbles'\\ml scrobbles{&<USER>}'";
+      "  * scrobbles: '\\ml scrobbles{&<USER>}'";
       "* Filters: tracks, artists, albums";
       "* Periods: overall, 7day, 1month, 3month, 6month, 12month";
       "* users: ",$[0=count k:key .lfm.cache;"()";atproc", "sv "@",'string k]);
