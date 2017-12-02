@@ -14,10 +14,13 @@ mulo:{[m;h;u]                                                                   
   .lfm.cache:@[get;`:lfm_cache;()!()];                                                          / load cache of lastfm usernames
   if[0=count msg:trim"c"$3_m;                                                                   / return help message if no input is provided
     options:("* enter 'user=<LFM_NAME>' to update lastfm username, leave blank to unset";
-      "* usage='\\ml <USER>{&<FILTER>{&<PERIOD>}}' OR '\\ml chart{&<USER>}{&<FILTER>}' OR '\\ml {<USER>&}scrobbles'";
-      "  {}=optional parameters";
-      "* Filters: tracks, artists, albums\n* Periods: overall, 7day, 1month, 3month, 6month, 12month";
-      "  users: ",$[0=count k:key .lfm.cache;"()";atproc", "sv "@",'string k]);
+      "* usage, where {} indicates optional parameters:";
+      "  * top: '\\ml <USER>{&<FILTER>{&<PERIOD>}}'";
+      "  * chart: '\\ml chart{&<USER>}{&<FILTER>}{&plot}'";
+      "  * scrobbles'\\ml scrobbles{&<USER>}'";
+      "* Filters: tracks, artists, albums";
+      "* Periods: overall, 7day, 1month, 3month, 6month, 12month";
+      "* users: ",$[0=count k:key .lfm.cache;"()";atproc", "sv "@",'string k]);
     :rc[;h;0]"\033[Gmusic lookup from lastfm enabled, available options:\n","\n"sv options;     / display available options
   ];
   if[msg like"user=*";                                                                          / update username for current user

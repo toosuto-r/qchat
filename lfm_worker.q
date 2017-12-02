@@ -15,7 +15,7 @@
   d:qid raze .lfm.httpGet[r;l];                                                                 / http request
   d:$[m:`attr in key d;first;(::)]d;                                                            / determine method
   if[0=count d;:()];                                                                            / return empty list if no results
-  res:{@/[;x;y]x#z}[key c;get c]'[$[m;(::);enlist]d];                                           / apply column functions
+  res:{@/[;x;y]x#qid z}[key c;get c]'[$[m;(::);enlist]d];                                       / apply column functions
   :update users:u from res;                                                                     / add username and return
  };
 
@@ -54,7 +54,7 @@
 .lfm.parse.table:{                                                                              / neatly format tables
   x:update("@",''string users)from 0!x;
   x:`no xcols update no:fills?[differ scrobbles;1+i;0N]from x;
-  :ssr[;"\n";"\n  "]"\n",.Q.s@[x;cols[x]where any"C "=\:exec t from meta x;`$];
+  :ssr[;"\n";"\n  "]"\n",-1_.Q.s@[x;cols[x]where any"C "=\:exec t from meta x;`$];
  };
 .lfm.parse.recenttracks:{[l;p;m]                                                                / [req user;period;message] parser for recent tracks
   r:$[m`attr;" is listening";" last listened"];                                                 / determine if song is currently playing
