@@ -31,7 +31,7 @@ if[enabled;
 
    / newstrs: detect new stars for a any users in a given leaderboard (include all years) /
    newstrs:{[x] /x:leaderboard
-     updst .' x cross yrlst;                                       //update state for all years on this board
+     updst .' lbs cross yrlst;                                     //update state for all years on all boards
      u:(where not prstrs[x]~'totstrs x);
      u:(exec id from u) inter exec id from totstrs x where stars>0;
      if[count u;                                                   //alert & award points
