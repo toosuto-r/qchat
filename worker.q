@@ -81,7 +81,7 @@ rhym:{
              .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::1234"btc 20*til floor count[btc]%20")];
  if[(y=`PLOT)&$[`;z]=`yday;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BTC price over yesterday:","\n" sv
              .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::5012"b@20*til floor count[b:select from btc where date=last date]%20")];
- j:c!(.j.k .Q.hg`$":https://api.coinbase.com/v2/exchange-rates")[`data][`rates]c:`GBP`USD`EUR;
+ j:c!(.j.k .Q.hg`$":https://api.coinbase.com/v2/exchange-rates?currency=BTC")[`data][`rates]c:`GBP`USD`EUR;
  d:`GBP`USD`EUR!("£";"$";"€");
  if[y<>`KFC;m:"Hey ",x,", bitcoin price is currently: ",d[y],j[y]," (",string[y],")"];
  if[(y<>`KFC) & $["F";z]<>0;m,:" and your holding is worth: ",d[y],string $["F";z]*"F"$j[y]];
