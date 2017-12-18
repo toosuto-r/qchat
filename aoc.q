@@ -36,11 +36,11 @@ if[enabled;
      u:(exec id from u) inter exec id from totstrs x where stars>0;
      if[count u;                                                   //alert & award points
         neg[key[.z.W]0](`worker;`aoc;"[",string[`minute$.z.T],"] The following users have received stars in the last 10 mins:\n",
-                                      .Q.s select from (totstrs[x]-prstrs[x]) where id in u);
+                                      -1_.Q.s select from (totstrs[x]-prstrs[x]) where id in u);
         neg[key[.z.W]0]@/:`manageq,'flip raze get@'flip@'(key;get)@\:update stars*3 from totstrs[x]-prstrs x;
         prstrs[x]:totstrs x;                                       //update state of prev stars
       ];
-     `cron insert (.z.P+"u"$10;`.aoc.newstrs;x);                   //check again on this same leaderboard in 10 mins
+     `cron insert (.z.P+"u"$10;`.aoc.newstrs;enlist x);                   //check again on this same leaderboard in 10 mins
     };
 
     / gtlb: get leaderboard for given lb & year /
@@ -62,5 +62,5 @@ if[enabled;
 if[.aoc.enabled;
   .aoc.updst .' a:.aoc.lbs[`legacy`openaccess] cross .aoc.yrlst;   //update state dict for both leaderboards across all three years
   @[`.aoc.prstrs;;:;]'[.aoc.lbs;.aoc.totstrs'[.aoc.lbs]];          //get the initial no. of stars for each user
-  `cron insert (.z.P+"u"$10;`.aoc.newstrs;.aoc.lbs`openaccess);        //insert cron job to update & detect new stars every 10 mins
+  `cron insert (.z.P+"u"$10;`.aoc.newstrs;enlist .aoc.lbs`openaccess);        //insert cron job to update & detect new stars every 10 mins
   ];
