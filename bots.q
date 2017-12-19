@@ -7,7 +7,7 @@ wiki:{[x;y;z] neg[wh](`wikilkup;trim "c"$3_x);}
 anty:{[x;y;z] neg[wh](`anty;trim "c"$3_x);}
 syny:{[x;y;z] neg[wh](`syny;trim "c"$3_x);}
 rhym:{[x;y;z] neg[wh](`rhym;trim "c"$3_x);}
-simp:{[x;y;z] neg[wh](`simp;z;trim "c"$3_x);}
+simp:{[x;y;z] neg[wh](`simp;y;z);}
 strm:{[x;y;z] if[""~trim "c"$3_x;:rc[;y;0]"\033[GSTREAMBOT: usage \\tv {show or movie name}"];neg[wh](`strm;trim "c"$3_x);}
 mulo:{[m;h;u]                                                                                   / [message;handle;user]
   if[()~key`:lfm_key;:rc[;h;0]"\033[Gmusic lookup not enabled"];                                / return error if unenabled

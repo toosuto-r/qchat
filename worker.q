@@ -118,7 +118,17 @@ gettop:{toptab,:select from
 
 `cron insert (.z.P+"v"$topcheck;`gettop;(shamethresh,topcheck));
 
-simp:{[u;m]
-  r:.j.k .Q.hg`:https://thesimpsonsquoteapi.glitch.me/quotes;
-  :neg[.z.w](`worker;`simp;" "sv raze each("@",string u;"-";"\"",r[`quote],"\"";"-";r`character));
+getSimpsons:{`:simpsons.csv 0:("\n"vs .Q.hg`$"https://raw.githubusercontent.com/vibronicshark55/simpsons_quotes/master/quotes.csv")except enlist"";} / http request for quotes, save result to disk
+
+simp:{[h;u]                                                                                     / [handle;user]
+  if[0=count@[value;`simpsonsQuotes;""];                                                        / if no quotes then download from internet
+    if[()~key`:simpsons.csv;getSimpsons[]];                                                     / download quotes if none exist on disk
+    simpsonsQuotes::neg[count a]?a:@[("**JJ";1#",")0:;`:simpsons.csv;([]quote:"";character:"";season:"j"$();episode:"j"$())]; / parse results and randomise
+  ];
+  if[0=count simpsonsQuotes;:neg[.z.w](`errw;"\033[GError: no Simpsons quotes";h)];             / exit with error if no quotes on disk
+  r:first simpsonsQuotes;                                                                       / get first quote from memory
+  @[`.;`simpsonsQuotes;1_];                                                                     / drop first quote from memory
+  msg:" "sv raze each("@",string u;"-";"\"",r[`quote],"\"";"-";r`character);                    / create message
+  if[not null r`season;msg,:", s"," e"sv"0"^-2$string r`season`episode];                        / append season data if available
+  :neg[.z.w](`worker;`simp;msg);                                                                / return message to chat
  };
