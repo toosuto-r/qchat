@@ -120,12 +120,12 @@ gettop:{toptab,:select from
 
 getSimpsons:{`:simpsons.csv 0:("\n"vs .Q.hg`$"https://raw.githubusercontent.com/vibronicshark55/simpsons_quotes/master/quotes.csv")except enlist"";} / http request for quotes, save result to disk
 
-simp:{[u;m]
+simp:{[h;u;m]
   if[0=count@[value;`simpsonsQuotes;""];                                                        / if no quotes then download from internet
     if[()~key`:simpsons.csv;getSimpsons[]];                                                     / download quotes if none exist on disk
     simpsonsQuotes::neg[count a]?a:@[("**JJ";1#",")0:;`:simpsons.csv;([]quote:"";character:"";season:"j"$();episode:"j"$())]; / parse results and randomise
   ];
-  if[0=count simpsonsQuotes;'"no simpsons quotes"];                                             / exit with error if quotes can't be pulled
+  if[0=count simpsonsQuotes;:neg[.z.w](`errw;"\033[GError: no Simpsons quotes";h)];             / exit with error if no quotes on disk
   r:first simpsonsQuotes;                                                                       / get first quote from memory
   @[`.;`simpsonsQuotes;1_];                                                                     / drop first quote from memory
   msg:" "sv raze each("@",string u;"-";"\"",r[`quote],"\"";"-";r`character);                    / create message
