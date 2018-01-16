@@ -73,15 +73,23 @@ rhym:{
  :neg[.z.w](`worker;`rhym;r);
  }
 / bitcoin
+
 .btc.getprice:{
+ sym:"BTCUSD"; //symbol for insertion into query strings
  if[(y=`PLOT)&($[`;z] in `0`month);:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BTC price over last month:","\n" sv
              .plot.cp[`red] .plot.auto[;`date`close;`line;0b]
              flip `date`close!({"D"$string key x};get)@\:(.j.k .Q.hg`:https://api.coindesk.com/v1/bpi/historical/close.json)`bpi)];
- if[(y=`PLOT)&$[`;z]=`today;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BTC price over today:","\n" sv
-             .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::1234"btc 20*til floor count[btc]%20")];
+ if[(y=`PLOT)&$[`;lower z] in `btc`today;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BTC price over today:","\n" sv
+             .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::1234"b 20*til floor count[b:select from btc where sym=`",sym,"]%20")];
+ if[(y=`PLOT)&$[`;lower z]=`eth;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", ETH price over today:","\n" sv
+             .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::1234"b 20*til floor count[b:select from btc where sym=`ETHUSD]%20")];
+ if[(y=`PLOT)&$[`;lower z]=`bch;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BCH price over today:","\n" sv
+             .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::1234"b 20*til floor count[b:select from btc where sym=`BCHUSD]%20")];
  if[(y=`PLOT)&$[`;z]=`yday;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BTC price over yesterday:","\n" sv
-             .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::5012"b@20*til floor count[b:select from btc where date=last date]%20")];
- j:c!(.j.k .Q.hg`$":https://api.coinbase.com/v2/exchange-rates")[`data][`rates]c:`GBP`USD`EUR;
+             .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::5012"b@20*til floor count[b:select from btc where date=last date,sym=`",sym,"]%20")];
+ if[(y=`PLOT)&$[`;z]=`mcap;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", market cap in USD for top 5 cryptocoins:","\n" sv
+             .plot.autocbar[;`name`market_cap_usd;0b;1b;value .plot.pc] @[;`market_cap_usd;"F"$].j.k .Q.hg`$"https://api.coinmarketcap.com/v1/ticker/?limit=5")];
+ j:c!(.j.k .Q.hg`$":https://api.coinbase.com/v2/exchange-rates?currency=BTC")[`data][`rates]c:`GBP`USD`EUR;
  d:`GBP`USD`EUR!("£";"$";"€");
  if[y<>`KFC;m:"Hey ",x,", bitcoin price is currently: ",d[y],j[y]," (",string[y],")"];
  if[(y<>`KFC) & $["F";z]<>0;m,:" and your holding is worth: ",d[y],string $["F";z]*"F"$j[y]];
@@ -118,7 +126,17 @@ gettop:{toptab,:select from
 
 `cron insert (.z.P+"v"$topcheck;`gettop;(shamethresh,topcheck));
 
-simp:{
-  r:.j.k .Q.hg`:http://thesimpsonsquoteapi.glitch.me/quotes;
-  :neg[.z.w](`worker;`simp;" "sv raze each("\"",r[`quote],"\"";"-";r`character));
+getSimpsons:{`:simpsons.csv 0:("\n"vs .Q.hg`$"https://raw.githubusercontent.com/vibronicshark55/simpsons_quotes/master/quotes.csv")except enlist"";} / http request for quotes, save result to disk
+
+simp:{[h;u]                                                                                     / [handle;user]
+  if[0=count@[value;`simpsonsQuotes;""];                                                        / if no quotes then download from internet
+    if[()~key`:simpsons.csv;getSimpsons[]];                                                     / download quotes if none exist on disk
+    simpsonsQuotes::neg[count a]?a:@[("**JJ";1#",")0:;`:simpsons.csv;([]quote:"";character:"";season:"j"$();episode:"j"$())]; / parse results and randomise
+  ];
+  if[0=count simpsonsQuotes;:neg[.z.w](`errw;"\033[GError: no Simpsons quotes";h)];             / exit with error if no quotes on disk
+  r:first simpsonsQuotes;                                                                       / get first quote from memory
+  @[`.;`simpsonsQuotes;1_];                                                                     / drop first quote from memory
+  msg:" "sv raze each("@",string u;"-";"\"",r[`quote],"\"";"-";r`character);                    / create message
+  if[not null r`season;msg,:", s"," e"sv"0"^-2$string r`season`episode];                        / append season data if available
+  :neg[.z.w](`worker;`simp;msg);                                                                / return message to chat
  };
