@@ -17,6 +17,8 @@ system"S ",string"j"$.z.T;
 \l stock.q
 \l aoc.q
 
+cfg:1!("SS";(),",")0:`:config.csv    
+
 /Powered by News API
 /default BBC
 news_key:first@[read0;`:news_key;""];
@@ -140,3 +142,14 @@ simp:{[h;u]                                                                     
   if[not null r`season;msg,:", s"," e"sv"0"^-2$string r`season`episode];                        / append season data if available
   :neg[.z.w](`worker;`simp;msg);                                                                / return message to chat
  };
+
+clng:{[h;u;ul;cul]
+  if[not `challengehub in key cfg;:neg[.z.w](`errw;"\033[GError: no challenge hub available";h)];
+  lb:get ` sv hsym[cfg[`challengehub;`val]],`cmp;
+  head:enlist["hey ",u,", the challenge hub leaderboard for active qchat members is:"];
+  nums:neg[11+c]$raze each string c#'10 vs til 11|c:count first lb;
+  body:$[22;(ul!cul)nn],'raze each (".";"\033[33;1m*\033[0m")lb nn:key[desc lb] inter ul;
+  msg:"\n "sv head,nums,body;
+  :neg[.z.w](`worker;`simp;msg);
+  }
+
