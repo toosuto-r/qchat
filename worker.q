@@ -150,6 +150,6 @@ clng:{[h;u;ul;cul]
   nums:neg[11+c]$raze each string c#'10 vs til 11|c:count first lb;
   body:$[22;(ul!cul)nn],'raze each (".";"\033[33;1m*\033[0m")lb nn:key[desc lb] inter ul;
   msg:"\n "sv head,nums,body;
-  :neg[.z.w](`worker;`simp;msg);
+  :neg[.z.w](`worker;`clng;msg);
   }
 
