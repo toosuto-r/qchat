@@ -9,27 +9,36 @@ if[not `rtk in cron`action;`cron insert (00:00+1+.z.D;`rtk;`)];
 recorded:`$("\\o ";"\\mk";"\\uv";"\\dv")
 if[not `quse in key`.;quse:([]time:0#.z.p;user:0#`;func:0#`)]
 
-fchk:enlist[""]!enlist{[x;y]0b}
-chatter:{if[not fchk[fchk?fchk l:3$"c"$r:dc[chatprikey;x];.z.w;.z.u];
+fchk:enlist[""]!enlist{[x;y;m]0b}
+chatter:{if[not fchk[fchk?fchk l:3$"c"$r;.z.w;.z.u;r:dc[chatprikey;x]];
   if[(l:`$l) in recorded;`quse insert (.z.P;.z.u;l)];
   tf[tf?tf 3$"c"$r][r;.z.w;.z.u]];};
 
-ptchk:{[x;y;z] if[r:z>pts[y];rc["\033[GInsufficient q";x;0]];r}
-ptcst:{[x;y;z] if[r:z>pts[y];rc["\033[GInsufficient q";x;0]];@[`pts;y;-;not[r]*z];r}
+ptchk:{[x;y;z;m] if[r:z>pts[y];rc["\033[GInsufficient q";x;0]];r}
+ptcst:{[x;y;z;m] if[r:z>pts[y];rc["\033[GInsufficient q";x;0]];@[`pts;y;-;not[r]*z];r}
 
-cdt:{[x;y]
-  if[qbonus[y]&2>dnt[y];@[`qbonus;y;:;0];@[`pts;y;+;5];rc["\033[GBonus awarded";x;0]]; //bonus on spending all votes
-  if[r:1>dnt[y];rc["\033[GInsufficient q";x;0]];r} //1 point to donate/upvote
-cdv:{if[r:1>dvt[y];rc["\033[GInsufficient q";x;0]];r}
+cdt:{[x;y;m]
+  c:1^"J"$@[m:" "vs trim "c"$3_m;1];
+  if[qbonus[y]&c=dnt[y];@[`qbonus;y;:;0];@[`pts;y;+;5];rc["\033[GBonus awarded";x;0]]; //bonus on spending all votes
+  if[c=0;rc["\033[GDang, yo cheap";x;0];:1b];           //call out cheapskates trying to 0 vote
+  if[r:abs[c]>dnt[y];rc["\033[GInsufficient q";x;0]];r} //c points to donate/upvote
+cdv:{[x;y;m]
+  c:1^"J"$@[m:" "vs trim "c"$3_m;1];
+  if[c=0;rc["\033[GCan't downvote by 0, noob";x;0];:1b]; //call out noobs trying to 0 vote
+  if[r:abs[c]>dvt[y];rc["\033[GInsufficient q";x;0]];r}
 cmk:ptcst[;;1] //1 point to markov
 cot:ptcst[;;5] //5 points to ostracise
 cpl:ptchk[;;1] //1 point to poll
 csr:ptcst[;;1] //1 point per simpsons reference
 
-upvt:{[x;y;z]x:string t:nu a?min a:lvn["c"$3_x]'[string nu:users except z];
-  @[`pts;t;+;1];@[`dnt;z;-;1];bc uvol[key aw],\:"\033[G",ucn[z;string z],"upvoted",ucn[t;x];}
-dnvt:{[x;y;z]x:string t:users a?min a:lvn["c"$3_x]'[string users];
-  @[`pts;t;-;1];@[`dvt;z;-;1];bc uvol[key aw],\:"\033[G",ucn[z;string z],"downvoted",ucn[t;x];}
+upvt:{[x;y;z]c:1^"J"$@[x:" "vs trim "c"$3_x;1];
+  x:string t:nu a?min a:lvn[x 0]'[string nu:users except z];
+  if[c<0;@[`pts;z;+;c];@[`dnt;z;+;c];:bc uvol[key aw],\:"\033[G",ucn[z;string z],"tried to be sneaky, fined ",string abs c];
+  @[`pts;t;+;c];@[`dnt;z;-;c];bc uvol[key aw],\:"\033[G",ucn[z;string z],"upvoted",ucn[t;x],$[1<c;"by ",string c;""];}
+dnvt:{[x;y;z]c:1^"J"$@[x:" "vs trim "c"$3_x;1];
+  x:string t:users a?min a:lvn["c"$3_x]'[string users];
+  if[c<0;@[`pts;z;+;c];@[`dvt;z;+;c];:bc uvol[key aw],\:"\033[G",ucn[z;string z],"tried to be sneaky, fined ",string abs c];
+  @[`pts;t;-;c];@[`dvt;z;-;c];bc uvol[key aw],\:"\033[G",ucn[z;string z],"downvoted",ucn[t;x],$[1<c;"by ",string c;""];}
 wllt:{[x;y;z]rc[;y;0] "\033[G",1_ucn[u;string u],"has ",string[pts u],"q, can give ",string[dnt u]," and downvote ",string dvt[u:z^`$"c"$3_x];}
 
 wltb:{[x;y;z] bc uvol[key aw],\:"\033[G","hey",(-1_ucn[z;string z]),", current wallets for active users are:\n",atproc ssr[;"^";"  "].Q.s 1!@[;`user;{`$"@",/:string[x],\:"^"}]`points`donates xdesc flip`user`points`donates`downvotes!(::;pts;dnt;dvt)@\:key aw};
