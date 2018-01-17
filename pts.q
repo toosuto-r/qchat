@@ -36,7 +36,7 @@ upvt:{[x;y;z]c:1^"J"$@[x:" "vs trim "c"$3_x;1];
   if[c<0;@[`pts;z;+;c];@[`dnt;z;+;c];:bc uvol[key aw],\:"\033[G",ucn[z;string z],"tried to be sneaky, fined ",string abs c];
   @[`pts;t;+;c];@[`dnt;z;-;c];bc uvol[key aw],\:"\033[G",ucn[z;string z],"upvoted",ucn[t;x],$[1<c;"by ",string c;""];}
 dnvt:{[x;y;z]c:1^"J"$@[x:" "vs trim "c"$3_x;1];
-  x:string t:users a?min a:lvn["c"$3_x]'[string users];
+  x:string t:users a?min a:lvn[x 0]'[string users];
   if[c<0;@[`pts;z;+;c];@[`dvt;z;+;c];:bc uvol[key aw],\:"\033[G",ucn[z;string z],"tried to be sneaky, fined ",string abs c];
   @[`pts;t;-;c];@[`dvt;z;-;c];bc uvol[key aw],\:"\033[G",ucn[z;string z],"downvoted",ucn[t;x],$[1<c;"by ",string c;""];}
 wllt:{[x;y;z]rc[;y;0] "\033[G",1_ucn[u;string u],"has ",string[pts u],"q, can give ",string[dnt u]," and downvote ",string dvt[u:z^`$"c"$3_x];}
