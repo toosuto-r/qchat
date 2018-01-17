@@ -20,9 +20,11 @@ ptcst:{[x;y;z;m] if[r:z>pts[y];rc["\033[GInsufficient q";x;0]];@[`pts;y;-;not[r]
 cdt:{[x;y;m]
   c:1^"J"$@[m:" "vs trim "c"$3_m;1];
   if[qbonus[y]&c=dnt[y];@[`qbonus;y;:;0];@[`pts;y;+;5];rc["\033[GBonus awarded";x;0]]; //bonus on spending all votes
+  if[c=0;rc["\033[GDang, yo cheap";x;0];:1b];           //call out cheapskates trying to 0 vote
   if[r:abs[c]>dnt[y];rc["\033[GInsufficient q";x;0]];r} //c points to donate/upvote
 cdv:{[x;y;m]
   c:1^"J"$@[m:" "vs trim "c"$3_m;1];
+  if[c=0;rc["\033[GCan't downvote by 0, noob";x;0];:1b]; //call out noobs trying to 0 vote
   if[r:abs[c]>dvt[y];rc["\033[GInsufficient q";x;0]];r}
 cmk:ptcst[;;1] //1 point to markov
 cot:ptcst[;;5] //5 points to ostracise
