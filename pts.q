@@ -20,10 +20,10 @@ ptcst:{[x;y;z;m] if[r:z>pts[y];rc["\033[GInsufficient q";x;0]];@[`pts;y;-;not[r]
 cdt:{[x;y;m]
   c:1^"J"$@[m:" "vs trim "c"$3_m;1];
   if[qbonus[y]&c=dnt[y];@[`qbonus;y;:;0];@[`pts;y;+;5];rc["\033[GBonus awarded";x;0]]; //bonus on spending all votes
-  if[r:c>dnt[y];rc["\033[GInsufficient q";x;0]];r} //1 point to donate/upvote
+  if[r:abs[c]>dnt[y];rc["\033[GInsufficient q";x;0]];r} //c points to donate/upvote
 cdv:{[x;y;m]
   c:1^"J"$@[m:" "vs trim "c"$3_m;1];
-  if[r:c>dvt[y];rc["\033[GInsufficient q";x;0]];r}
+  if[r:abs[c]>dvt[y];rc["\033[GInsufficient q";x;0]];r}
 cmk:ptcst[;;1] //1 point to markov
 cot:ptcst[;;5] //5 points to ostracise
 cpl:ptchk[;;1] //1 point to poll
@@ -31,9 +31,11 @@ csr:ptcst[;;1] //1 point per simpsons reference
 
 upvt:{[x;y;z]c:1^"J"$@[x:" "vs trim "c"$3_x;1];
   x:string t:nu a?min a:lvn[x 0]'[string nu:users except z];
+  if[c<0;@[`pts;z;+;c];@[`dnt;z;+;c];:bc uvol[key aw],\:"\033[G",ucn[z;string z],"tried to be sneaky, fined ",string abs c];
   @[`pts;t;+;c];@[`dnt;z;-;c];bc uvol[key aw],\:"\033[G",ucn[z;string z],"upvoted",ucn[t;x],$[1<c;"by ",string c;""];}
 dnvt:{[x;y;z]c:1^"J"$@[x:" "vs trim "c"$3_x;1];
   x:string t:users a?min a:lvn["c"$3_x]'[string users];
+  if[c<0;@[`pts;z;+;c];@[`dvt;z;+;c];:bc uvol[key aw],\:"\033[G",ucn[z;string z],"tried to be sneaky, fined ",string abs c];
   @[`pts;t;-;c];@[`dvt;z;-;c];bc uvol[key aw],\:"\033[G",ucn[z;string z],"downvoted",ucn[t;x],$[1<c;"by ",string c;""];}
 wllt:{[x;y;z]rc[;y;0] "\033[G",1_ucn[u;string u],"has ",string[pts u],"q, can give ",string[dnt u]," and downvote ",string dvt[u:z^`$"c"$3_x];}
 
