@@ -16,6 +16,7 @@ system"S ",string"j"$.z.T;
 \l plot.q
 \l stock.q
 \l aoc.q
+\l so.q
 
 cfg:1!("SS";(),",")0:`:config.csv    
 
