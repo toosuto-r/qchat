@@ -26,11 +26,8 @@
 .stack.chk:{
   so:.stack.get[];                                                      //get latest JSON
   d:.stack.dt so[`items;;`creation_date];                               //get creation dates
-  nq:();                                                                //empty list for new questions (returned empty if no new qus)
-  if[.stack.ldt<d[0];                                                   //check for newer questions
-     nq:so[`items] where d > .stack.ldt;                                //get list of new questions
-     .stack.ldt:d[0];                                                   //update last date
-    ];
+  nq:so[`items] where d > .stack.ldt;                                   //get list of new questions
+  .stack.ldt:d[0];                                                      //update last date
   :nq;                                                                  //return list of new questions, empty if none
  }
 
