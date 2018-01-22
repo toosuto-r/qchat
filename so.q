@@ -8,7 +8,7 @@
 .stack.col:enlist[`]!enlist{[x;y] "\033[",string[x],"m",y,"\033[0m"}    //dictionary for colorising functions
 .stack.col[`title]:.stack.col[`][33]                                    //33 - yellow
 .stack.col[`link]:.stack.col[`][35]                                     //35 - purple
-.stack.fix:ssr[;;{"c"$"I"$x except "&#;"}]/[;("&#??;";"$#???;")];       //function to replace HTML encoded special chars e.g. &#39; -> '
+.stack.fix:ssr[;;{"c"$"I"$x except "&#;"}]/[;("&#??;";"&#???;")];       //function to replace HTML encoded special chars e.g. &#39; -> '
 .stack.trm:{x til last ss[x;"/"]}                                       //trim link to remove unnecessary stating of question in URL
 
 .stack.get:{
