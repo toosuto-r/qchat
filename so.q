@@ -9,6 +9,7 @@
 .stack.col[`title]:.stack.col[`][33]                                    //33 - yellow
 .stack.col[`link]:.stack.col[`][35]                                     //35 - purple
 .stack.fix:ssr[;;{"c"$"I"$x except "&#;"}]/[;("&#??;";"$#???;")];       //function to replace HTML encoded special chars e.g. &#39; -> '
+.stack.trm:{x til last ss[x;"/"]}                                       //trim link to remove unnecessary stating of question in URL
 
 .stack.get:{
   /`:/tmp/so.json 0: enlist .Q.hg .stack.url;                           //doesn't appear to work correctly, needs further investigation
@@ -19,9 +20,7 @@
  }
 
 .stack.dt:{
-  d:1970.01.01+div[x;24*3600];                                          //calculate date based on seconds since UNIX epoch
-  t:"v"$mod[x;24*3600];                                                 //calculate time
-  :d+t;                                                                 //return datetime
+  :1970.01.01+x%24*3600;                                                //calculate datetime based on seconds since UNIX epoch
  }
 
 .stack.chk:{
@@ -35,7 +34,7 @@
 .stack.fmt:{[x]                                                         //take one question as input
   u:x[`owner][`display_name];                                           //extract username
   t:.stack.col.title .stack.fix x`title;                                //extract & colour title
-  l:.stack.col.link x`link;                                             //extract & colour link
+  l:.stack.col.link .stack.trm x`link;                                  //extract & colour link
   :u," asked a question titled: ",t,"\nLink: ",l;                       //return complete string for this question
  };
 
