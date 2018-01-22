@@ -8,6 +8,7 @@
 .stack.col:enlist[`]!enlist{[x;y] "\033[",string[x],"m",y,"\033[0m"}    //dictionary for colorising functions
 .stack.col[`title]:.stack.col[`][33]                                    //33 - yellow
 .stack.col[`link]:.stack.col[`][35]                                     //35 - purple
+.stack.fix:ssr[;;{"c"$"I"$x except "&#;"}]/[;("&#??;";"$#???;")];       //function to replace HTML encoded special chars e.g. &#39; -> '
 
 .stack.get:{
   /`:/tmp/so.json 0: enlist .Q.hg .stack.url;                           //doesn't appear to work correctly, needs further investigation
@@ -33,7 +34,7 @@
 
 .stack.fmt:{[x]                                                         //take one question as input
   u:x[`owner][`display_name];                                           //extract username
-  t:.stack.col.title x`title;                                           //extract & colour title
+  t:.stack.col.title .stack.fix x`title;                                //extract & colour title
   l:.stack.col.link x`link;                                             //extract & colour link
   :u," asked a question titled: ",t,"\nLink: ",l;                       //return complete string for this question
  };
