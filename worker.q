@@ -82,11 +82,11 @@ rhym:{
              .plot.cp[`red] .plot.auto[;`date`close;`line;0b]
              flip `date`close!({"D"$string key x};get)@\:(.j.k .Q.hg`:https://api.coindesk.com/v1/bpi/historical/close.json)`bpi)];
  if[(y=`PLOT)&$[`;lower z] in `btc`today;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BTC price over today:","\n" sv
-             .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::1234"b 20*til floor count[b:select from btc where sym=`",sym,"]%20")];
+             .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::5011"b 20*til floor count[b:select from btc where sym=`",sym,"]%20")];
  if[(y=`PLOT)&$[`;lower z]=`eth;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", ETH price over today:","\n" sv
-             .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::1234"b 20*til floor count[b:select from btc where sym=`ETHUSD]%20")];
+             .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::5011"b 20*til floor count[b:select from btc where sym=`ETHUSD]%20")];
  if[(y=`PLOT)&$[`;lower z]=`bch;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BCH price over today:","\n" sv
-             .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::1234"b 20*til floor count[b:select from btc where sym=`BCHUSD]%20")];
+             .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::5011"b 20*til floor count[b:select from btc where sym=`BCHUSD]%20")];
  if[(y=`PLOT)&$[`;z]=`yday;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", BTC price over yesterday:","\n" sv
              .plot.cp[`red] .plot.auto[;`time`spot;`line;0b]`::5012"b@20*til floor count[b:select from btc where date=last date,sym=`",sym,"]%20")];
  if[(y=`PLOT)&$[`;z]=`mcap;:neg[.z.w](`worker;`bitcoin;"Hey ",x,", market cap in USD for top 5 cryptocoins:","\n" sv
