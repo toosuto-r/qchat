@@ -1,3 +1,5 @@
+mh:hopen "J"$.z.x 0                                 /open handle to main process using 1st parameter as port
+neg[mh](`init;`);                                   /call init functionon main process to set wh & load code
 
 .z.pw:{[u;p]"b"$not count .z.W};
 \t 1000

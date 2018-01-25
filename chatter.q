@@ -1,12 +1,7 @@
-workeron:1b;
-if[workeron;`SSL_VERIFY_SERVER setenv "no";system"q worker.q -p ",string[wp:{$[x~r:@[system;"lsof -i :",string x;x];x;x+1i]}/[system"p"]];system"sleep 0.5";wh:hopen "j"$wp];
-\l kg.q
-\l chat.q
-\l func.q
-\d .c4
-\l connect4.q
-\d .
-\l levenshtein.q
-\l bots.q
-\l pts.q
-\l plot.q
+init:{[x]
+  wh::first key .z.W;               /worker has opened handle, first handle in .z.W will be worker
+  system@'"l ",/:("kg";"chat";"func";"levenshtein";"bots";"pts";"plot";"connect4"),\:".q";
+ }
+p:string system"p";                 /get main proc port for worker to callback
+system"q worker.q ",p," -p 0W";     /start worker on random available port
+/after this, main proc will wait for init to be called by worker

@@ -9,7 +9,7 @@
 /       Close if one player quits or server exits (ADD QUIT RECORD TO LB TABLE)
 / DONE  Maintain on-disk leaderboard? (in case of quit, award win to non-quitter) ([] p1:`$();p2:`$();w:`$();m:`int$();q:`boolean$())
 /       Add "testing" mode where results aren't recorded (auto-enable in case of both players having same username)
-
+\d .c4
 
 players:()!()                                                   / dict for handle!username
 curplayer:0                                                     / player 1 starts
@@ -107,3 +107,5 @@ lb:{get `:lb}
 
 / generate actual leaderboard
 top:{`wins xdesc select wins:count i by player:w from lb[]}
+
+\d .
