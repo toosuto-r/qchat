@@ -59,4 +59,4 @@ fchk,:("\\mk";"\\o ";"\\p ";"\\uv";"\\dv";"\\sr")!(cmk;cot;cpl;cdt;cdv;csr);
 
 tf,:("\\uv";"\\dv";"\\w ";"\\wt";"\\wp")!(upvt;dnvt;wllt;wltb;ptpl)
 
-labels,:("\\uv";"\\dv";"\\w ";"\\wt";"\\wp")!("upvote";"downvote";"wallet";"wallettable";"walletplot")
+labels,:getLabels`:config/pts_labels.csv;

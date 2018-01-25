@@ -1,4 +1,4 @@
-labels,:("\\ne";"\\ml";"\\bc";"\\df";"\\st";"\\an";"\\sn";"\\ud";"\\wk";"\\rh";"\\tv";"\\sr")!("news";"music";"bitcoin";"define";"stock";"antonym";"synonym";"urbandictionary";"wikipedia";"rhymes";"streaming lookup";"simpsons reference");
+labels,:getLabels`:config/worker_labels.csv;
 
 news:{[x;y;z] rc[;y;0]"\033[GGetting news";neg[wh](`getheadline;uct string z);}
 defn:{[x;y;z] neg[wh](`dictlkup;trim "c"$3_x);}
@@ -88,7 +88,7 @@ bstk:{[x;y;z] d:(!)."S=;"0:x:4_"c"$x;
 
 gtqt:{[x;y;z]neg[wh](`.st.getqt;4_"c"$x;ucn[z;string z];z);}
 
-workernames,:`news`music`bitcoin`defino`stock`shame`wiki`urbd`ant`syn`rhym`stream`buyr`aoc`simp`clng`stack!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT";"SHAMEBOT";"WIKIBOT";"URBANBOT";"ANTONYMBOT";"SYNONYMBOT";"RHYMEBOT";"STREAMBOT";"INVESTOBOT";"AOCBOT";"REFBOT";"CLNGBOT";"STACKBOT")],\:"]:" / bot names used when printing to chat
+workernames,:{"[",/:$[10;x],\:"]:"}(!).("S*";",")0:`:config/workernames;                        / bot names used when printing to chat
 
 chlb:{[x;y;z]
   neg[wh](`clng;.z.w;trim uct string z;key aw;trim raze each ucn'[key aw;string key aw]);

@@ -156,7 +156,9 @@ emji:{[x;y;z] if[not(`$3_"c"$x) in key emdict;:rc[;y;0]"j"$"\033[GUnknown emoji 
   if[null`$3_"c"$x;:rc[;y;0]emdict`];
   ccht[;y;z]emdict `$"c"$3_x;}
 
-labels:("\\q ";"\\h ";"\\c ";"\\u ";"\\i ";"\\k ";"\\o ";"\\y ";"\\a ";"\\n ";"\\d ";"\\e ";"\\g ";"\\v ";"\\me";"\\t ";"\\p ")!("quit";"help";"colour";"users";"info";"kick";"ostracise";"(y)";"add";"newchat";"delete";"emoji";"game";"volume";"action";"topic";"poll")
+getLabels:{(!).@[;`command`label]("**";1#",")0:x};
+
+labels:getLabels`:config/labels.csv;
 
 words:@[read0;`:works;enlist"unknown"];
 / cache topic list in random order to ensure all topics have been used once before repeating
