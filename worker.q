@@ -39,7 +39,7 @@ udlkup:{
   :neg[.z.w](`worker;`urbd;raze"The definition of ",x," is: ",d)
  };
 
-.w.hu:.h.hug .h.sc,";:@&=/?#[]";        //expand URI escape mapping for RFC-3986 safe characters
+.w.hu:.h.hug .h.sc except"!*'()+$,";        //expand URI escape mapping for RFC-3986
 
 wikilkup:{
   q:.w.hu x;
