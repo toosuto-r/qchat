@@ -88,7 +88,7 @@ bstk:{[x;y;z] d:(!)."S=;"0:x:4_"c"$x;
 
 gtqt:{[x;y;z]neg[wh](`.st.getqt;4_"c"$x;ucn[z;string z];z);}
 
-workernames,:`news`music`bitcoin`defino`stock`shame`wiki`urbd`ant`syn`rhym`stream`buyr`aoc`simp`clng`stack!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT";"SHAMEBOT";"WIKIBOT";"URBANBOT";"ANTONYMBOT";"SYNONYMBOT";"RHYMEBOT";"STREAMBOT";"INVESTOBOT";"AOCBOT";"REFBOT";"CLNGBOT";"STACKBOT")],\:"]:" / bot names used when printing to chat
+workernames,:`news`music`bitcoin`defino`stock`shame`wiki`urbd`ant`syn`rhym`stream`buyr`aoc`simp`clng`stack`github!"[",/:$[10;("NEWSBOT";"LASTFMBOT";"BTCBOT";"DICTBOT";"STOCKBOT";"SHAMEBOT";"WIKIBOT";"URBANBOT";"ANTONYMBOT";"SYNONYMBOT";"RHYMEBOT";"STREAMBOT";"INVESTOBOT";"AOCBOT";"REFBOT";"CLNGBOT";"STACKBOT";"GITBOT")],\:"]:" / bot names used when printing to chat
 
 chlb:{[x;y;z]
   neg[wh](`clng;.z.w;trim uct string z;key aw;trim raze each ucn'[key aw;string key aw]);

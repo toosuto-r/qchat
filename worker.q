@@ -17,6 +17,7 @@ system"S ",string"j"$.z.T;
 \l stock.q
 \l aoc.q
 \l so.q
+\l github.q
 
 cfg:1!("SS";(),",")0:`:config.csv    
 
